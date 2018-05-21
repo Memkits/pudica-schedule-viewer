@@ -17,7 +17,7 @@
  (states content)
  (let [state (or (:data states) {:text ""})]
    (div
-    {:style ui/column}
+    {:style (merge ui/column {:padding "16px"})}
     (textarea
      {:value (:text state),
       :placeholder (:text state),
