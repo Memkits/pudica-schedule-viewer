@@ -17,7 +17,7 @@
  comp-nav
  ()
  (div
-  {:style (merge ui/column {:padding 8})}
+  {:style (merge ui/column {:padding 8, :border-right (str "1px solid " (hsl 0 0 80))})}
   (div {:style style-icon, :on-click (action-> :router {:name :home})} (comp-icon :code))
   (div
    {:style style-icon, :on-click (action-> :router {:name :viewer})}

@@ -2,7 +2,7 @@
 (ns build.upload
   (:require ["child_process" :as child-process]))
 
-(def configs {:orgization "memkits"
+(def configs {:orgization "Memkits"
               :name "pudica-schedule-viewer"
               :cdn "pudica-schedule-viewer"})
 
