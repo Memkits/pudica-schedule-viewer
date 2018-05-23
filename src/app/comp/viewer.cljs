@@ -16,7 +16,9 @@
 (defcomp
  comp-time
  (time)
- (if (nil? time) (<> "nil") (<> (.format (dayjs time) "YYYY-MM-DD HH:mm"))))
+ (span
+  {:style {:font-size 13, :font-family ui/font-fancy, :color (hsl 0 0 70)}}
+  (if (nil? time) (<> "nil") (<> (.format (dayjs time) "MM-DD HH:mm")))))
 
 (defcomp
  comp-viewer
@@ -29,7 +31,7 @@
    (->> (:tasks content)
         (map
          (fn [[k task]]
-           [k (div {} (<> (:text task)) (=< 8 nil) (comp-time (:created-time task)))]))))
+           [k (div {} (comp-time (:created-time task)) (=< 8 nil) (<> (:text task)))]))))
   (=< nil 16)
   (div {} (<> "Archived"))
   (list->
@@ -40,8 +42,8 @@
            [k
             (div
              {}
-             (<> (:text task))
-             (=< 8 nil)
              (comp-time (:done-time task))
              (=< 8 nil)
-             (comp-time (:archived-time task)))]))))))
+             (comp-time (:archived-time task))
+             (=< 8 nil)
+             (<> (:text task)))]))))))
