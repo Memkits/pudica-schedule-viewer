@@ -11,14 +11,20 @@
             [app.schema :refer [dev?]]
             [respo-ui.comp.icon :refer [comp-icon]]))
 
-(def style-icon {:margin "8", :font-size 16, :cursor :pointer})
+(def style-icon {:margin "8", :font-size 16, :cursor :pointer, :color (hsl 0 0 70)})
+
+(defcomp
+ comp-link
+ (page icon active?)
+ (div
+  {:style (merge style-icon (if active? {:color :black})),
+   :on-click (action-> :router {:name page})}
+  (comp-icon icon)))
 
 (defcomp
  comp-nav
- ()
+ (current-page)
  (div
   {:style (merge ui/column {:padding 8, :border-right (str "1px solid " (hsl 0 0 80))})}
-  (div {:style style-icon, :on-click (action-> :router {:name :home})} (comp-icon :code))
-  (div
-   {:style style-icon, :on-click (action-> :router {:name :viewer})}
-   (comp-icon :ios-monitor))))
+  (comp-link :home :code (= current-page :home))
+  (comp-link :viewer :ios-monitor (= current-page :viewer))))

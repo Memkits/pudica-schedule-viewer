@@ -21,7 +21,13 @@
     (textarea
      {:value (:text state),
       :placeholder (:text state),
-      :style (merge ui/textarea {:width 640, :height 320, :font-family ui/font-code}),
+      :style (merge
+              ui/textarea
+              {:width 640,
+               :height 320,
+               :font-family ui/font-code,
+               :font-size 12,
+               :line-height "1.6em"}),
       :on-input (mutation-> (assoc state :text (:value %e)))})
     (=< nil 16)
     (div
@@ -30,6 +36,6 @@
       {:style ui/button,
        :on-click (fn [e d! m!]
          (try
-          (d! :content (read-string (:text state)))
+          (do (d! :content (read-string (:text state))) (d! :router {:name :viewer}))
           (catch js/Error error (.log js/console error))))}
       (<> "Submit"))))))
