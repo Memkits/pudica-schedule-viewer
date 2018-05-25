@@ -17,18 +17,23 @@
  comp-time
  (time)
  (span
-  {:style {:font-size 13, :font-family ui/font-fancy, :color (hsl 0 0 70)}}
+  {:style {:font-size 13,
+           :font-family ui/font-fancy,
+           :color (hsl 0 0 70),
+           :min-width 80,
+           :display :inline-block}}
   (if (nil? time) (<> "nil") (<> (.format (dayjs time) "MM-DD HH:mm")))))
 
 (defcomp
  comp-viewer
  (content)
  (div
-  {:style (merge ui/flex {:padding 16, :overflow :auto})}
+  {:style (merge ui/flex {:padding 16, :overflow :auto, :padding-bottom 200})}
   (div {} (<> "Tasks"))
   (list->
    {:style {:padding-left 16}}
    (->> (:tasks content)
+        (sort-by (fn [[k task]] (unchecked-negate (:created-time task))))
         (map
          (fn [[k task]]
            [k (div {} (comp-time (:created-time task)) (=< 8 nil) (<> (:text task)))]))))
@@ -37,6 +42,11 @@
   (list->
    {:style {:padding-left 16}}
    (->> (:archives content)
+        (sort
+         (fn [[k1 task-a] [k2 task-b]]
+           (if (= (:done-time task-b) (:done-time task-a))
+             (< (:archived-time task-b) (:archived-time task-a))
+             (< (:done-time task-b) (:done-time task-a)))))
         (map
          (fn [[k task]]
            [k
