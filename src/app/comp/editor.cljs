@@ -17,14 +17,14 @@
  (states content)
  (let [state (or (:data states) {:text ""})]
    (div
-    {:style (merge ui/column {:padding "16px"})}
+    {:style (merge ui/flex ui/column {:padding "16px"})}
     (textarea
      {:value (:text state),
       :placeholder (:text state),
       :style (merge
               ui/textarea
-              {:width 640,
-               :height 320,
+              {:width "100%",
+               :height 400,
                :font-family ui/font-code,
                :font-size 12,
                :line-height "1.6em"}),
