@@ -2343,6 +2343,7 @@
        "yL" {
         :type :expr, :by "root", :at 1518157357847, :id "BJg8VR398G"
         :data {
+         "D" {:type :leaf, :by "root", :at 1528871682219, :text ";", :id "BJ5-oE0em"}
          "T" {:type :leaf, :by "root", :at 1518157450281, :text ".addEventListener", :id "BJg8VR398Gleaf"}
          "j" {:type :leaf, :by "root", :at 1518157453505, :text "js/window", :id "rkmqRncIf"}
          "r" {:type :leaf, :by "root", :at 1518157458163, :text "|beforeunload", :id "Sk8cAnqUz"}
@@ -2388,6 +2389,7 @@
        "yP" {
         :type :expr, :by "root", :at 1518157492640, :id "rJ6n03q8G"
         :data {
+         "D" {:type :leaf, :by "root", :at 1528871719836, :text ";", :id "H1lEoVRgm"}
          "T" {:type :leaf, :by "root", :at 1518157495438, :text "let", :id "rJ6n03q8Gleaf"}
          "j" {
           :type :expr, :by "root", :at 1518157495644, :id "SJxpRh9Iz"
@@ -2463,6 +2465,15 @@
             :type :expr, :by "root", :at 1528870600578, :id "Hk-CUNAx7"
             :data {
              "T" {:type :leaf, :by "root", :at 1528870601166, :text "event", :id "Sy-gRIV0e7"}
+            }
+           }
+           "p" {
+            :type :expr, :by "root", :at 1528871723329, :id "SylX4iVAxm"
+            :data {
+             "T" {:type :leaf, :by "root", :at 1528871726261, :text ".log", :id "SylX4iVAxmleaf"}
+             "j" {:type :leaf, :by "root", :at 1528871728151, :text "js/console", :id "Bk48Vo4Re7"}
+             "r" {:type :leaf, :by "root", :at 1528871738242, :text "\"Received message:", :id "B1ZdNoVRgX"}
+             "v" {:type :leaf, :by "root", :at 1528871736907, :text "event", :id "SkAVsE0x7"}
             }
            }
            "v" {

@@ -28,16 +28,20 @@
   (render-app! render!)
   (add-watch *reel :changes (fn [] (render-app! render!)))
   (listen-devtools! "a" dispatch!)
-  (.addEventListener
+  (comment
+   .addEventListener
    js/window
    "beforeunload"
    (fn [] (.setItem js/localStorage (:storage schema/config) (pr-str (:store @*reel)))))
-  (let [raw (.getItem js/localStorage (:storage schema/config))]
-    (if (some? raw) (do (dispatch! :hydrate-storage (read-string raw)))))
+  (comment
+   let
+   ((raw (.getItem js/localStorage (:storage schema/config))))
+   (if (some? raw) (do (dispatch! :hydrate-storage (read-string raw)))))
   (.addEventListener
    js/window
    "message"
    (fn [event]
+     (.log js/console "Received message:" event)
      (dispatch! :content (read-string (.-data event)))
      (dispatch! :router {:name :viewer})))
   (println "App started."))
