@@ -28,15 +28,12 @@
   (render-app! render!)
   (add-watch *reel :changes (fn [] (render-app! render!)))
   (listen-devtools! "a" dispatch!)
-  (comment
-   .addEventListener
+  (.addEventListener
    js/window
    "beforeunload"
    (fn [] (.setItem js/localStorage (:storage schema/config) (pr-str (:store @*reel)))))
-  (comment
-   let
-   ((raw (.getItem js/localStorage (:storage schema/config))))
-   (if (some? raw) (do (dispatch! :hydrate-storage (read-string raw)))))
+  (let [raw (.getItem js/localStorage (:storage schema/config))]
+    (if (some? raw) (do (dispatch! :hydrate-storage (read-string raw)))))
   (.addEventListener
    js/window
    "message"

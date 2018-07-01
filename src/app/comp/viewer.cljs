@@ -22,7 +22,18 @@
            :color (hsl 0 0 70),
            :min-width 80,
            :display :inline-block}}
-  (if (nil? time) (<> "nil") (<> (.format (dayjs time) "MM-DD HH:mm")))))
+  (if (nil? time) (<> "-") (<> (.format (dayjs time) "MM-DD HH:mm")))))
+
+(defcomp
+ comp-weekday
+ (time)
+ (span
+  {:style {:font-size 13,
+           :font-family ui/font-fancy,
+           :color (hsl 0 0 70),
+           :min-width 80,
+           :display :inline-block}}
+  (if (nil? time) (<> "-") (<> (.format (dayjs time) "dddd")))))
 
 (defcomp
  comp-viewer
@@ -54,6 +65,6 @@
              {}
              (comp-time (:done-time task))
              (=< 8 nil)
-             (comp-time (:archived-time task))
+             (comp-weekday (:archived-time task))
              (=< 8 nil)
              (<> (:text task)))]))))))
