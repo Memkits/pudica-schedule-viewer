@@ -33,7 +33,7 @@
            :color (hsl 0 0 70),
            :min-width 80,
            :display :inline-block}}
-  (if (nil? time) (<> "-") (<> (.format (dayjs time) "dddd")))))
+  (if (nil? time) (<> "-") (<> (.format (dayjs time) "ddd")))))
 
 (defcomp
  comp-viewer
