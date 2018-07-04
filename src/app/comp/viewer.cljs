@@ -20,20 +20,9 @@
   {:style {:font-size 13,
            :font-family ui/font-fancy,
            :color (hsl 0 0 70),
-           :min-width 80,
+           :min-width 40,
            :display :inline-block}}
-  (if (nil? time) (<> "-") (<> (.format (dayjs time) "MM-DD HH:mm")))))
-
-(defcomp
- comp-weekday
- (time)
- (span
-  {:style {:font-size 13,
-           :font-family ui/font-fancy,
-           :color (hsl 0 0 70),
-           :min-width 80,
-           :display :inline-block}}
-  (if (nil? time) (<> "-") (<> (.format (dayjs time) "ddd")))))
+  (if (nil? time) (<> "-") (<> (.format (dayjs time) "HH:mm")))))
 
 (defcomp
  comp-viewer
@@ -50,21 +39,33 @@
            [k (div {} (comp-time (:created-time task)) (=< 8 nil) (<> (:text task)))]))))
   (=< nil 16)
   (div {} (<> "Archived"))
-  (list->
-   {:style {:padding-left 16}}
-   (->> (:archives content)
-        (sort
-         (fn [[k1 task-a] [k2 task-b]]
-           (if (= (:done-time task-b) (:done-time task-a))
-             (< (:archived-time task-b) (:archived-time task-a))
-             (< (:done-time task-b) (:done-time task-a)))))
-        (map
-         (fn [[k task]]
-           [k
-            (div
-             {}
-             (comp-time (:done-time task))
-             (=< 8 nil)
-             (comp-weekday (:done-time task))
-             (=< 8 nil)
-             (<> (:text task)))]))))))
+  (let [grouped-tasks (group-by
+                       (fn [[_ task]]
+                         (.format (dayjs (or (:done-time task) 1514778176367)) "YYYY-MM-DD"))
+                       (:archives content))]
+    (list->
+     {}
+     (->> grouped-tasks
+          (sort (fn [[date1 _] [date2 _]] (compare date2 date1)))
+          (map
+           (fn [[date-string tasks]]
+             [date-string
+              (div
+               {:style {:margin-bottom 16}}
+               (div
+                {:style (merge ui/row {:color (hsl 0 0 70), :font-family ui/font-fancy})}
+                (<> date-string)
+                (=< 8 nil)
+                (<> (.format (dayjs date-string) "ddd")))
+               (list->
+                {:style {:padding-left 16}}
+                (->> tasks
+                     (sort
+                      (fn [[k1 task-a] [k2 task-b]]
+                        (if (= (:done-time task-b) (:done-time task-a))
+                          (< (:archived-time task-b) (:archived-time task-a))
+                          (< (:done-time task-b) (:done-time task-a)))))
+                     (map
+                      (fn [[k task]]
+                        [k
+                         (div {} (comp-time (:done-time task)) (=< 8 nil) (<> (:text task)))])))))])))))))
