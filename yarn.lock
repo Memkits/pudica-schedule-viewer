@@ -690,9 +690,15 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
+<<<<<<< Updated upstream
 dayjs@^1.6.10:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.7.0.tgz#8a1d008928dc72da55c436ace13be2545ce2b2ea"
+=======
+dayjs@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.7.2.tgz#31b65d962a59a7e5bb2a20f01002a4b8d6d6f62c"
+>>>>>>> Stashed changes
 
 debug@^2.2.0, debug@^2.6.8:
   version "2.6.9"
@@ -1198,7 +1204,11 @@ shadow-cljs-jar@1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/shadow-cljs-jar/-/shadow-cljs-jar-1.1.2.tgz#88664fae5957a7c21554e1a33476f1c475162c92"
 
+<<<<<<< Updated upstream
 shadow-cljs@^2.4.13:
+=======
+shadow-cljs@^2.4.14:
+>>>>>>> Stashed changes
   version "2.4.14"
   resolved "https://registry.yarnpkg.com/shadow-cljs/-/shadow-cljs-2.4.14.tgz#72d3b66efbb2d393d1083e694605ba222e401097"
   dependencies:

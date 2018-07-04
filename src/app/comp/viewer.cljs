@@ -65,6 +65,6 @@
              {}
              (comp-time (:done-time task))
              (=< 8 nil)
-             (comp-weekday (:archived-time task))
+             (comp-weekday (:done-time task))
              (=< 8 nil)
              (<> (:text task)))]))))))
