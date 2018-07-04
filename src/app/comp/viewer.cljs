@@ -39,10 +39,13 @@
            [k (div {} (comp-time (:created-time task)) (=< 8 nil) (<> (:text task)))]))))
   (=< nil 16)
   (div {} (<> "Archived"))
-  (let [grouped-tasks (group-by
-                       (fn [[_ task]]
-                         (.format (dayjs (or (:done-time task) 1514778176367)) "YYYY-MM-DD"))
-                       (:archives content))]
+  (let [grouped-tasks (->> (:archives content)
+                           (group-by
+                            (fn [[_ task]]
+                              (let [done-time (:done-time task)]
+                                (if (some? done-time)
+                                  (.format (dayjs done-time) "YYYY-MM-DD")
+                                  "2018-01-01")))))]
     (list->
      {}
      (->> grouped-tasks
