@@ -690,15 +690,9 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
-<<<<<<< Updated upstream
-dayjs@^1.6.10:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.7.0.tgz#8a1d008928dc72da55c436ace13be2545ce2b2ea"
-=======
-dayjs@^1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.7.2.tgz#31b65d962a59a7e5bb2a20f01002a4b8d6d6f62c"
->>>>>>> Stashed changes
+dayjs@^1.7.4:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.7.4.tgz#6001277372aec83021943157fa279ecf2b5f5cf8"
 
 debug@^2.2.0, debug@^2.6.8:
   version "2.6.9"
@@ -964,6 +958,10 @@ ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
 
+nanoid@^1.0.7:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-1.1.0.tgz#b18e806e1cdbfdbe030374d5cf08a48cbc80b474"
+
 node-libs-browser@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/node-libs-browser/-/node-libs-browser-2.0.0.tgz#a3a59ec97024985b46e958379646f96c4b616646"
@@ -1204,13 +1202,9 @@ shadow-cljs-jar@1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/shadow-cljs-jar/-/shadow-cljs-jar-1.1.2.tgz#88664fae5957a7c21554e1a33476f1c475162c92"
 
-<<<<<<< Updated upstream
-shadow-cljs@^2.4.13:
-=======
-shadow-cljs@^2.4.14:
->>>>>>> Stashed changes
-  version "2.4.14"
-  resolved "https://registry.yarnpkg.com/shadow-cljs/-/shadow-cljs-2.4.14.tgz#72d3b66efbb2d393d1083e694605ba222e401097"
+shadow-cljs@^2.4.28:
+  version "2.4.28"
+  resolved "https://registry.yarnpkg.com/shadow-cljs/-/shadow-cljs-2.4.28.tgz#14e123d2b4d446560effad6d508e7df47e612496"
   dependencies:
     babel-core "^6.26.0"
     babel-preset-env "^1.6.0"
@@ -1222,9 +1216,11 @@ shadow-cljs@^2.4.14:
     source-map-support "^0.4.15"
     ws "^3.0.0"
 
-shortid@^2.2.8:
-  version "2.2.8"
-  resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.8.tgz#033b117d6a2e975804f6f0969dbe7d3d0b355131"
+shortid@^2.2.12:
+  version "2.2.12"
+  resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.12.tgz#8e9a95ffbc671fff8f09e985dbc7874102b0cfd2"
+  dependencies:
+    nanoid "^1.0.7"
 
 signal-exit@^3.0.2:
   version "3.0.2"
