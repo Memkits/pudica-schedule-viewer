@@ -25,6 +25,8 @@
  comp-nav
  (current-page)
  (div
-  {:style (merge ui/column {:padding 8, :border-right (str "1px solid " (hsl 0 0 80))})}
+  {:style (merge
+           ui/row
+           {:padding 8, :justify-content :flex-end, :background-color (hsl 0 0 96)})}
   (comp-link :home :code (= current-page :home))
   (comp-link :viewer :ios-monitor (= current-page :viewer))))

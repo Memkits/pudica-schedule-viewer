@@ -19,10 +19,10 @@
  (reel)
  (let [store (:store reel), states (:states store), router (:router store)]
    (div
-    {:style (merge ui/global ui/fullscreen ui/row)}
-    (comp-nav (:name router))
+    {:style (merge ui/global ui/fullscreen ui/column)}
     (case (:name router)
       :home (cursor-> :editor comp-editor states (:content store))
       :viewer (comp-viewer (:content store))
       (<> router))
+    (comp-nav (:name router))
     (when dev? (cursor-> :reel comp-reel states reel {})))))

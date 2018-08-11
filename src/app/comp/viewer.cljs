@@ -12,7 +12,8 @@
             [respo-ui.comp.icon :refer [comp-icon]]
             [cljs.reader :refer [read-string]]
             ["dayjs" :as dayjs]
-            [respo.util.list :refer [map-val]]))
+            [respo.util.list :refer [map-val]]
+            [app.style :as style]))
 
 (defn by-latest-task [task-a task-b]
   (if (= (:done-time task-b) (:done-time task-a))
@@ -45,27 +46,31 @@
  comp-day
  (day month-date)
  (div
-  {:style {:width 80}}
+  {:style (merge style/title {:font-size 20, :font-weight 300})}
   (<>
    (case day 0 "Sub" 1 "Mon" 2 "Tue" 3 "Wed" 4 "Thu" 5 "Fri" 6 "Sat" (str "Invalid:" day)))
-  (=< 4 nil)
-  (<> month-date {:font-size 12, :color (hsl 0 0 80)})))
+  (=< 8 nil)
+  (<> month-date {:font-size 12, :color (hsl 0 0 0)})))
 
-(defcomp comp-week (week) (div {:style {:width 80}} (<> (str week "th week"))))
+(defcomp
+ comp-week
+ (week)
+ (div {:style (merge style/title {:font-size 16})} (<> (str week "th week"))))
 
-(defcomp comp-year (year) (<> year {:font-family ui/font-code}))
-
-(def style-group {:border-left "1px solid #ddd", :padding-left 8})
+(defcomp
+ comp-year
+ (year)
+ (<> year (merge style/title {:border-bottom (str "1px solid " (hsl 0 0 94))})))
 
 (defcomp
  comp-viewer
  (content)
  (div
   {:style (merge ui/flex {:padding 16, :overflow :auto, :padding-bottom 200})}
-  (div {} (<> "Tasks"))
+  (div {:style (merge style/title {:color (hsl 0 0 70)})} (<> "Tasks"))
   (comp-active-tasks (:tasks content))
-  (=< nil 16)
-  (div {} (<> "Archived"))
+  (=< nil 64)
+  (div {:style (merge style/title {:color (hsl 0 0 80)})} (<> "Archived"))
   (let [tasks (vals (:archives content))
         get-done-time (fn [task]
                         (if (some? (:done-time task))
@@ -93,7 +98,7 @@
            (fn [[year tasks-by-week]]
              [year
               (div
-               {:style ui/row}
+               {:style ui/column}
                (comp-year year)
                (=< 8 nil)
                (list->
@@ -103,28 +108,28 @@
                       (fn [[week tasks-by-day]]
                         [week
                          (div
-                          {:style (merge ui/row style-group {:padding-top 8})}
+                          {:style (merge ui/column {:padding-top 16})}
                           (comp-week week)
                           (list->
                            {:style (merge
                                     ui/row
                                     {:flex-wrap :wrap,
                                      :border-top "1px solid #ddd",
-                                     :margin-top 8,
-                                     :padding-top 8})}
+                                     :padding-top 8,
+                                     :padding-left 16})}
                            (->> tasks-by-day
                                 (map
                                  (fn [[day tasks]]
                                    [day
                                     (div
                                      {:style (merge
-                                              ui/row
-                                              {:flex-shrink 0, :margin-right 16})}
+                                              ui/column
+                                              {:flex-shrink 0, :margin-right 32})}
                                      (comp-day
                                       day
                                       (.format (get-done-time (first tasks)) "MM-DD"))
                                      (list->
-                                      {:style {}}
+                                      {:style {:padding-left 16, :min-width 240}}
                                       (->> tasks
                                            (sort by-latest-task)
                                            (map
