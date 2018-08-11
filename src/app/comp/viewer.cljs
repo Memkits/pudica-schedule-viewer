@@ -37,7 +37,7 @@
  (list->
   {:style {:padding-left 16}}
   (->> tasks
-       (sort-by (fn [[k task]] (unchecked-negate (:created-time task))))
+       (sort-by (fn [[k task]] (:sort-id task)))
        (map
         (fn [[k task]]
           [k (div {} (comp-time (:created-time task)) (=< 8 nil) (<> (:text task)))])))))
@@ -93,50 +93,40 @@
                                            (sort by-larger))))))))]
     (list->
      {:style ui/column}
-     (->> tasks-by-year
-          (map
-           (fn [[year tasks-by-week]]
-             [year
-              (div
-               {:style ui/column}
-               (comp-year year)
-               (=< 8 nil)
-               (list->
-                {:style ui/column}
-                (->> tasks-by-week
-                     (map
-                      (fn [[week tasks-by-day]]
-                        [week
-                         (div
-                          {:style (merge ui/column {:padding-top 16})}
-                          (comp-week week)
-                          (list->
-                           {:style (merge
-                                    ui/row
-                                    {:flex-wrap :wrap,
-                                     :border-top "1px solid #ddd",
-                                     :padding-top 8,
-                                     :padding-left 16})}
-                           (->> tasks-by-day
-                                (map
-                                 (fn [[day tasks]]
-                                   [day
-                                    (div
-                                     {:style (merge
-                                              ui/column
-                                              {:flex-shrink 0, :margin-right 32})}
-                                     (comp-day
-                                      day
-                                      (.format (get-done-time (first tasks)) "MM-DD"))
-                                     (list->
-                                      {:style {:padding-left 16, :min-width 240}}
-                                      (->> tasks
-                                           (sort by-latest-task)
-                                           (map
-                                            (fn [task]
-                                              [(:id task)
-                                               (div
-                                                {}
-                                                (comp-time (:done-time task))
-                                                (=< 8 nil)
-                                                (<> (:text task)))])))))])))))])))))])))))))
+     (for [[year tasks-by-week] tasks-by-year]
+       [year
+        (div
+         {:style ui/column}
+         (comp-year year)
+         (=< 8 nil)
+         (list->
+          {:style ui/column}
+          (for [[week tasks-by-day] tasks-by-week]
+            [week
+             (div
+              {:style (merge ui/column {:padding-top 16})}
+              (comp-week week)
+              (list->
+               {:style (merge
+                        ui/row
+                        {:flex-wrap :wrap,
+                         :border-top "1px solid #ddd",
+                         :padding-top 8,
+                         :padding-left 16})}
+               (for [[day tasks] tasks-by-day]
+                 [day
+                  (div
+                   {:style (merge ui/column {:flex-shrink 0, :margin-right 32})}
+                   (comp-day day (.format (get-done-time (first tasks)) "MM-DD"))
+                   (list->
+                    {:style {:padding-left 16, :min-width 240}}
+                    (->> tasks
+                         (sort by-latest-task)
+                         (map
+                          (fn [task]
+                            [(:id task)
+                             (div
+                              {}
+                              (comp-time (:done-time task))
+                              (=< 8 nil)
+                              (<> (:text task)))])))))])))])))])))))
