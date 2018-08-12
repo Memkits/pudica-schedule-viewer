@@ -48,7 +48,7 @@
  (div
   {:style (merge style/title {:font-size 20, :font-weight 300})}
   (<>
-   (case day 0 "Sub" 1 "Mon" 2 "Tue" 3 "Wed" 4 "Thu" 5 "Fri" 6 "Sat" (str "Invalid:" day)))
+   (case day 0 "Sun" 1 "Mon" 2 "Tue" 3 "Wed" 4 "Thu" 5 "Fri" 6 "Sat" (str "Invalid:" day)))
   (=< 8 nil)
   (<> month-date {:font-size 12, :color (hsl 0 0 0)})))
 
