@@ -44,18 +44,20 @@
 
 (defcomp
  comp-day
- (day month-date)
+ (day month-date amount)
  (div
   {:style (merge style/title {:font-size 20, :font-weight 300})}
   (<>
    (case day 0 "Sun" 1 "Mon" 2 "Tue" 3 "Wed" 4 "Thu" 5 "Fri" 6 "Sat" (str "Invalid:" day)))
   (=< 8 nil)
-  (<> month-date {:font-size 12, :color (hsl 0 0 0)})))
+  (<> month-date {:font-size 12, :color (hsl 0 0 0)})
+  (=< 8 nil)
+  (<> (str "(" amount ")") {:font-size 12})))
 
 (defcomp
  comp-week
- (week)
- (div {:style (merge style/title {:font-size 16})} (<> (str week "th week"))))
+ (week amount)
+ (div {:style (merge style/title {:font-size 16})} (<> (str week "th week (" amount ")"))))
 
 (defcomp
  comp-year
@@ -105,7 +107,7 @@
             [week
              (div
               {:style (merge ui/column {:padding-top 16})}
-              (comp-week week)
+              (comp-week week (apply + (map count (vals tasks-by-day))))
               (list->
                {:style (merge
                         ui/row
@@ -117,7 +119,10 @@
                  [day
                   (div
                    {:style (merge ui/column {:flex-shrink 0, :margin-right 32})}
-                   (comp-day day (.format (get-done-time (first tasks)) "MM-DD"))
+                   (comp-day
+                    day
+                    (.format (get-done-time (first tasks)) "MM-DD")
+                    (count tasks))
                    (list->
                     {:style {:padding-left 16, :min-width 240}}
                     (->> tasks
