@@ -4,11 +4,11 @@ Pudica Schedule Viewer
 
 > Trying to visualize storage file of pudica-schedule
 
-Site http://repo.memkits.org/pudica-schedule-viewer/
+Site http://r.tiye.me/Memkits/pudica-schedule-viewer/
 
 ### Workflow
 
-Workflow https://github.com/mvc-works/calcit-workflow
+Workflow https://github.com/calcit-lang/respo-calcit-workflow
 
 ### License
 
