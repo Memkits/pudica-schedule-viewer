@@ -3,16 +3,7 @@
   "version": "0.1.0",
   "description": "ClojureScript workflow using Calcit Editor",
   "main": "index.js",
-  "scripts": {
-    "watch": "shadow-cljs watch client",
-    "serve": "http-server dist -s",
-    "repl": "rlwrap shadow-cljs clj-repl",
-    "build": "shadow-cljs clj-run build.main/build",
-    "build-local": "shadow-cljs clj-run build.main/build-local",
-    "page": "shadow-cljs clj-run build.main/page",
-    "upload": "lumo -c cli -m build.upload",
-    "ln": "cd target && rm -f entry && ln -s ../entry"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git@github.com:mvc-works/calcit-workflow.git"
@@ -20,11 +11,13 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "devDependencies": {
-    "http-server": "^0.11.1",
-    "shadow-cljs": "^2.6.2"
+    "bottom-tip": "^0.1.2",
+    "vite": "^2.4.4"
   },
   "dependencies": {
+    "@calcit/procs": "^0.4.16",
     "dayjs": "^1.7.5",
+    "feather-icons": "^4.28.0",
     "shortid": "^2.2.13"
   }
 }
