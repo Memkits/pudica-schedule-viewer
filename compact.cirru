@@ -3,6 +3,7 @@
   :configs $ {} (:init-fn |app.main/main!) (:reload-fn |app.main/reload!)
     :modules $ [] |respo.calcit/ |lilac/ |memof/ |respo-ui.calcit/ |respo-markdown.calcit/ |reel.calcit/ |respo-feather.calcit/
     :version |0.0.1
+  :entries $ {}
   :files $ {}
     |app.comp.editor $ {}
       :ns $ quote
@@ -329,14 +330,14 @@
             render-app!
             add-watch *reel :changes $ fn (r p) (render-app!)
             listen-devtools! |a dispatch!
-            ; js/window.addEventListener "\"beforeunload" $ fn (? e)
+            js/window.addEventListener "\"beforeunload" $ fn (? e)
               js/localStorage.setItem (:storage schema/config)
                 format-cirru-edn $ :store @*reel
-            ; let
+            let
                 raw $ js/localStorage.getItem (:storage schema/config)
               if (some? raw)
                 do $ dispatch! :hydrate-storage (parse-cirru-edn raw)
-            ; js/window.addEventListener "\"message" $ fn (event) (js/console.log "\"Received message:" event)
+            js/window.addEventListener "\"message" $ fn (event) (js/console.log "\"Received message:" event)
               dispatch! :content $ parse-cirru-edn (.-data event)
               dispatch! :router $ {} (:name :viewer)
             println "|App started."
