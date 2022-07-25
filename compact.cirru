@@ -1,20 +1,38 @@
 
 {} (:package |app)
-  :configs $ {} (:init-fn |app.main/main!) (:reload-fn |app.main/reload!)
+  :configs $ {} (:init-fn |app.main/main!) (:reload-fn |app.main/reload!) (:version |0.0.1)
     :modules $ [] |respo.calcit/ |lilac/ |memof/ |respo-ui.calcit/ |respo-markdown.calcit/ |reel.calcit/ |respo-feather.calcit/
-    :version |0.0.1
   :entries $ {}
   :files $ {}
-    |app.comp.editor $ {}
+    |app.comp.container $ {}
+      :defs $ {}
+        |comp-container $ quote
+          defcomp comp-container (reel)
+            let
+                store $ :store reel
+                states $ :states store
+                router $ :router store
+              div
+                {} $ :style (merge ui/global ui/fullscreen ui/column)
+                case (:name router)
+                  :home $ comp-editor (>> states :editor) (:content store)
+                  :viewer $ comp-viewer (:content store)
+                  <> router
+                comp-nav $ :name router
+                when dev? $ comp-reel (>> states :reel) reel ({})
       :ns $ quote
-        ns app.comp.editor $ :require
+        ns app.comp.container $ :require
           [] respo-ui.core :refer $ [] hsl
           [] respo-ui.core :as ui
-          [] respo.core :refer $ [] defcomp cursor-> action-> mutation-> <> div button textarea span
+          [] respo.core :refer $ [] defcomp >> <> div button textarea span
           [] respo.comp.space :refer $ [] =<
+          [] reel.comp.reel :refer $ [] comp-reel
           [] respo-md.comp.md :refer $ [] comp-md
           [] app.schema :refer $ [] dev?
-          [] respo-ui.comp.icon :refer $ [] comp-icon
+          [] app.comp.nav :refer $ [] comp-nav
+          [] app.comp.editor :refer $ [] comp-editor
+          [] app.comp.viewer :refer $ [] comp-viewer
+    |app.comp.editor $ {}
       :defs $ {}
         |comp-editor $ quote
           defcomp comp-editor (states content)
@@ -41,82 +59,57 @@
                           d! :content $ parse-cirru-edn (:text state)
                           d! :router $ {} (:name :viewer)
                     <> "\"Submit"
-    |app.comp.container $ {}
       :ns $ quote
-        ns app.comp.container $ :require
+        ns app.comp.editor $ :require
           [] respo-ui.core :refer $ [] hsl
           [] respo-ui.core :as ui
-          [] respo.core :refer $ [] defcomp >> <> div button textarea span
-          [] respo.comp.space :refer $ [] =<
-          [] reel.comp.reel :refer $ [] comp-reel
-          [] respo-md.comp.md :refer $ [] comp-md
-          [] app.schema :refer $ [] dev?
-          [] app.comp.nav :refer $ [] comp-nav
-          [] app.comp.editor :refer $ [] comp-editor
-          [] app.comp.viewer :refer $ [] comp-viewer
-      :defs $ {}
-        |comp-container $ quote
-          defcomp comp-container (reel)
-            let
-                store $ :store reel
-                states $ :states store
-                router $ :router store
-              div
-                {} $ :style (merge ui/global ui/fullscreen ui/column)
-                case (:name router)
-                  :home $ comp-editor (>> states :editor) (:content store)
-                  :viewer $ comp-viewer (:content store)
-                  <> router
-                comp-nav $ :name router
-                when dev? $ comp-reel (>> states :reel) reel ({})
-    |app.schema $ {}
-      :ns $ quote (ns app.schema)
-      :defs $ {}
-        |dev? $ quote
-          def dev? $ = "\"env" (get-env "\"mode")
-        |store $ quote
-          def store $ {}
-            :states $ {}
-            :router $ {} (:name :home)
-            :content |
-        |config $ quote
-          def config $ {} (:storage |pudica-schedule-viewer)
-    |app.comp.viewer $ {}
-      :ns $ quote
-        ns app.comp.viewer $ :require
-          [] respo-ui.core :refer $ [] hsl
-          [] respo-ui.core :as ui
-          [] respo.core :refer $ [] defcomp >> list-> <> div button textarea span
-          [] verbosely.core :refer $ [] verbosely!
+          [] respo.core :refer $ [] defcomp cursor-> action-> mutation-> <> div button textarea span
           [] respo.comp.space :refer $ [] =<
           [] respo-md.comp.md :refer $ [] comp-md
           [] app.schema :refer $ [] dev?
           [] respo-ui.comp.icon :refer $ [] comp-icon
-          [] cljs.reader :refer $ [] read-string
-          [] "\"dayjs" :default dayjs
-          [] app.style :as style
+    |app.comp.nav $ {}
       :defs $ {}
-        |comp-time $ quote
-          defcomp comp-time (time)
-            span
-              {} $ :style
-                {} (:font-size 13) (:font-family ui/font-fancy)
-                  :color $ hsl 0 0 70
-                  :min-width 40
-                  :display :inline-block
-              if (nil? time) (<> "\"??:??")
-                <> $ .!format (dayjs time) "\"HH:mm"
-        |comp-week $ quote
-          defcomp comp-week (week amount)
+        |comp-link $ quote
+          defcomp comp-link (page icon active?)
+            div
+              {}
+                :style $ merge style-icon
+                  if active? $ {} (:color :black)
+                :on-click $ fn (e d!)
+                  d! :router $ {} (:name page)
+              comp-i icon 16 $ hsl 200 80 70
+        |comp-nav $ quote
+          defcomp comp-nav (current-page)
             div
               {} $ :style
-                merge style/title $ {} (:font-size 16)
-              <> $ str week "\"th week (" amount "\")"
-        |comp-year $ quote
-          defcomp comp-year (year)
-            <> year $ merge style/title
-              {} $ :border-bottom
-                str "\"1px solid " $ hsl 0 0 94
+                merge ui/row $ {} (:padding 8) (:justify-content :flex-end)
+                  :background-color $ hsl 0 0 96
+              comp-link :home :code $ = current-page :home
+              =< 8 nil
+              comp-link :viewer :monitor $ = current-page :viewer
+        |style-icon $ quote
+          def style-icon $ {} (:margin "\"8") (:font-size 16) (:cursor :pointer)
+            :color $ hsl 0 0 70
+      :ns $ quote
+        ns app.comp.nav $ :require
+          [] respo-ui.core :refer $ [] hsl
+          [] respo-ui.core :as ui
+          [] respo.core :refer $ [] defcomp >> <> div button textarea span
+          [] respo.comp.space :refer $ [] =<
+          [] respo-md.comp.md :refer $ [] comp-md
+          [] app.schema :refer $ [] dev?
+          [] feather.core :refer $ [] comp-i
+    |app.comp.viewer $ {}
+      :defs $ {}
+        |by-larger $ quote
+          defn by-larger (x y) (&compare y x)
+        |by-latest-task $ quote
+          defn by-latest-task (task-a task-b)
+            if
+              = (:done-time task-b) (:done-time task-a)
+              < (:archived-time task-b) (:archived-time task-a)
+              < (:done-time task-b) (:done-time task-a)
         |comp-active-tasks $ quote
           defcomp comp-active-tasks (tasks)
             list->
@@ -145,14 +138,16 @@
               =< 8 nil
               <> (str "\"(" amount "\")")
                 {} $ :font-size 12
-        |get-done-time $ quote
-          defn get-done-time (task)
-            if
-              some? $ :done-time task
-              dayjs $ :done-time task
-              dayjs "\"2021-01-01"
-        |by-larger $ quote
-          defn by-larger (x y) (&compare y x)
+        |comp-time $ quote
+          defcomp comp-time (time)
+            span
+              {} $ :style
+                {} (:font-size 13) (:font-family ui/font-fancy)
+                  :color $ hsl 0 0 70
+                  :min-width 40
+                  :display :inline-block
+              if (nil? time) (<> "\"??:??")
+                <> $ .!format (dayjs time) "\"HH:mm"
         |comp-viewer $ quote
           defcomp comp-viewer (content)
             div
@@ -241,88 +236,48 @@
                                                         comp-time $ :done-time task
                                                         =< 8 nil
                                                         <> $ :text task
-        |by-latest-task $ quote
-          defn by-latest-task (task-a task-b)
+        |comp-week $ quote
+          defcomp comp-week (week amount)
+            div
+              {} $ :style
+                merge style/title $ {} (:font-size 16)
+              <> $ str week "\"th week (" amount "\")"
+        |comp-year $ quote
+          defcomp comp-year (year)
+            <> year $ merge style/title
+              {} $ :border-bottom
+                str "\"1px solid " $ hsl 0 0 94
+        |get-done-time $ quote
+          defn get-done-time (task)
             if
-              = (:done-time task-b) (:done-time task-a)
-              < (:archived-time task-b) (:archived-time task-a)
-              < (:done-time task-b) (:done-time task-a)
-    |app.updater $ {}
+              some? $ :done-time task
+              dayjs $ :done-time task
+              dayjs "\"2021-01-01"
       :ns $ quote
-        ns app.updater $ :require
-          [] respo.cursor :refer $ [] update-states
-      :defs $ {}
-        |updater $ quote
-          defn updater (store op op-data op-id op-time)
-            case-default op
-              do (println "\"Unknown op:" op) store
-              :states $ update-states store op-data
-              :content $ assoc store :content op-data
-              :router $ assoc store :router op-data
-              :hydrate-storage op-data
-    |app.comp.nav $ {}
-      :ns $ quote
-        ns app.comp.nav $ :require
+        ns app.comp.viewer $ :require
           [] respo-ui.core :refer $ [] hsl
           [] respo-ui.core :as ui
-          [] respo.core :refer $ [] defcomp >> <> div button textarea span
+          [] respo.core :refer $ [] defcomp >> list-> <> div button textarea span
+          [] verbosely.core :refer $ [] verbosely!
           [] respo.comp.space :refer $ [] =<
           [] respo-md.comp.md :refer $ [] comp-md
           [] app.schema :refer $ [] dev?
-          [] feather.core :refer $ [] comp-i
-      :defs $ {}
-        |comp-link $ quote
-          defcomp comp-link (page icon active?)
-            div
-              {}
-                :style $ merge style-icon
-                  if active? $ {} (:color :black)
-                :on-click $ fn (e d!)
-                  d! :router $ {} (:name page)
-              comp-i icon 16 $ hsl 200 80 70
-        |comp-nav $ quote
-          defcomp comp-nav (current-page)
-            div
-              {} $ :style
-                merge ui/row $ {} (:padding 8) (:justify-content :flex-end)
-                  :background-color $ hsl 0 0 96
-              comp-link :home :code $ = current-page :home
-              =< 8 nil
-              comp-link :viewer :monitor $ = current-page :viewer
-        |style-icon $ quote
-          def style-icon $ {} (:margin "\"8") (:font-size 16) (:cursor :pointer)
-            :color $ hsl 0 0 70
-    |app.style $ {}
-      :ns $ quote
-        ns app.style $ :require ([] respo-ui.core :as ui)
-      :defs $ {}
-        |title $ quote
-          def title $ {} (:font-weight 100) (:font-family ui/font-fancy)
-    |app.main $ {}
-      :ns $ quote
-        ns app.main $ :require
-          [] respo.core :refer $ [] render! clear-cache! realize-ssr!
-          [] app.comp.container :refer $ [] comp-container
-          [] app.updater :refer $ [] updater
-          [] app.schema :as schema
-          [] reel.util :refer $ [] listen-devtools!
-          [] reel.core :refer $ [] reel-updater refresh-reel
-          [] reel.schema :as reel-schema
+          [] respo-ui.comp.icon :refer $ [] comp-icon
           [] cljs.reader :refer $ [] read-string
           [] "\"dayjs" :default dayjs
-          [] "\"dayjs/plugin/weekOfYear" :default week-of-year
-          "\"./calcit.build-errors" :default build-errors
-          "\"bottom-tip" :default hud!
-          app.config :as config
+          [] app.style :as style
+    |app.config $ {}
       :defs $ {}
-        |render-app! $ quote
-          defn render-app! () $ render! mount-target (comp-container @*reel) dispatch!
-        |ssr? $ quote
-          def ssr? $ some? (js/document.querySelector |meta.respo-ssr)
-        |mount-target $ quote
-          def mount-target $ .querySelector js/document |.app
+        |dev? $ quote
+          def dev? $ = "\"dev" (get-env "\"mode")
+      :ns $ quote (ns app.config)
+    |app.main $ {}
+      :defs $ {}
         |*reel $ quote
           defatom *reel $ -> reel-schema/reel (assoc :base schema/store) (assoc :store schema/store)
+        |dispatch! $ quote
+          defn dispatch! (op op-data) (; println |Dispatch: op)
+            reset! *reel $ reel-updater updater @*reel op op-data
         |main! $ quote
           defn main! ()
             if config/dev? $ load-console-formatter!
@@ -344,9 +299,8 @@
               dispatch! :content $ parse-cirru-edn (.-data event)
               dispatch! :router $ {} (:name :viewer)
             println "|App started."
-        |dispatch! $ quote
-          defn dispatch! (op op-data) (; println |Dispatch: op)
-            reset! *reel $ reel-updater updater @*reel op op-data
+        |mount-target $ quote
+          def mount-target $ .querySelector js/document |.app
         |reload! $ quote
           defn reload! () $ if (nil? build-errors)
             do (remove-watch *reel :changes) (clear-cache!)
@@ -354,8 +308,53 @@
               reset! *reel $ refresh-reel @*reel schema/store updater
               hud! "\"ok~" "\"Ok"
             hud! "\"error" build-errors
-    |app.config $ {}
-      :ns $ quote (ns app.config)
+        |render-app! $ quote
+          defn render-app! () $ render! mount-target (comp-container @*reel) dispatch!
+        |ssr? $ quote
+          def ssr? $ some? (js/document.querySelector |meta.respo-ssr)
+      :ns $ quote
+        ns app.main $ :require
+          [] respo.core :refer $ [] render! clear-cache! realize-ssr!
+          [] app.comp.container :refer $ [] comp-container
+          [] app.updater :refer $ [] updater
+          [] app.schema :as schema
+          [] reel.util :refer $ [] listen-devtools!
+          [] reel.core :refer $ [] reel-updater refresh-reel
+          [] reel.schema :as reel-schema
+          [] cljs.reader :refer $ [] read-string
+          [] "\"dayjs" :default dayjs
+          [] "\"dayjs/plugin/weekOfYear" :default week-of-year
+          "\"./calcit.build-errors" :default build-errors
+          "\"bottom-tip" :default hud!
+          app.config :as config
+    |app.schema $ {}
       :defs $ {}
+        |config $ quote
+          def config $ {} (:storage |pudica-schedule-viewer)
         |dev? $ quote
-          def dev? $ = "\"dev" (get-env "\"mode")
+          def dev? $ = "\"env" (get-env "\"mode" "\"release")
+        |store $ quote
+          def store $ {}
+            :states $ {}
+            :router $ {} (:name :home)
+            :content |
+      :ns $ quote (ns app.schema)
+    |app.style $ {}
+      :defs $ {}
+        |title $ quote
+          def title $ {} (:font-weight 100) (:font-family ui/font-fancy)
+      :ns $ quote
+        ns app.style $ :require ([] respo-ui.core :as ui)
+    |app.updater $ {}
+      :defs $ {}
+        |updater $ quote
+          defn updater (store op op-data op-id op-time)
+            case-default op
+              do (println "\"Unknown op:" op) store
+              :states $ update-states store op-data
+              :content $ assoc store :content op-data
+              :router $ assoc store :router op-data
+              :hydrate-storage op-data
+      :ns $ quote
+        ns app.updater $ :require
+          [] respo.cursor :refer $ [] update-states
