@@ -13,25 +13,25 @@
                 states $ :states store
                 router $ :router store
               div
-                {} $ :style (merge ui/global ui/fullscreen ui/column)
-                case (:name router)
+                {} $ :class-name (str-spaced css/global css/fullscreen css/column)
+                case-default (:name router) (<> router)
                   :home $ comp-editor (>> states :editor) (:content store)
                   :viewer $ comp-viewer (:content store)
-                  <> router
                 comp-nav $ :name router
                 when dev? $ comp-reel (>> states :reel) reel ({})
       :ns $ quote
         ns app.comp.container $ :require
-          [] respo-ui.core :refer $ [] hsl
-          [] respo-ui.core :as ui
-          [] respo.core :refer $ [] defcomp >> <> div button textarea span
-          [] respo.comp.space :refer $ [] =<
-          [] reel.comp.reel :refer $ [] comp-reel
-          [] respo-md.comp.md :refer $ [] comp-md
-          [] app.schema :refer $ [] dev?
-          [] app.comp.nav :refer $ [] comp-nav
-          [] app.comp.editor :refer $ [] comp-editor
-          [] app.comp.viewer :refer $ [] comp-viewer
+          respo-ui.core :refer $ hsl
+          respo-ui.core :as ui
+          respo.core :refer $ defcomp >> <> div button textarea span
+          respo.comp.space :refer $ =<
+          reel.comp.reel :refer $ comp-reel
+          respo-md.comp.md :refer $ comp-md
+          app.config :refer $ dev?
+          app.comp.nav :refer $ comp-nav
+          app.comp.editor :refer $ comp-editor
+          app.comp.viewer :refer $ comp-viewer
+          respo-ui.css :as css
     |app.comp.editor $ {}
       :defs $ {}
         |comp-editor $ quote
@@ -41,65 +41,74 @@
                 state $ or (:data states)
                   {} $ :text "\""
               div
-                {} $ :style
-                  merge ui/flex ui/column $ {} (:padding "\"16px")
+                {}
+                  :class-name $ str-spaced css/flex css/flex
+                  :style $ {} (:padding "\"16px")
                 textarea $ {}
                   :value $ :text state
                   :placeholder $ :text state
-                  :style $ merge ui/textarea
-                    {} (:width "\"100%") (:height 400) (:font-family ui/font-code) (:font-size 12) (:line-height "\"1.6em") (:white-space :nowrap)
+                  :style css-textbox
                   :on-input $ fn (e d!)
                     d! cursor $ assoc state :text (:value e)
                 =< nil 16
                 div ({})
                   button
-                    {} (:style ui/button)
+                    {} (:class-name css/button)
                       :on-click $ fn (e d!)
                         do
                           d! :content $ parse-cirru-edn (:text state)
                           d! :router $ {} (:name :viewer)
                     <> "\"Submit"
+        |css-textbox $ quote
+          defstyle css-textbox $ {}
+            "\"$0" $ merge ui/textarea
+              {} (:width "\"100%") (:height 400) (:font-family ui/font-code) (:font-size 12) (:line-height "\"1.6em") (:white-space :nowrap)
       :ns $ quote
         ns app.comp.editor $ :require
-          [] respo-ui.core :refer $ [] hsl
-          [] respo-ui.core :as ui
-          [] respo.core :refer $ [] defcomp cursor-> action-> mutation-> <> div button textarea span
-          [] respo.comp.space :refer $ [] =<
-          [] respo-md.comp.md :refer $ [] comp-md
-          [] app.schema :refer $ [] dev?
-          [] respo-ui.comp.icon :refer $ [] comp-icon
+          respo-ui.core :refer $ hsl
+          respo-ui.core :as ui
+          respo.core :refer $ defcomp <> div button textarea span
+          respo.comp.space :refer $ =<
+          respo-md.comp.md :refer $ comp-md
+          respo-ui.comp.icon :refer $ comp-icon
+          respo.css :refer $ defstyle
+          respo-ui.css :as css
     |app.comp.nav $ {}
       :defs $ {}
         |comp-link $ quote
           defcomp comp-link (page icon active?)
             div
-              {}
-                :style $ merge style-icon
-                  if active? $ {} (:color :black)
+              {} (:class-name css-icon)
+                :style $ if active?
+                  {} $ :color :black
                 :on-click $ fn (e d!)
                   d! :router $ {} (:name page)
               comp-i icon 16 $ hsl 200 80 70
         |comp-nav $ quote
           defcomp comp-nav (current-page)
             div
-              {} $ :style
-                merge ui/row $ {} (:padding 8) (:justify-content :flex-end)
-                  :background-color $ hsl 0 0 96
+              {} $ :class-name css-nav
               comp-link :home :code $ = current-page :home
               =< 8 nil
               comp-link :viewer :monitor $ = current-page :viewer
-        |style-icon $ quote
-          def style-icon $ {} (:margin "\"8") (:font-size 16) (:cursor :pointer)
-            :color $ hsl 0 0 70
+        |css-icon $ quote
+          defstyle css-icon $ {}
+            "\"$0" $ {} (:margin "\"8") (:font-size 16) (:cursor :pointer)
+              :color $ hsl 0 0 70
+        |css-nav $ quote
+          defstyle css-nav $ {}
+            "\"$0" $ merge ui/row
+              {} (:padding 8) (:justify-content :flex-end)
+                :background-color $ hsl 0 0 96
       :ns $ quote
         ns app.comp.nav $ :require
-          [] respo-ui.core :refer $ [] hsl
-          [] respo-ui.core :as ui
-          [] respo.core :refer $ [] defcomp >> <> div button textarea span
-          [] respo.comp.space :refer $ [] =<
-          [] respo-md.comp.md :refer $ [] comp-md
-          [] app.schema :refer $ [] dev?
-          [] feather.core :refer $ [] comp-i
+          respo-ui.core :refer $ hsl
+          respo-ui.core :as ui
+          respo.core :refer $ defcomp >> <> div button textarea span
+          respo.comp.space :refer $ =<
+          respo-md.comp.md :refer $ comp-md
+          feather.core :refer $ comp-i
+          respo.css :refer $ defstyle
     |app.comp.viewer $ {}
       :defs $ {}
         |by-larger $ quote
@@ -129,8 +138,7 @@
         |comp-day $ quote
           defcomp comp-day (day month-date amount)
             div
-              {} $ :style
-                merge style/title $ {} (:font-size 20) (:font-weight 300)
+              {} $ :class-name css-day
               <> $ case-default day (str "\"Invalid:" day) (0 "\"Sun") (1 "\"Mon") (2 "\"Tue") (3 "\"Wed") (4 "\"Thu") (5 "\"Fri") (6 "\"Sat")
               =< 8 nil
               <> month-date $ {} (:font-size 12)
@@ -141,11 +149,7 @@
         |comp-time $ quote
           defcomp comp-time (time)
             span
-              {} $ :style
-                {} (:font-size 13) (:font-family ui/font-fancy)
-                  :color $ hsl 0 0 70
-                  :min-width 40
-                  :display :inline-block
+              {} $ :class-name css-time
               if (nil? time) (<> "\"??:??")
                 <> $ .!format (dayjs time) "\"HH:mm"
         |comp-viewer $ quote
@@ -154,15 +158,15 @@
               {} $ :style
                 merge ui/flex $ {} (:padding 16) (:overflow :auto) (:padding-bottom 200)
               div
-                {} $ :style
-                  merge style/title $ {}
+                {} (:class-name style/css-title)
+                  :style $ {}
                     :color $ hsl 0 0 70
                 <> "\"Tasks"
               comp-active-tasks $ :tasks content
               =< nil 64
               div
-                {} $ :style
-                  merge style/title $ {}
+                {} (:class-name style/css-title)
+                  :style $ {}
                     :color $ hsl 0 0 80
                 <> "\"Archived"
               let
@@ -172,57 +176,56 @@
                     .map last
                   tasks-by-year $ -> tasks
                     .group-by $ fn (task)
-                      .year $ get-done-time task
+                      .!year $ get-done-time task
                     .to-list
                     .sort by-larger
                     .map $ fn (pair)
                       let[] (k tasks) pair $ [] k
                         -> tasks
                           .group-by $ fn (task)
-                            .week $ get-done-time task
+                            .!week $ get-done-time task
                           .to-list
                           .sort by-larger
                           .map $ fn (pair)
                             let[] (k tasks) pair $ [] k
                               -> tasks
                                 .group-by $ fn (task)
-                                  .day $ get-done-time task
+                                  .!day $ get-done-time task
                                 .to-list
                                 .sort by-larger
                 list->
-                  {} $ :style ui/column
+                  {} $ :class-name css/column
                   -> tasks-by-year $ map
                     fn (pair)
                       let[] (year tasks-by-week) pair $ [] year
                         div
-                          {} $ :style ui/column
+                          {} $ :class-name css/column
                           comp-year year
                           =< 8 nil
                           list->
-                            {} $ :style ui/column
+                            {} $ :class-name css/column
                             -> tasks-by-week $ map
                               fn (pair)
                                 let[] (week tasks-by-day) pair $ [] week
                                   div
-                                    {} $ :style
-                                      merge ui/column $ {} (:padding-top 16)
+                                    {} (:class-name css/column)
+                                      :style $ {} (:padding-top 16)
                                     comp-week week $ -> tasks-by-day
                                       or $ []
                                       .map last
                                       .map count
                                       .reduce 0 &+
                                     list->
-                                      {} $ :style
-                                        merge ui/row $ {} (:flex-wrap :wrap) (:border-top "\"1px solid #ddd") (:padding-top 8) (:padding-left 16)
+                                      {} $ :class-name css-day-list
                                       -> tasks-by-day
                                         or $ []
                                         map $ fn (pair)
                                           let[] (day tasks) pair $ [] day
                                             div
-                                              {} $ :style
-                                                merge ui/column $ {} (:flex-shrink 0) (:margin-right 32)
+                                              {} (:class-name css/column)
+                                                :style $ {} (:flex-shrink 0) (:margin-right 32)
                                               comp-day day
-                                                .format
+                                                .!format
                                                   get-done-time $ first tasks
                                                   , "\"MM-DD"
                                                 count tasks
@@ -239,14 +242,31 @@
         |comp-week $ quote
           defcomp comp-week (week amount)
             div
-              {} $ :style
-                merge style/title $ {} (:font-size 16)
+              {} $ :class-name css-week
               <> $ str week "\"th week (" amount "\")"
         |comp-year $ quote
           defcomp comp-year (year)
-            <> year $ merge style/title
-              {} $ :border-bottom
-                str "\"1px solid " $ hsl 0 0 94
+            <> year $ str-spaced style/css-title css-year
+        |css-day $ quote
+          defstyle css-day $ {}
+            "\"$0" $ {} (:font-weight 100) (:font-family ui/font-fancy) (:font-size 20) (:font-weight 300)
+        |css-day-list $ quote
+          defstyle css-day-list $ {}
+            "\"$0" $ merge ui/row
+              {} (:flex-wrap :wrap) (:border-top "\"1px solid #ddd") (:padding-top 8) (:padding-left 16)
+        |css-time $ quote
+          defstyle css-time $ {}
+            "\"$0" $ {} (:font-size 13) (:font-family ui/font-fancy)
+              :color $ hsl 0 0 70
+              :min-width 40
+              :display :inline-block
+        |css-week $ quote
+          defstyle css-week $ {}
+            "\"$0" $ {} (:font-weight 100) (:font-family ui/font-fancy) (:font-size 16)
+        |css-year $ quote
+          defstyle css-year $ {}
+            "\"$0" $ {}
+              :border-bottom $ str "\"1px solid " (hsl 0 0 94)
         |get-done-time $ quote
           defn get-done-time (task)
             if
@@ -255,21 +275,21 @@
               dayjs "\"2021-01-01"
       :ns $ quote
         ns app.comp.viewer $ :require
-          [] respo-ui.core :refer $ [] hsl
-          [] respo-ui.core :as ui
-          [] respo.core :refer $ [] defcomp >> list-> <> div button textarea span
-          [] verbosely.core :refer $ [] verbosely!
-          [] respo.comp.space :refer $ [] =<
-          [] respo-md.comp.md :refer $ [] comp-md
-          [] app.schema :refer $ [] dev?
-          [] respo-ui.comp.icon :refer $ [] comp-icon
-          [] cljs.reader :refer $ [] read-string
-          [] "\"dayjs" :default dayjs
-          [] app.style :as style
+          respo-ui.core :refer $ hsl
+          respo-ui.core :as ui
+          respo.core :refer $ defcomp >> list-> <> div button textarea span
+          respo.comp.space :refer $ =<
+          respo-md.comp.md :refer $ comp-md
+          app.schema :refer $ dev?
+          respo-ui.comp.icon :refer $ comp-icon
+          "\"dayjs" :default dayjs
+          app.style :as style
+          respo.css :refer $ defstyle
+          respo-ui.css :as css
     |app.config $ {}
       :defs $ {}
         |dev? $ quote
-          def dev? $ = "\"dev" (get-env "\"mode")
+          def dev? $ = "\"dev" (get-env "\"mode" "\"release")
       :ns $ quote (ns app.config)
     |app.main $ {}
       :defs $ {}
@@ -314,16 +334,15 @@
           def ssr? $ some? (js/document.querySelector |meta.respo-ssr)
       :ns $ quote
         ns app.main $ :require
-          [] respo.core :refer $ [] render! clear-cache! realize-ssr!
-          [] app.comp.container :refer $ [] comp-container
-          [] app.updater :refer $ [] updater
-          [] app.schema :as schema
-          [] reel.util :refer $ [] listen-devtools!
-          [] reel.core :refer $ [] reel-updater refresh-reel
-          [] reel.schema :as reel-schema
-          [] cljs.reader :refer $ [] read-string
-          [] "\"dayjs" :default dayjs
-          [] "\"dayjs/plugin/weekOfYear" :default week-of-year
+          respo.core :refer $ render! clear-cache! realize-ssr!
+          app.comp.container :refer $ comp-container
+          app.updater :refer $ updater
+          reel.util :refer $ listen-devtools!
+          reel.core :refer $ reel-updater refresh-reel
+          reel.schema :as reel-schema
+          app.schema :as schema
+          "\"dayjs" :default dayjs
+          "\"dayjs/plugin/weekOfYear" :default week-of-year
           "\"./calcit.build-errors" :default build-errors
           "\"bottom-tip" :default hud!
           app.config :as config
@@ -331,8 +350,6 @@
       :defs $ {}
         |config $ quote
           def config $ {} (:storage |pudica-schedule-viewer)
-        |dev? $ quote
-          def dev? $ = "\"env" (get-env "\"mode" "\"release")
         |store $ quote
           def store $ {}
             :states $ {}
@@ -341,10 +358,12 @@
       :ns $ quote (ns app.schema)
     |app.style $ {}
       :defs $ {}
-        |title $ quote
-          def title $ {} (:font-weight 100) (:font-family ui/font-fancy)
+        |css-title $ quote
+          defstyle css-title $ {}
+            "\"$0" $ {} (:font-weight 100) (:font-family ui/font-fancy)
       :ns $ quote
-        ns app.style $ :require ([] respo-ui.core :as ui)
+        ns app.style $ :require (respo-ui.core :as ui)
+          respo.css :refer $ defstyle
     |app.updater $ {}
       :defs $ {}
         |updater $ quote
