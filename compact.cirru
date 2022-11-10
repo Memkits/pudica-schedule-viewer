@@ -47,7 +47,7 @@
                 textarea $ {}
                   :value $ :text state
                   :placeholder $ :text state
-                  :style css-textbox
+                  :class-name css-textbox
                   :on-input $ fn (e d!)
                     d! cursor $ assoc state :text (:value e)
                 =< nil 16
