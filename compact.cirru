@@ -116,10 +116,12 @@
           defn by-larger (x y) (&compare y x)
         |by-latest-task $ quote
           defn by-latest-task (task-a task-b)
-            if
-              = (:done-time task-b) (:done-time task-a)
-              < (:archived-time task-b) (:archived-time task-a)
-              < (:done-time task-b) (:done-time task-a)
+            let
+                ret $ if
+                  = (:done-time task-b) (:done-time task-a)
+                  < (:archived-time task-b) (:archived-time task-a)
+                  < (:done-time task-b) (:done-time task-a)
+              if ret 1 -1
         |comp-active-tasks $ quote
           defcomp comp-active-tasks (tasks)
             list->
@@ -274,7 +276,7 @@
               {} (:flex-wrap :wrap) (:border-top "\"1px solid #f8f8f8ca") (:padding-top 16) (:padding-left 16)
         |css-time $ quote
           defstyle css-time $ {}
-            "\"$0" $ {} (:font-size 10) (:font-family ui/font-code)
+            "\"$0" $ {} (:font-size 10) (:font-family ui/font-code) (:vertical-align :top)
               :color $ hsl 0 0 70
               :min-width 40
               :display :inline-block
