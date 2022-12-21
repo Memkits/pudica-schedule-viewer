@@ -2,6 +2,7 @@
 body {
   margin: 0;
   font-display: optional;
+  background-color: hsla(0, 0%, 50%, 0.06);
 }
 
 body * {
