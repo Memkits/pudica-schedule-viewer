@@ -747,8 +747,16 @@
               |v $ {} (:at 1629307635029) (:by |rJG4IHzWf) (:type :expr)
                 :data $ {}
                   |T $ {} (:at 1629307635029) (:by |rJG4IHzWf) (:text |&compare) (:type :leaf)
-                  |j $ {} (:at 1629307635029) (:by |rJG4IHzWf) (:text |y) (:type :leaf)
-                  |r $ {} (:at 1629307635029) (:by |rJG4IHzWf) (:text |x) (:type :leaf)
+                  |j $ {} (:at 1679376699631) (:by |rJG4IHzWf) (:type :expr)
+                    :data $ {}
+                      |D $ {} (:at 1679376700846) (:by |rJG4IHzWf) (:text |nth) (:type :leaf)
+                      |T $ {} (:at 1629307635029) (:by |rJG4IHzWf) (:text |y) (:type :leaf)
+                      |b $ {} (:at 1679376701488) (:by |rJG4IHzWf) (:text |0) (:type :leaf)
+                  |r $ {} (:at 1679376704373) (:by |rJG4IHzWf) (:type :expr)
+                    :data $ {}
+                      |D $ {} (:at 1679376705360) (:by |rJG4IHzWf) (:text |nth) (:type :leaf)
+                      |T $ {} (:at 1629307635029) (:by |rJG4IHzWf) (:text |x) (:type :leaf)
+                      |b $ {} (:at 1679376706681) (:by |rJG4IHzWf) (:text |0) (:type :leaf)
           |by-latest-task $ {} (:at 1533459803428) (:by |root) (:id |yU6mSMY2EJ) (:type :expr)
             :data $ {}
               |T $ {} (:at 1533459808750) (:by |root) (:id |hdBSnQg7i3) (:text |defn) (:type :leaf)

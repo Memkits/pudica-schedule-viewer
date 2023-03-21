@@ -113,7 +113,8 @@
     |app.comp.viewer $ {}
       :defs $ {}
         |by-larger $ quote
-          defn by-larger (x y) (&compare y x)
+          defn by-larger (x y)
+            &compare (nth y 0) (nth x 0)
         |by-latest-task $ quote
           defn by-latest-task (task-a task-b)
             let
