@@ -98,8 +98,9 @@
         |css-nav $ quote
           defstyle css-nav $ {}
             "\"$0" $ merge ui/row
-              {} (:padding 8) (:justify-content :flex-end)
+              {} (:position :absolute) (:bottom 0) (:right 0) (:padding 8) (:justify-content :flex-end)
                 :background-color $ hsl 0 0 96
+                :gap 4
       :ns $ quote
         ns app.comp.nav $ :require
           respo-ui.core :refer $ hsl
@@ -112,7 +113,8 @@
     |app.comp.viewer $ {}
       :defs $ {}
         |by-larger $ quote
-          defn by-larger (x y) (&compare y x)
+          defn by-larger (x y)
+            &compare (nth y 0) (nth x 0)
         |by-latest-task $ quote
           defn by-latest-task (task-a task-b)
             let
@@ -125,7 +127,10 @@
           defcomp comp-active-tasks (tasks)
             list->
               {} $ :style
-                {} $ :padding-left 16
+                {} (:padding "\"4px 8px")
+                  :background-color $ hsl 20 80 97
+                  :border $ str "\"1px solid " (hsl 20 80 84)
+                  :border-radius "\"0px"
               -> tasks
                 or $ {}
                 .to-list
@@ -224,8 +229,7 @@
                                         map $ fn (pair)
                                           let[] (day tasks) pair $ [] day
                                             div
-                                              {} (:class-name css/column)
-                                                :style $ {} (:flex-shrink 0) (:margin-right 32)
+                                              {} $ :class-name (str-spaced css/column css-day-card)
                                               comp-day day
                                                 .!format
                                                   get-done-time $ first tasks
@@ -233,14 +237,16 @@
                                                 count tasks
                                               list->
                                                 {} $ :style
-                                                  {} (:padding-left 16) (:min-width 240)
+                                                  {} (:padding-left 8) (:min-width 240)
                                                 -> tasks (sort by-latest-task)
                                                   map $ fn (task)
                                                     [] (:id task)
                                                       div ({})
                                                         comp-time $ :done-time task
                                                         =< 8 nil
-                                                        <> $ :text task
+                                                        span $ {}
+                                                          :inner-text $ :text task
+                                                          :class-name "\"task-content"
         |comp-week $ quote
           defcomp comp-week (week amount)
             div
@@ -252,13 +258,26 @@
         |css-day $ quote
           defstyle css-day $ {}
             "\"$0" $ {} (:font-weight 100) (:font-family ui/font-fancy) (:font-size 20) (:font-weight 300)
+        |css-day-card $ quote
+          defstyle css-day-card $ {}
+            "\"$0" $ {} (:padding "\"4px 8px")
+              :background-color $ hsl 0 0 100
+              :flex-shrink 0
+              :margin-right 16
+              :margin-bottom 16
+              :border $ str "\"1px solid " (hsl 0 0 92)
+              :box-shadow $ str "\"1px 1px 4px " (hsl 0 0 0 0.1)
+              :border-radius "\"6px"
+              :transition-duration "\"300ms"
+            "\"$0:hover" $ {}
+              :box-shadow $ str "\"1px 1px 6px " (hsl 0 0 0 0.2)
         |css-day-list $ quote
           defstyle css-day-list $ {}
             "\"$0" $ merge ui/row
-              {} (:flex-wrap :wrap) (:border-top "\"1px solid #ddd") (:padding-top 8) (:padding-left 16)
+              {} (:flex-wrap :wrap) (:border-top "\"1px solid #f8f8f8ca") (:padding-top 16) (:padding-left 16)
         |css-time $ quote
           defstyle css-time $ {}
-            "\"$0" $ {} (:font-size 11) (:font-family ui/font-code) (:vertical-align :top)
+            "\"$0" $ {} (:font-size 10) (:font-family ui/font-code) (:vertical-align :top)
               :color $ hsl 0 0 70
               :min-width 40
               :display :inline-block
