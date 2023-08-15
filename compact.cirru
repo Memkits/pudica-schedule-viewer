@@ -317,8 +317,8 @@
         |*reel $ quote
           defatom *reel $ -> reel-schema/reel (assoc :base schema/store) (assoc :store schema/store)
         |dispatch! $ quote
-          defn dispatch! (op op-data) (; println |Dispatch: op)
-            reset! *reel $ reel-updater updater @*reel op op-data
+          defn dispatch! (op) (js/console.log |Dispatch: op)
+            reset! *reel $ reel-updater updater @*reel op
         |main! $ quote
           defn main! ()
             if config/dev? $ load-console-formatter!
@@ -334,11 +334,14 @@
               if (some? raw)
                 do
                   ; dispatch! :hydrate-storage $ parse-cirru-edn raw
-                  dispatch! :content $ parse-cirru-edn raw
-                  dispatch! :router $ {} (:name :viewer)
+                  dispatch! $ :: :content (parse-cirru-edn raw)
+                  dispatch! $ :: :router
+                    {} $ :name :viewer
             ; js/window.addEventListener "\"message" $ fn (event) (js/console.log "\"Received message:" event)
-              dispatch! :content $ parse-cirru-edn (.-data event)
-              dispatch! :router $ {} (:name :viewer)
+              dispatch! $ :: :content
+                parse-cirru-edn $ .-data event
+              dispatch! $ :: :router
+                {} $ :name :viewer
             println "|App started."
         |mount-target $ quote
           def mount-target $ .querySelector js/document |.app
@@ -388,13 +391,14 @@
     |app.updater $ {}
       :defs $ {}
         |updater $ quote
-          defn updater (store op op-data op-id op-time)
-            case-default op
-              do (println "\"Unknown op:" op) store
-              :states $ update-states store op-data
-              :content $ assoc store :content op-data
-              :router $ assoc store :router op-data
-              :hydrate-storage op-data
+          defn updater (store op op-id op-time)
+            tag-match op
+                :states cursor s
+                update-states store cursor s
+              (:content c) (assoc store :content c)
+              (:router r) (assoc store :router r)
+              (:hydrate-storage d) d
+              _ $ do (eprintln "\"Unknown op:" op) store
       :ns $ quote
         ns app.updater $ :require
           [] respo.cursor :refer $ [] update-states
