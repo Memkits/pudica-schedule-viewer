@@ -1,7 +1,7 @@
 
 {} (:package |app)
   :configs $ {} (:init-fn |app.main/main!) (:reload-fn |app.main/reload!) (:version |0.0.1)
-    :modules $ [] |respo.calcit/ |lilac/ |memof/ |respo-ui.calcit/ |respo-markdown.calcit/ |reel.calcit/ |respo-feather.calcit/
+    :modules $ [] |respo.calcit/ |lilac/ |memof/ |respo-ui.calcit/ |respo-markdown.calcit/ |reel.calcit/ |respo-feather.calcit/ |respo-message.calcit/
   :entries $ {}
   :files $ {}
     |app.comp.container $ %{} :FileEntry
@@ -20,6 +20,10 @@
                     :viewer $ comp-viewer (:content store)
                   comp-nav $ :name router
                   comp-upload $ :content store
+                  comp-messages (:messages store)
+                    {} $ :bottom? false
+                    fn (info d!) (d! action/remove-one info)
+                  when dev? $ comp-inspect "\"Store" store ({})
                   when dev? $ comp-reel (>> states :reel) reel ({})
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
@@ -28,6 +32,7 @@
             respo-ui.core :as ui
             respo.core :refer $ defcomp >> <> div button textarea span
             respo.comp.space :refer $ =<
+            respo.comp.inspect :refer $ comp-inspect
             reel.comp.reel :refer $ comp-reel
             respo-md.comp.md :refer $ comp-md
             app.config :refer $ dev?
@@ -35,6 +40,8 @@
             app.comp.editor :refer $ comp-editor
             app.comp.viewer :refer $ comp-viewer
             respo-ui.css :as css
+            respo-message.comp.messages :refer $ comp-messages
+            respo-message.action :as action
     |app.comp.editor $ %{} :FileEntry
       :defs $ {}
         |comp-editor $ %{} :CodeEntry (:doc |)
@@ -108,7 +115,8 @@
                   :class-name $ str-spaced css-icon css-place-upload
                   :on-click $ fn (e d!) (hint-fn async)
                     js-await $ .!post axios "\"https://data-backs.chenyong.life/data/pudica-schedule-viewer" (to-js-data content)
-                    js/alert "\"sent data to remote server."
+                    d! action/create $ {} (:text "\"uploaded")
+                      :token $ nanoid
                 comp-i :upload-cloud 16 $ hsl 200 80 70
         |css-icon $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -136,7 +144,9 @@
             respo-md.comp.md :refer $ comp-md
             feather.core :refer $ comp-i
             respo.css :refer $ defstyle
+            respo-message.action :as action
             "\"axios" :default axios
+            "\"nanoid" :refer $ nanoid
     |app.comp.viewer $ %{} :FileEntry
       :defs $ {}
         |by-larger $ %{} :CodeEntry (:doc |)
@@ -435,6 +445,7 @@
               :states $ {}
               :router $ {} (:name :home)
               :content |
+              :messages $ {}
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote (ns app.schema)
     |app.style $ %{} :FileEntry
@@ -458,8 +469,14 @@
                 (:content c) (assoc store :content c)
                 (:router r) (assoc store :router r)
                 (:hydrate-storage d) d
-                _ $ do (eprintln "\"Unknown op:" op) store
+                _ $ if
+                  action/message-action? $ nth op 0
+                  update store :messages $ fn (messages)
+                    update-messages messages (nth op 0) (nth op 1) op-id op-time
+                  do (eprintln "\"Unknown op:" op) store
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns app.updater $ :require
             [] respo.cursor :refer $ [] update-states
+            respo-message.action :as action
+            respo-message.updater :refer $ update-messages

@@ -8,3 +8,4 @@
     |Respo/respo-markdown.calcit |0.4.2
     |Respo/respo-ui.calcit |0.6.2
     |Respo/respo-feather.calcit |0.4.0-a1
+    |Respo/respo-message.calcit |0.0.8
