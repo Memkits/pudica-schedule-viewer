@@ -19,6 +19,7 @@
                     :home $ comp-editor (>> states :editor) (:content store)
                     :viewer $ comp-viewer (:content store)
                   comp-nav $ :name router
+                  comp-upload $ :content store
                   when dev? $ comp-reel (>> states :reel) reel ({})
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
@@ -30,7 +31,7 @@
             reel.comp.reel :refer $ comp-reel
             respo-md.comp.md :refer $ comp-md
             app.config :refer $ dev?
-            app.comp.nav :refer $ comp-nav
+            app.comp.nav :refer $ comp-nav comp-upload
             app.comp.editor :refer $ comp-editor
             app.comp.viewer :refer $ comp-viewer
             respo-ui.css :as css
@@ -95,9 +96,20 @@
             defcomp comp-nav (current-page)
               div
                 {} $ :class-name css-nav
+                =< 8 nil
                 comp-link :home :code $ = current-page :home
                 =< 8 nil
                 comp-link :viewer :monitor $ = current-page :viewer
+        |comp-upload $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defn comp-upload (content)
+              div
+                {}
+                  :class-name $ str-spaced css-icon css-place-upload
+                  :on-click $ fn (e d!) (hint-fn async)
+                    js-await $ .!post axios "\"https://data-backs.chenyong.life/data/pudica-schedule-viewer" (to-js-data content)
+                    js/alert "\"sent data to remote server."
+                comp-i :upload-cloud 16 $ hsl 200 80 70
         |css-icon $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle css-icon $ {}
@@ -110,6 +122,10 @@
                 {} (:position :absolute) (:bottom 0) (:right 0) (:padding 8) (:justify-content :flex-end)
                   :background-color $ hsl 0 0 96
                   :gap 4
+        |css-place-upload $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle css-place-upload $ {}
+              "\"$0" $ {} (:position :absolute) (:top 8) (:right 8)
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns app.comp.nav $ :require
@@ -120,6 +136,7 @@
             respo-md.comp.md :refer $ comp-md
             feather.core :refer $ comp-i
             respo.css :refer $ defstyle
+            "\"axios" :default axios
     |app.comp.viewer $ %{} :FileEntry
       :defs $ {}
         |by-larger $ %{} :CodeEntry (:doc |)
@@ -377,7 +394,7 @@
               println "|App started."
         |mount-target $ %{} :CodeEntry (:doc |)
           :code $ quote
-            def mount-target $ .querySelector js/document |.app
+            def mount-target $ js/document.querySelector |.app
         |reload! $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn reload! () $ if (nil? build-errors)
