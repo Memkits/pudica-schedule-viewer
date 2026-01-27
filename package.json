@@ -12,12 +12,12 @@
   "license": "MIT",
   "devDependencies": {
     "bottom-tip": "^0.1.5",
-    "vite": "^5.3.5"
+    "vite": "^7.3.1"
   },
   "dependencies": {
-    "@calcit/procs": "^0.9.1",
-    "axios": "^1.7.3",
-    "dayjs": "^1.11.12",
+    "@calcit/procs": "^0.10.11",
+    "axios": "^1.13.3",
+    "dayjs": "^1.11.19",
     "feather-icons": "^4.29.2"
   }
 }
