@@ -358,7 +358,7 @@
         |css-day $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle css-day $ {}
-              "\"$0" $ {} (:font-weight 100) (:font-family ui/font-fancy) (:font-size 20) (:font-weight 300)
+              "\"$0" $ {} (:font-weight "\"300") (:font-family ui/font-fancy) (:font-size 20)
           :examples $ []
         |css-day-card $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -418,7 +418,7 @@
         |css-week $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle css-week $ {}
-              "\"$0" $ {} (:font-weight 100) (:font-family ui/font-fancy) (:font-size 16)
+              "\"$0" $ {} (:font-weight "\"100") (:font-family ui/font-fancy) (:font-size 16)
           :examples $ []
         |css-year $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -578,7 +578,7 @@
         |css-title $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle css-title $ {}
-              "\"$0" $ {} (:font-weight 100) (:font-family ui/font-fancy)
+              "\"$0" $ {} (:font-weight "\"100") (:font-family ui/font-fancy)
           :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
