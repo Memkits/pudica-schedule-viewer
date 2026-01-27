@@ -174,7 +174,7 @@
                     = (:done-time task-b) (:done-time task-a)
                     < (:archived-time task-b) (:archived-time task-a)
                     < (:done-time task-b) (:done-time task-a)
-                if ret 1 -1
+                if ret -1 1
           :examples $ []
         |comp-active-tasks $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -223,25 +223,21 @@
                       , "\"MM-DD"
                   count tasks
                 list->
-                  {} $ :style
-                    {} (:padding-left 4) (:min-width 200)
+                  {} $ :class-name css-tasks-container
                   -> tasks (sort by-latest-task)
                     map $ fn (task)
                       [] (:id task)
                         div
-                          {} $ :style
-                            {} (:display :flex) (:align-items :baseline) (:gap 8)
-                          comp-time $ :done-time task
-                          span $ {}
-                            :style $ {} (:flex 1) (:text-align :left)
-                            :inner-text $ :text task
-                            :class-name "\"task-content"
-                          span
-                            {} $ :style
-                              {} (:font-size 12)
-                                :color $ hsl 0 0 70
-                                :margin-left 8
-                            <> $ format-duration task
+                          {} $ :class-name css-task-item
+                          div
+                            {} $ :class-name css-task-text
+                            <> $ :text task
+                          div
+                            {} $ :class-name css-task-top
+                            comp-time $ :done-time task
+                            span
+                              {} $ :class-name css-task-duration
+                              <> $ format-duration task
           :examples $ []
         |comp-time $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -369,9 +365,7 @@
             defstyle css-day-card $ {}
               "\"$0" $ {} (:padding "\"4px 8px")
                 :background-color $ hsl 0 0 100
-                :flex-shrink 0
-                :margin-right 16
-                :margin-bottom 16
+                :flex-shrink "\"0"
                 :border $ str "\"1px solid " (hsl 0 0 92)
                 :box-shadow $ str "\"1px 1px 4px " (hsl 0 0 0 0.1)
                 :border-radius "\"6px"
@@ -385,7 +379,33 @@
           :code $ quote
             defstyle css-day-list $ {}
               "\"$0" $ merge ui/row
-                {} (:flex-wrap :wrap) (:border-top "\"1px solid #f8f8f8ca") (:padding-top 16) (:padding-left 16) (:align-items :stretch) (:gap 8)
+                {} (:flex-wrap :wrap) (:border-top "\"1px solid #f8f8f8ca") (:padding-top 16) (:padding-left 16) (:align-items :stretch) (:gap 16)
+          :examples $ []
+        |css-task-duration $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle css-task-duration $ {}
+              "\"$0" $ {} (:font-size 12)
+                :color $ hsl 0 0 70
+          :examples $ []
+        |css-task-item $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle css-task-item $ {}
+              "\"$0" $ {} (:display :flex) (:flex-direction :column) (:margin-bottom 4)
+          :examples $ []
+        |css-task-text $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle css-task-text $ {}
+              "\"$0" $ {} (:flex "\"1") (:text-align :left) (:line-height "\"1.4em") (:padding-top 2)
+          :examples $ []
+        |css-task-top $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle css-task-top $ {}
+              "\"$0" $ {} (:display :flex) (:align-items :center) (:gap 8) (:line-height "\"14px")
+          :examples $ []
+        |css-tasks-container $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle css-tasks-container $ {}
+              "\"$0" $ {} (:padding-left 4) (:min-width 200) (:display :flex) (:flex-direction :column) (:gap 4)
           :examples $ []
         |css-time $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -427,7 +447,7 @@
                   created $ dayjs
                     or (:created-time task) (:done-time task)
                   days $ .!diff done created "\"day"
-                str "| (" (+ days 1) "|d)"
+                str (+ days 1) "\"d"
           :examples $ []
         |get-done-time $ %{} :CodeEntry (:doc |)
           :code $ quote
