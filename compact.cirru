@@ -1,5 +1,5 @@
 
-{} (:package |app)
+{} (:about "|file is generated - never edit directly; learn cr edit/tree workflows before changing") (:package |app)
   :configs $ {} (:init-fn |app.main/main!) (:reload-fn |app.main/reload!) (:version |0.0.1)
     :modules $ [] |respo.calcit/ |lilac/ |memof/ |respo-ui.calcit/ |respo-markdown.calcit/ |reel.calcit/ |respo-feather.calcit/ |respo-message.calcit/
   :entries $ {}
@@ -25,6 +25,7 @@
                     fn (info d!) (d! action/remove-one info)
                   when dev? $ comp-inspect "\"Store" store ({})
                   when dev? $ comp-reel (>> states :reel) reel ({})
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns app.comp.container $ :require
@@ -42,6 +43,7 @@
             respo-ui.css :as css
             respo-message.comp.messages :refer $ comp-messages
             respo-message.action :as action
+        :examples $ []
     |app.comp.editor $ %{} :FileEntry
       :defs $ {}
         |comp-editor $ %{} :CodeEntry (:doc |)
@@ -70,11 +72,13 @@
                             d! :content $ parse-cirru-edn (:text state)
                             d! :router $ {} (:name :viewer)
                       <> "\"Submit"
+          :examples $ []
         |css-textbox $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle css-textbox $ {}
               "\"$0" $ merge ui/textarea
                 {} (:width "\"100%") (:height 400) (:font-family ui/font-code) (:font-size 12) (:line-height "\"1.6em") (:white-space :nowrap)
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns app.comp.editor $ :require
@@ -86,6 +90,7 @@
             respo-ui.comp.icon :refer $ comp-icon
             respo.css :refer $ defstyle
             respo-ui.css :as css
+        :examples $ []
     |app.comp.nav $ %{} :FileEntry
       :defs $ {}
         |comp-link $ %{} :CodeEntry (:doc |)
@@ -98,6 +103,7 @@
                   :on-click $ fn (e d!)
                     d! :router $ {} (:name page)
                 comp-i icon 16 $ hsl 200 80 70
+          :examples $ []
         |comp-nav $ %{} :CodeEntry (:doc |)
           :code $ quote
             defcomp comp-nav (current-page)
@@ -107,6 +113,7 @@
                 comp-link :home :code $ = current-page :home
                 =< 8 nil
                 comp-link :viewer :monitor $ = current-page :viewer
+          :examples $ []
         |comp-upload $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn comp-upload (content)
@@ -118,11 +125,13 @@
                     d! action/create $ {} (:text "\"uploaded")
                       :token $ nanoid
                 comp-i :upload-cloud 16 $ hsl 200 80 70
+          :examples $ []
         |css-icon $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle css-icon $ {}
               "\"$0" $ {} (:margin "\"8") (:font-size 16) (:cursor :pointer)
                 :color $ hsl 0 0 70
+          :examples $ []
         |css-nav $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle css-nav $ {}
@@ -130,10 +139,12 @@
                 {} (:position :absolute) (:bottom 0) (:right 0) (:padding 8) (:justify-content :flex-end)
                   :background-color $ hsl 0 0 96
                   :gap 4
+          :examples $ []
         |css-place-upload $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle css-place-upload $ {}
               "\"$0" $ {} (:position :absolute) (:top 8) (:right 8)
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns app.comp.nav $ :require
@@ -147,12 +158,14 @@
             respo-message.action :as action
             "\"axios" :default axios
             "\"nanoid" :refer $ nanoid
+        :examples $ []
     |app.comp.viewer $ %{} :FileEntry
       :defs $ {}
         |by-larger $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn by-larger (x y)
               &compare (nth y 0) (nth x 0)
+          :examples $ []
         |by-latest-task $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn by-latest-task (task-a task-b)
@@ -161,7 +174,8 @@
                     = (:done-time task-b) (:done-time task-a)
                     < (:archived-time task-b) (:archived-time task-a)
                     < (:done-time task-b) (:done-time task-a)
-                if ret 1 -1
+                if ret -1 1
+          :examples $ []
         |comp-active-tasks $ %{} :CodeEntry (:doc |)
           :code $ quote
             defcomp comp-active-tasks (tasks)
@@ -182,6 +196,7 @@
                         comp-time $ :created-time task
                         =< 8 nil
                         <> $ :text task
+          :examples $ []
         |comp-day $ %{} :CodeEntry (:doc |)
           :code $ quote
             defcomp comp-day (day month-date amount)
@@ -194,6 +209,36 @@
                 =< 8 nil
                 <> (str "\"(" amount "\")")
                   {} $ :font-size 12
+          :examples $ []
+        |comp-day-card $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defcomp comp-day-card (day tasks week-start)
+              div
+                {} $ :class-name (str-spaced css/column css-day-card)
+                comp-day day
+                  if (empty? tasks)
+                    .!format (.!add week-start day "\"day") "\"MM-DD"
+                    .!format
+                      get-done-time $ first tasks
+                      , "\"MM-DD"
+                  count tasks
+                list->
+                  {} $ :class-name css-tasks-container
+                  -> tasks (sort by-latest-task)
+                    map $ fn (task)
+                      [] (:id task)
+                        div
+                          {} $ :class-name css-task-item
+                          div
+                            {} $ :class-name css-task-text
+                            <> $ :text task
+                          div
+                            {} $ :class-name css-task-top
+                            comp-time $ :done-time task
+                            span
+                              {} $ :class-name css-task-duration
+                              <> $ format-duration task
+          :examples $ []
         |comp-time $ %{} :CodeEntry (:doc |)
           :code $ quote
             defcomp comp-time (time)
@@ -201,6 +246,7 @@
                 {} $ :class-name css-time
                 if (nil? time) (<> "\"??:??")
                   <> $ .!format (dayjs time) "\"HH:mm"
+          :examples $ []
         |comp-viewer $ %{} :CodeEntry (:doc |)
           :code $ quote
             defcomp comp-viewer (content)
@@ -260,69 +306,107 @@
                                     div
                                       {} (:class-name css/column)
                                         :style $ {} (:padding-top 16)
-                                      comp-week week $ -> tasks-by-day
-                                        or $ []
-                                        .map last
-                                        .map count
-                                        .reduce 0 &+
-                                      list->
-                                        {} $ :class-name css-day-list
-                                        -> tasks-by-day
-                                          or $ []
-                                          map $ fn (pair)
-                                            let[] (day tasks) pair $ [] day
-                                              div
-                                                {} $ :class-name (str-spaced css/column css-day-card)
-                                                comp-day day
-                                                  .!format
-                                                    get-done-time $ first tasks
-                                                    , "\"MM-DD"
-                                                  count tasks
-                                                list->
-                                                  {} $ :style
-                                                    {} (:padding-left 8) (:min-width 240)
-                                                  -> tasks (sort by-latest-task)
-                                                    map $ fn (task)
-                                                      [] (:id task)
-                                                        div ({})
-                                                          comp-time $ :done-time task
-                                                          =< 8 nil
-                                                          span $ {}
-                                                            :inner-text $ :text task
-                                                            :class-name "\"task-content"
+                                      let
+                                          filled-days $ fill-weekdays tasks-by-day
+                                          week-start $ let
+                                              first-task $ -> tasks-by-day (map last)
+                                                filter $ fn (tasks)
+                                                  not $ empty? tasks
+                                                first
+                                                first
+                                            if (some? first-task)
+                                              .!startOf (get-done-time first-task) "\"week"
+                                              dayjs
+                                        div ({})
+                                          comp-week week
+                                            -> filled-days
+                                              or $ []
+                                              .map last
+                                              .map count
+                                              .reduce 0 &+
+                                            , week-start
+                                          list->
+                                            {} $ :class-name css-day-list
+                                            -> filled-days
+                                              or $ []
+                                              , .reverse $ map
+                                                fn (pair)
+                                                  let[] (day tasks) pair $ [] day (comp-day-card day tasks week-start)
+          :examples $ []
         |comp-week $ %{} :CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-week (week amount)
+            defcomp comp-week (week amount week-start)
               div
                 {} $ :class-name css-week
                 <> $ str week "\"th week (" amount "\")"
+                =< 8 nil
+                span
+                  {} $ :style
+                    {} (:font-size 12)
+                      :color $ hsl 0 0 60
+                      :font-family ui/font-normal
+                  <> $ let
+                      start $ if (some? week-start) week-start (dayjs)
+                      end $ .!add start 4 "\"day"
+                    str (.!format start "\"YYYY-MM-DD") "| ~ " $ .!format end "\"YYYY-MM-DD"
+          :examples $ []
         |comp-year $ %{} :CodeEntry (:doc |)
           :code $ quote
             defcomp comp-year (year)
               <> year $ str-spaced style/css-title css-year
+          :examples $ []
         |css-day $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle css-day $ {}
-              "\"$0" $ {} (:font-weight 100) (:font-family ui/font-fancy) (:font-size 20) (:font-weight 300)
+              "\"$0" $ {} (:font-weight "\"300") (:font-family ui/font-fancy) (:font-size 20)
+          :examples $ []
         |css-day-card $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle css-day-card $ {}
               "\"$0" $ {} (:padding "\"4px 8px")
                 :background-color $ hsl 0 0 100
-                :flex-shrink 0
-                :margin-right 16
-                :margin-bottom 16
+                :flex-shrink "\"0"
                 :border $ str "\"1px solid " (hsl 0 0 92)
                 :box-shadow $ str "\"1px 1px 4px " (hsl 0 0 0 0.1)
                 :border-radius "\"6px"
                 :transition-duration "\"300ms"
+                :width 320
+                :min-height 72
               "\"$0:hover" $ {}
                 :box-shadow $ str "\"1px 1px 6px " (hsl 0 0 0 0.2)
+          :examples $ []
         |css-day-list $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle css-day-list $ {}
               "\"$0" $ merge ui/row
-                {} (:flex-wrap :wrap) (:border-top "\"1px solid #f8f8f8ca") (:padding-top 16) (:padding-left 16)
+                {} (:flex-wrap :wrap) (:border-top "\"1px solid #f8f8f8ca") (:padding-top 16) (:padding-left 16) (:align-items :stretch) (:gap 16)
+          :examples $ []
+        |css-task-duration $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle css-task-duration $ {}
+              "\"$0" $ {} (:font-size 12)
+                :color $ hsl 0 0 70
+          :examples $ []
+        |css-task-item $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle css-task-item $ {}
+              "\"$0" $ {} (:display :flex) (:flex-direction :column) (:margin-bottom 4)
+          :examples $ []
+        |css-task-text $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle css-task-text $ {}
+              "\"$0" $ {} (:flex "\"1") (:text-align :left) (:line-height "\"1.4em") (:padding-top 2)
+          :examples $ []
+        |css-task-top $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle css-task-top $ {}
+              "\"$0" $ {} (:display :flex) (:align-items :center) (:gap 8) (:line-height "\"14px")
+          :examples $ []
+        |css-tasks-container $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle css-tasks-container $ {}
+              "\"$0" $ {} (:padding-left 4) (:min-width 200) (:display :flex) (:flex-direction :column) (:gap 4)
+          :examples $ []
         |css-time $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle css-time $ {}
@@ -330,15 +414,41 @@
                 :color $ hsl 0 0 70
                 :min-width 40
                 :display :inline-block
+          :examples $ []
         |css-week $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle css-week $ {}
-              "\"$0" $ {} (:font-weight 100) (:font-family ui/font-fancy) (:font-size 16)
+              "\"$0" $ {} (:font-weight "\"100") (:font-family ui/font-fancy) (:font-size 16)
+          :examples $ []
         |css-year $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle css-year $ {}
               "\"$0" $ {}
                 :border-bottom $ str "\"1px solid " (hsl 0 0 94)
+          :examples $ []
+        |fill-weekdays $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defn fill-weekdays (tasks-by-day)
+              let
+                  day-map $ pairs-map tasks-by-day
+                  all-days $ -> (range 1 6)
+                    concat $ -> (keys day-map) (.to-list)
+                    distinct
+                    .sort-by $ fn (x) x
+                -> all-days $ map
+                  fn (d)
+                    [] d $ or (get day-map d) ([])
+          :examples $ []
+        |format-duration $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defn format-duration (task)
+              let
+                  done $ get-done-time task
+                  created $ dayjs
+                    or (:created-time task) (:done-time task)
+                  days $ .!diff done created "\"day"
+                str (+ days 1) "\"d"
+          :examples $ []
         |get-done-time $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn get-done-time (task)
@@ -346,6 +456,7 @@
                 some? $ :done-time task
                 dayjs $ :done-time task
                 dayjs "\"2021-01-01"
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns app.comp.viewer $ :require
@@ -360,23 +471,28 @@
             app.style :as style
             respo.css :refer $ defstyle
             respo-ui.css :as css
+        :examples $ []
     |app.config $ %{} :FileEntry
       :defs $ {}
         |dev? $ %{} :CodeEntry (:doc |)
           :code $ quote
             def dev? $ = "\"dev" (get-env "\"mode" "\"release")
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote (ns app.config)
+        :examples $ []
     |app.main $ %{} :FileEntry
       :defs $ {}
         |*reel $ %{} :CodeEntry (:doc |)
           :code $ quote
             defatom *reel $ -> reel-schema/reel (assoc :base schema/store) (assoc :store schema/store)
+          :examples $ []
         |dispatch! $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn dispatch! (op)
               when config/dev? $ js/console.log |Dispatch: op
               reset! *reel $ reel-updater updater @*reel op
+          :examples $ []
         |main! $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn main! ()
@@ -402,9 +518,11 @@
                 dispatch! $ :: :router
                   {} $ :name :viewer
               println "|App started."
+          :examples $ []
         |mount-target $ %{} :CodeEntry (:doc |)
           :code $ quote
             def mount-target $ js/document.querySelector |.app
+          :examples $ []
         |reload! $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn reload! () $ if (nil? build-errors)
@@ -413,12 +531,15 @@
                 reset! *reel $ refresh-reel @*reel schema/store updater
                 hud! "\"ok~" "\"Ok"
               hud! "\"error" build-errors
+          :examples $ []
         |render-app! $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn render-app! () $ render! mount-target (comp-container @*reel) dispatch!
+          :examples $ []
         |ssr? $ %{} :CodeEntry (:doc |)
           :code $ quote
             def ssr? $ some? (js/document.querySelector |meta.respo-ssr)
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns app.main $ :require
@@ -434,11 +555,13 @@
             "\"./calcit.build-errors" :default build-errors
             "\"bottom-tip" :default hud!
             app.config :as config
+        :examples $ []
     |app.schema $ %{} :FileEntry
       :defs $ {}
         |config $ %{} :CodeEntry (:doc |)
           :code $ quote
             def config $ {} (:storage |pudica-schedule-viewer)
+          :examples $ []
         |store $ %{} :CodeEntry (:doc |)
           :code $ quote
             def store $ {}
@@ -446,18 +569,22 @@
               :router $ {} (:name :home)
               :content |
               :messages $ {}
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote (ns app.schema)
+        :examples $ []
     |app.style $ %{} :FileEntry
       :defs $ {}
         |css-title $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle css-title $ {}
-              "\"$0" $ {} (:font-weight 100) (:font-family ui/font-fancy)
+              "\"$0" $ {} (:font-weight "\"100") (:font-family ui/font-fancy)
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns app.style $ :require (respo-ui.core :as ui)
             respo.css :refer $ defstyle
+        :examples $ []
     |app.updater $ %{} :FileEntry
       :defs $ {}
         |updater $ %{} :CodeEntry (:doc |)
@@ -474,9 +601,11 @@
                   update store :messages $ fn (messages)
                     update-messages messages (nth op 0) (nth op 1) op-id op-time
                   do (eprintln "\"Unknown op:" op) store
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns app.updater $ :require
             [] respo.cursor :refer $ [] update-states
             respo-message.action :as action
             respo-message.updater :refer $ update-messages
+        :examples $ []

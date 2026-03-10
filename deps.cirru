@@ -1,11 +1,10 @@
 
-{}
-  :dependencies $ {}
-    |calcit-lang/lilac |0.5.0
-    |calcit-lang/memof |0.0.16
-    |Respo/respo.calcit |0.16.10
-    |Respo/reel.calcit |0.6.3
-    |Respo/respo-markdown.calcit |0.4.2
-    |Respo/respo-ui.calcit |0.6.2
+{} (:calcit-version |0.10.11)
+  :dependencies $ {} (|Respo/reel.calcit |0.6.3)
     |Respo/respo-feather.calcit |0.4.0-a1
-    |Respo/respo-message.calcit |0.0.8
+    |Respo/respo-markdown.calcit |0.4.11
+    |Respo/respo-message.calcit |0.0.9
+    |Respo/respo-ui.calcit |0.6.3
+    |Respo/respo.calcit |0.16.26
+    |calcit-lang/lilac |0.5.0
+    |calcit-lang/memof |0.0.17
