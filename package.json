@@ -1,9 +1,9 @@
 {
+  "packageManager": "yarn@4.12.0",
   "name": "pudica-schedule-viewer",
   "version": "0.1.0",
   "description": "Data viewer for Pudica Schedule",
   "main": "index.js",
-  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git@github.com:Memkits/pudica-schedule-viewer.git"
@@ -12,10 +12,10 @@
   "license": "MIT",
   "devDependencies": {
     "bottom-tip": "^0.1.5",
-    "vite": "^7.3.1"
+    "vite": "^8.1.0"
   },
   "dependencies": {
-    "@calcit/procs": "^0.10.11",
+    "@calcit/procs": "^0.12.47",
     "axios": "^1.13.3",
     "dayjs": "^1.11.19",
     "feather-icons": "^4.29.2"
