@@ -474,7 +474,7 @@
       :defs $ {}
         |dev? $ %{} :CodeEntry (:doc |) (:schema :dynamic)
           :code $ quote
-            def dev? $ = |dev (get-env |mode |release)
+            def dev? $ let ((mode $ option:unwrap-or (get-env |mode) |release)) (= mode |dev)
           :examples $ []
       :ns $ %{} :NsEntry (:doc |)
         :code $ quote (ns app.config)
