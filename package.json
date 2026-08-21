@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@calcit/procs": "^0.13.27",
-    "axios": "^1.13.3",
+    "axios": "^1.18.0",
     "dayjs": "^1.11.19",
     "feather-icons": "^4.29.2"
   }
