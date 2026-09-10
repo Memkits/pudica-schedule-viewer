@@ -10,8 +10,10 @@ Site http://r.tiye.me/Memkits/pudica-schedule-viewer/
 
 Workflow https://github.com/calcit-lang/respo-calcit-workflow
 
-The project currently targets Calcit `0.14.7` in compatibility mode while its
-remaining dynamic boundaries are migrated incrementally:
+The project targets Calcit `0.14.7` with strict type checks. Legacy Pudica
+storage maps are validated once and converted to typed schedule/task structs;
+the remaining `Dynamic` positions are limited to storage, Respo state, and
+host boundaries:
 
 ```bash
 yarn check
