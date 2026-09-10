@@ -12,9 +12,10 @@
   "license": "MIT",
   "scripts": {
     "check": "calcit calcit.cirru --compat-types --check-only",
-    "compile": "calcit calcit.cirru --compat-types js",
+    "compile": "calcit calcit.cirru --compat-types js && node scripts/patch-respo-canvas.mjs",
     "dev": "yarn compile && vite",
-    "test:storage": "yarn compile && node tests/storage-read.mjs"
+    "test:storage": "yarn compile && node tests/storage-read.mjs",
+    "test:canvas": "yarn compile && node tests/canvas-context.mjs"
   },
   "devDependencies": {
     "bottom-tip": "^0.1.5",

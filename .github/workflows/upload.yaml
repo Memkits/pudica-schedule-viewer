@@ -48,6 +48,7 @@ jobs:
           yarn install --immutable
           yarn check
           yarn test:storage
+          yarn test:canvas
           yarn vite build --base=./
 
       - name: Deploy to server
