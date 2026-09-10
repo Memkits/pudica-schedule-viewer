@@ -1,34 +1,33 @@
 
-{} (:about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `cr query` to inspect and `cr edit`/`cr tree` to modify. Run `cr docs agents --full` first. Manual edits must follow format and schema conventions, then run `cr edit format`.") (:package |app)
+{} (:about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `calcit query` to inspect and `calcit edit`/`calcit tree` to modify. Run `calcit docs agents --full` first. Manual edits must follow format and schema conventions, then run `calcit edit format`.") (:package |app)
   :entries $ {}
     :default $ {} (:description |) (:init-fn 'app.main/main!) (:mode :native) (:reload-fn 'app.main/reload!)
       :feature-policy $ {}
       :modules $ [] |respo.calcit/ |respo-ui.calcit/ |respo-markdown.calcit/ |reel.calcit/ |respo-feather.calcit/ |respo-message.calcit/ |js-ffi/
       :type-slots $ {}
   :files $ {}
-    |app.comp.container $ %{} 'FileEntry
+    'app.comp.container $ %{} 'FileEntry
       :defs $ {}
-        |comp-container $ %{} 'CodeEntry (:doc |)
+        'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-container (reel)
+            defcomp comp-container (store-value)
               let
-                  store $ &map:get reel :store
-                  states $ &map:get store :states
-                  router $ &map:get store :router
+                  store $ assert-type store-value (:: 'Map 'Tag 'Dynamic)
+                  states $ assert-type (&map:get store :states) (:: 'Map 'Tag 'Dynamic)
+                  router $ assert-type (&map:get store :router) (:: 'Map 'Tag 'Tag)
+                  route-name $ assert-type (&map:get router :name) 'Tag
                 div
                   {} $ :class-name (str-spaced css/global css/fullscreen css/column)
-                  case-default (&map:get router :name) (<> router)
-                    :home $ comp-editor (>> states :editor) (&map:get store :content)
+                  case-default route-name (<> |Unknown)
+                    :home $ comp-editor (>> states :editor)
                     :viewer $ comp-viewer (&map:get store :content)
-                  comp-nav $ &map:get router :name
+                  comp-nav route-name
                   comp-upload $ &map:get store :content
-                  comp-messages (&map:get store :messages)
-                    {} $ :bottom? false
-                    fn (info d!) (d! action/remove-one info)
                   when dev? $ comp-inspect |Store store ({})
-                  when dev? $ comp-reel (>> states :reel) reel ({})
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Component)
+              :args $ [] (:: 'Map 'Tag 'Dynamic)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns app.comp.container $ :require
@@ -37,24 +36,23 @@
             respo.core :refer $ defcomp >> <> div button textarea span
             respo.comp.space :refer $ =<
             respo.comp.inspect :refer $ comp-inspect
-            reel.comp.reel :refer $ comp-reel
             respo-md.comp.md :refer $ comp-md
             app.config :refer $ dev?
             app.comp.nav :refer $ comp-nav comp-upload
             app.comp.editor :refer $ comp-editor
             app.comp.viewer :refer $ comp-viewer
             respo-ui.css :as css
-            respo-message.comp.messages :refer $ comp-messages
-            respo-message.action :as action
-    |app.comp.editor $ %{} 'FileEntry
+    'app.comp.editor $ %{} 'FileEntry
       :defs $ {}
-        |comp-editor $ %{} 'CodeEntry (:doc |)
+        'comp-editor $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-editor (states content)
+            defcomp comp-editor (states)
               let
                   cursor $ &map:get states :cursor
-                  state $ or (&map:get states :data)
-                    {} $ :text |
+                  state $ assert-type
+                    or (&map:get states :data)
+                      {} $ :text |
+                    :: 'Map 'Tag 'String
                 div
                   {}
                     :class-name $ str-spaced css/flex css/flex
@@ -64,26 +62,40 @@
                     :placeholder $ &map:get state :text
                     :class-name css-textbox
                     :on-input $ fn (e d!)
-                      d! cursor $ assoc state :text
-                        assert-type (&map:get e :value) 'String
-                  =< nil 16
+                      d! $ :: :states cursor
+                        assoc state :text $ assert-type (&map:get e :value) 'String
+                  =< 0 16
                   div ({})
                     button
                       {} (:class-name css/button)
                         :on-click $ fn (e d!)
                           do
-                            d! :content $ parse-cirru-edn (&map:get state :text)
-                            d! :router $ {} (:name :viewer)
+                            d! $ :: :content
+                              parse-cirru-edn $ &map:get state :text
+                            d! $ :: :router
+                              {} $ :name :viewer
                       <> |Submit
           :examples $ []
-          :schema $ :: 'Dynamic
-        |css-textbox $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Component)
+              :args $ [] (:: 'Map 'Tag 'Dynamic)
+        'css-textbox $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-textbox $ {}
-              |$0 $ merge ui/textarea
-                {} (:width |100%) (:height 400) (:font-family ui/font-code) (:font-size 12) (:line-height |1.6em) (:white-space :nowrap)
+              |$0 $ {} (:outline :none)
+                :border $ str "|1px solid " (hsl 0 0 80)
+                :font-size 12
+                :font-family ui/font-code
+                :border-radius |4px
+                :padding 8
+                :min-width 240
+                :vertical-align :top
+                :width |100%
+                :height 400
+                :line-height |1.6em
+                :white-space :nowrap
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'String
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns app.comp.editor $ :require
@@ -95,9 +107,18 @@
             respo-ui.comp.icon :refer $ comp-icon
             respo.css :refer $ defstyle
             respo-ui.css :as css
-    |app.comp.nav $ %{} 'FileEntry
+    'app.comp.nav $ %{} 'FileEntry
       :defs $ {}
-        |comp-link $ %{} 'CodeEntry (:doc |)
+        'begin-upload $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defn begin-upload (content)
+              unsafe-coerce (uploadSchedule content) 'JsObject
+          :examples $ []
+          :schema $ :: 'Fn
+            {} (:return 'JsObject)
+              :args $ [] 'Dynamic
+              :features $ #{} :js-ffi
+        'comp-link $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-link (page icon active?)
               div
@@ -105,57 +126,73 @@
                   :style $ if active?
                     {} $ :color :black
                   :on-click $ fn (e d!)
-                    d! :router $ {} (:name page)
-                comp-i icon 16 $ hsl 200 80 70
+                    d! $ :: :router
+                      {} $ :name page
+                <> $ if (= icon :code) |Edit |View
           :examples $ []
-          :schema $ :: 'Dynamic
-        |comp-nav $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Component)
+              :args $ [] 'Tag 'Tag 'Bool
+        'comp-nav $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-nav (current-page)
               div
                 {} $ :class-name css-nav
-                =< 8 nil
+                =< 8 0
                 comp-link :home :code $ = current-page :home
-                =< 8 nil
+                =< 8 0
                 comp-link :viewer :monitor $ = current-page :viewer
           :examples $ []
-          :schema $ :: 'Dynamic
-        |comp-upload $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Component)
+              :args $ [] 'Tag
+        'comp-upload $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defn comp-upload (content)
+            defcomp comp-upload (content)
               div
                 {}
                   :class-name $ str-spaced css-icon css-place-upload
                   :on-click $ fn (e d!)
                     hint-fn $ {} (:async true)
-                    js-await $ .!post axios |https://data-backs.chenyong.life/data/pudica-schedule-viewer (to-js-data content)
-                    d! action/create $ {} (:text |uploaded)
-                      :token $ nanoid
-                comp-i :upload-cloud 16 $ hsl 200 80 70
+                    js-await $ upload-schedule! content
+                <> |Upload
           :examples $ []
-          :schema $ :: 'Dynamic
-        |css-icon $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Component)
+              :args $ [] 'T
+              :features $ #{} :js-ffi
+              :generics $ [] 'T
+        'css-icon $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-icon $ {}
               |$0 $ {} (:margin |8) (:font-size 16) (:cursor :pointer)
                 :color $ hsl 0 0 70
           :examples $ []
-          :schema $ :: 'Dynamic
-        |css-nav $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'String
+        'css-nav $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-nav $ {}
-              |$0 $ merge ui/row
-                {} (:position :absolute) (:bottom 0) (:right 0) (:padding 8) (:justify-content :flex-end)
-                  :background-color $ hsl 0 0 96
-                  :gap 4
+              |$0 $ {} (:display |flex) (:align-items |stretch) (:flex-direction |row) (:position :absolute) (:bottom 0) (:right 0) (:padding 8) (:justify-content :flex-end)
+                :background-color $ hsl 0 0 96
+                :gap 4
           :examples $ []
-          :schema $ :: 'Dynamic
-        |css-place-upload $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'String
+        'css-place-upload $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-place-upload $ {}
               |$0 $ {} (:position :absolute) (:top 8) (:right 8)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'String
+        'upload-schedule! $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defn upload-schedule! (content)
+              hint-fn $ {} (:async true)
+              js-await $ begin-upload content
+          :examples $ []
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ [] 'Dynamic
+              :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns app.comp.nav $ :require
@@ -164,33 +201,76 @@
             respo.core :refer $ defcomp >> <> div button textarea span
             respo.comp.space :refer $ =<
             respo-md.comp.md :refer $ comp-md
-            feather.core :refer $ comp-i
             respo.css :refer $ defstyle
-            respo-message.action :as action
-            |axios :default axios
-            |nanoid :refer $ nanoid
-    |app.comp.viewer $ %{} 'FileEntry
+            |../upload.mjs :refer $ uploadSchedule
+    'app.comp.viewer $ %{} 'FileEntry
       :defs $ {}
-        |by-larger $ %{} 'CodeEntry (:doc |)
+        'DayjsHost $ %{} 'CodeEntry (:doc "|Typed Dayjs methods used by schedule rendering.")
           :code $ quote
-            defn by-larger (x y)
-              &compare
-                option:unwrap-or (nth y 0) 0
-                option:unwrap-or (nth x 0) 0
+            deftrait DayjsHost
+              .format $ :: 'Fn
+                {}
+                  :args $ [] 'app.comp.viewer/DayjsHost 'String
+                  :return 'String
+              .year $ :: 'Fn
+                {}
+                  :args $ [] 'app.comp.viewer/DayjsHost
+                  :return 'Number
+              .week $ :: 'Fn
+                {}
+                  :args $ [] 'app.comp.viewer/DayjsHost
+                  :return 'Number
+              .day $ :: 'Fn
+                {}
+                  :args $ [] 'app.comp.viewer/DayjsHost
+                  :return 'Number
+              .startOf $ :: 'Fn
+                {}
+                  :args $ [] 'app.comp.viewer/DayjsHost 'String
+                  :return 'app.comp.viewer/DayjsHost
+              .add $ :: 'Fn
+                {}
+                  :args $ [] 'app.comp.viewer/DayjsHost 'Number 'String
+                  :return 'app.comp.viewer/DayjsHost
+              .diff $ :: 'Fn
+                {}
+                  :args $ [] 'app.comp.viewer/DayjsHost 'app.comp.viewer/DayjsHost 'String
+                  :return 'Number
           :examples $ []
-          :schema $ :: 'Dynamic
-        |by-latest-task $ %{} 'CodeEntry (:doc |)
+          :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
+            :names $ {} (:add |add) (:day |day) (:diff |diff) (:format |format) (:startOf |startOf) (:week |week) (:year |year)
+          :schema $ :: 'Trait
+        'add-days $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defn add-days (value amount)
+              unsafe-coerce (.!add value amount |day) 'app.comp.viewer/DayjsHost
+          :examples $ []
+          :schema $ :: 'Fn
+            {} (:return 'app.comp.viewer/DayjsHost)
+              :args $ [] 'app.comp.viewer/DayjsHost 'Number
+              :features $ #{} :js-ffi
+        'by-larger $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defn by-larger (x y) (&compare y x)
+          :examples $ []
+          :schema $ :: 'Fn
+            {} (:return 'Number)
+              :args $ [] 'Number 'Number
+        'by-latest-task $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn by-latest-task (task-a task-b)
               let
-                  ret $ if
-                    = (&map:get task-b :done-time) (&map:get task-a :done-time)
-                    < (&map:get task-b :archived-time) (&map:get task-a :archived-time)
-                    < (&map:get task-b :done-time) (&map:get task-a :done-time)
+                  done-a $ option:unwrap-or (:done-time task-a) 0
+                  done-b $ option:unwrap-or (:done-time task-b) 0
+                  archived-a $ option:unwrap-or (:archived-time task-a) 0
+                  archived-b $ option:unwrap-or (:archived-time task-b) 0
+                  ret $ if (= done-b done-a) (< archived-b archived-a) (< done-b done-a)
                 if ret -1 1
           :examples $ []
-          :schema $ :: 'Dynamic
-        |comp-active-tasks $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'Number)
+              :args $ [] 'app.schema/Task 'app.schema/Task
+        'comp-active-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-active-tasks (tasks)
               list->
@@ -199,201 +279,232 @@
                     :background-color $ hsl 20 80 97
                     :border $ str "|1px solid " (hsl 20 80 84)
                     :border-radius |0px
-                -> tasks
-                  or $ {}
-                  .to-list
-                  .sort-by $ fn (pair)
-                    option:unwrap-or (last pair) 0
-                  map $ fn (pair)
-                    let[] (k task) pair $ [] k
+                -> tasks (vals) (&set:to-list)
+                  sort $ fn (task-a task-b)
+                    hint-fn $ {}
+                      :args $ [] 'app.schema/Task 'app.schema/Task
+                      :return 'Number
+                    &compare (:created-time task-a) (:created-time task-b)
+                  map $ fn (task)
+                    hint-fn $ {}
+                      :args $ [] 'app.schema/Task
+                      :return $ :: 'List 'Dynamic
+                    [] (:id task)
                       div ({})
-                        comp-time $ &map:get task :created-time
-                        =< 8 nil
-                        <> $ &map:get task :text
+                        comp-time $ %some (:created-time task)
+                        =< 8 0
+                        <> $ :text task
           :examples $ []
-          :schema $ :: 'Dynamic
-        |comp-day $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Component)
+              :args $ [] (:: 'Map 'String 'app.schema/Task)
+        'comp-day $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-day (day month-date amount)
               div
                 {} $ :class-name css-day
                 <> $ case-default day (str |Invalid: day) (0 |Sun) (1 |Mon) (2 |Tue) (3 |Wed) (4 |Thu) (5 |Fri) (6 |Sat)
-                =< 8 nil
+                =< 8 0
                 <> month-date $ {} (:font-size 12)
                   :color $ hsl 0 0 0
-                =< 8 nil
+                =< 8 0
                 <> (str "|(" amount "|)")
                   {} $ :font-size 12
           :examples $ []
-          :schema $ :: 'Dynamic
-        |comp-day-card $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Component)
+              :args $ [] 'Number 'String 'Number
+        'comp-day-card $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-day-card (day tasks week-start)
               div
                 {} $ :class-name (str-spaced css/column css-day-card)
                 comp-day day
-                  if (empty? tasks)
-                    .!format
-                      unsafe-coerce
-                        .!add (unsafe-coerce week-start 'JsObject) day |day
-                        , 'JsObject
-                      , |MM-DD
-                    .!format
-                      unsafe-coerce
-                        get-done-time $ option:unwrap-or (first tasks) nil
-                        , 'JsObject
-                      , |MM-DD
+                  if-let
+                    task $ assert-type (first tasks) (:: 'Option 'app.schema/Task)
+                    format-dayjs (get-done-time task) |MM-DD
+                    format-dayjs (add-days week-start day) |MM-DD
                   count tasks
                 list->
                   {} $ :class-name css-tasks-container
                   -> tasks (sort by-latest-task)
                     map $ fn (task)
-                      [] (&map:get task :id)
+                      hint-fn $ {}
+                        :args $ [] 'app.schema/Task
+                        :return $ :: 'List 'Dynamic
+                      [] (:id task)
                         div
                           {} $ :class-name css-task-item
                           div
                             {} $ :class-name css-task-text
-                            <> $ &map:get task :text
+                            <> $ :text task
                           div
                             {} $ :class-name css-task-top
-                            comp-time $ &map:get task :done-time
+                            comp-time $ :done-time task
                             span
                               {} $ :class-name css-task-duration
                               <> $ format-duration task
           :examples $ []
-          :schema $ :: 'Dynamic
-        |comp-time $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Component)
+              :args $ [] 'Number (:: 'List 'app.schema/Task) 'app.comp.viewer/DayjsHost
+        'comp-time $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-time (time)
               span
                 {} $ :class-name css-time
-                if (nil? time) (<> |??:??)
-                  <> $ unsafe-coerce
-                    .!format
-                      unsafe-coerce (dayjs time) 'JsObject
-                      , |HH:mm
-                    , 'String
+                match time
+                  (:some value)
+                    <> $ format-dayjs (make-dayjs value) |HH:mm
+                  (:none) (<> |??:??)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |comp-viewer $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Component)
+              :args $ [] (:: 'Option 'Number)
+        'comp-viewer $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-viewer (content)
-              div
-                {} $ :style
-                  merge ui/flex $ {} (:padding 16) (:overflow :auto) (:padding-bottom 200)
+              let
+                  content $ schema/decode-schedule content
+                  tasks $ &set:to-list
+                    vals $ :archives content
+                  tasks-by-year $ assert-type
+                    group-by tasks $ fn (task)
+                      hint-fn $ {}
+                        :args $ [] 'app.schema/Task
+                        :return 'Number
+                      dayjs-year $ get-done-time task
+                    :: 'Map 'Number $ :: 'List 'app.schema/Task
+                  years $ sort
+                    &set:to-list $ keys tasks-by-year
+                    , by-larger
                 div
-                  {} (:class-name style/css-title)
-                    :style $ {}
-                      :color $ hsl 0 0 70
-                  <> |Tasks
-                comp-active-tasks $ &map:get content :tasks
-                =< nil 64
-                div
-                  {} (:class-name style/css-title)
-                    :style $ {}
-                      :color $ hsl 0 0 80
-                  <> |Archived
-                let
-                    tasks $ -> (&map:get content :archives)
-                      or $ {}
-                      .to-list
-                      .map last
-                    tasks-by-year $ -> tasks
-                      .group-by $ fn (task)
-                        .!year $ get-done-time task
-                      .to-list
-                      .sort by-larger
-                      .map $ fn (pair)
-                        let[] (k tasks) pair $ [] k
-                          -> tasks
-                            .group-by $ fn (task)
-                              .!week $ get-done-time task
-                            .to-list
-                            .sort by-larger
-                            .map $ fn (pair)
-                              let[] (k tasks) pair $ [] k
-                                -> tasks
-                                  .group-by $ fn (task)
-                                    .!day $ get-done-time task
-                                  .to-list
-                                  .sort by-larger
+                  {} $ :style
+                    {} (:flex 1) (:padding 16) (:overflow :auto) (:padding-bottom 200)
+                  div
+                    {} (:class-name style/css-title)
+                      :style $ {}
+                        :color $ hsl 0 0 70
+                    <> |Tasks
+                  comp-active-tasks $ :tasks content
+                  =< 0 64
+                  div
+                    {} (:class-name style/css-title)
+                      :style $ {}
+                        :color $ hsl 0 0 80
+                    <> |Archived
                   list->
                     {} $ :class-name css/column
-                    -> tasks-by-year $ map
-                      fn (pair)
-                        let[] (year tasks-by-week) pair $ [] year
-                          div
+                    map years $ fn (year)
+                      hint-fn $ {}
+                        :args $ [] 'Number
+                        :return $ :: 'List 'Dynamic
+                      let
+                          tasks-in-year $ assert-type
+                            or (&map:get tasks-by-year year) ([])
+                            :: 'List 'app.schema/Task
+                          tasks-by-week $ assert-type
+                            group-by tasks-in-year $ fn (task)
+                              hint-fn $ {}
+                                :args $ [] 'app.schema/Task
+                                :return 'Number
+                              dayjs-week $ get-done-time task
+                            :: 'Map 'Number $ :: 'List 'app.schema/Task
+                          weeks $ sort
+                            &set:to-list $ keys tasks-by-week
+                            , by-larger
+                        [] year $ div
+                          {} $ :class-name css/column
+                          comp-year year
+                          =< 8 0
+                          list->
                             {} $ :class-name css/column
-                            comp-year year
-                            =< 8 nil
-                            list->
-                              {} $ :class-name css/column
-                              -> tasks-by-week $ map
-                                fn (pair)
-                                  let[] (week tasks-by-day) pair $ [] week
-                                    div
-                                      {} (:class-name css/column)
-                                        :style $ {} (:padding-top 16)
-                                      let
-                                          filled-days $ fill-weekdays tasks-by-day
-                                          week-start $ if
-                                            nil? $ first-nonempty-task tasks-by-day
-                                            dayjs
-                                            .!startOf
-                                              get-done-time $ first-nonempty-task tasks-by-day
-                                              , |week
-                                        div ({})
-                                          comp-week week
-                                            -> filled-days
-                                              or $ []
-                                              .map last
-                                              .map count
-                                              .reduce 0 &+
-                                            , week-start
-                                          list->
-                                            {} $ :class-name css-day-list
-                                            -> filled-days
-                                              or $ []
-                                              , .reverse $ map
-                                                fn (pair)
-                                                  let[] (day tasks) pair $ [] day (comp-day-card day tasks week-start)
+                            map weeks $ fn (week)
+                              hint-fn $ {}
+                                :args $ [] 'Number
+                                :return $ :: 'List 'Dynamic
+                              let
+                                  tasks-in-week $ assert-type
+                                    or (&map:get tasks-by-week week) ([])
+                                    :: 'List 'app.schema/Task
+                                  tasks-by-day $ assert-type
+                                    group-by tasks-in-week $ fn (task)
+                                      hint-fn $ {}
+                                        :args $ [] 'app.schema/Task
+                                        :return 'Number
+                                      dayjs-day $ get-done-time task
+                                    :: 'Map 'Number $ :: 'List 'app.schema/Task
+                                  days $ -> (range 1 6)
+                                    concat $ &set:to-list (keys tasks-by-day)
+                                    distinct
+                                    sort &compare
+                                  week-start $ match (first tasks-in-week)
+                                    (:some task)
+                                      start-of-week $ get-done-time task
+                                    (:none) (current-dayjs)
+                                  amount $ -> days
+                                    map $ fn (day)
+                                      hint-fn $ {}
+                                        :args $ [] 'Number
+                                        :return 'Number
+                                      count $ assert-type
+                                        or (&map:get tasks-by-day day) ([])
+                                        :: 'List 'app.schema/Task
+                                    reduce 0 &+
+                                [] week $ div
+                                  {} (:class-name css/column)
+                                    :style $ {} (:padding-top 16)
+                                  comp-week week amount week-start
+                                  list->
+                                    {} $ :class-name css-day-list
+                                    -> days (reverse)
+                                      map $ fn (day)
+                                        hint-fn $ {}
+                                          :args $ [] 'Number
+                                          :return $ :: 'List 'Dynamic
+                                        [] day $ comp-day-card day
+                                          assert-type
+                                            or (&map:get tasks-by-day day) ([])
+                                            :: 'List 'app.schema/Task
+                                          , week-start
           :examples $ []
-          :schema $ :: 'Dynamic
-        |comp-week $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Component)
+              :args $ [] 'Dynamic
+        'comp-week $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-week (week amount week-start)
               div
                 {} $ :class-name css-week
                 <> $ str week "|th week (" amount "|)"
-                =< 8 nil
+                =< 8 0
                 span
                   {} $ :style
                     {} (:font-size 12)
                       :color $ hsl 0 0 60
                       :font-family ui/font-normal
                   <> $ let
-                      start $ if (some? week-start) week-start (dayjs)
-                      end $ unsafe-coerce
-                        .!add (unsafe-coerce start 'JsObject) 4 |day
-                        , 'JsObject
-                    str
-                      .!format (unsafe-coerce start 'JsObject) |YYYY-MM-DD
-                      , "| ~ " $ .!format (unsafe-coerce end 'JsObject) |YYYY-MM-DD
+                      end $ add-days week-start 4
+                    str (format-dayjs week-start |YYYY-MM-DD) "| ~ " $ format-dayjs end |YYYY-MM-DD
           :examples $ []
-          :schema $ :: 'Dynamic
-        |comp-year $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Component)
+              :args $ [] 'Number 'Number 'app.comp.viewer/DayjsHost
+        'comp-year $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-year (year)
-              <> year $ str-spaced style/css-title css-year
+              <> (str year) (str-spaced style/css-title css-year)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |css-day $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Component)
+              :args $ [] 'Number
+        'css-day $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-day $ {}
               |$0 $ {} (:font-weight |300) (:font-family ui/font-fancy) (:font-size 20)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |css-day-card $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'String
+        'css-day-card $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-day-card $ {}
               |$0 $ {} (:padding "|4px 8px")
@@ -408,46 +519,45 @@
               |$0:hover $ {}
                 :box-shadow $ str "|1px 1px 6px " (hsl 0 0 0 0.2)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |css-day-list $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'String
+        'css-day-list $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-day-list $ {}
-              |$0 $ merge ui/row
-                {} (:flex-wrap :wrap) (:border-top "|1px solid #f8f8f8ca") (:padding-top 16) (:padding-left 16) (:align-items :stretch) (:gap 16)
+              |$0 $ {} (:display |flex) (:align-items :stretch) (:flex-direction |row) (:flex-wrap :wrap) (:border-top "|1px solid #f8f8f8ca") (:padding-top 16) (:padding-left 16) (:gap 16)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |css-task-duration $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'String
+        'css-task-duration $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-task-duration $ {}
               |$0 $ {} (:font-size 12)
                 :color $ hsl 0 0 70
           :examples $ []
-          :schema $ :: 'Dynamic
-        |css-task-item $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'String
+        'css-task-item $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-task-item $ {}
               |$0 $ {} (:display :flex) (:flex-direction :column) (:margin-bottom 4)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |css-task-text $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'String
+        'css-task-text $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-task-text $ {}
               |$0 $ {} (:flex |1) (:text-align :left) (:line-height |1.4em) (:padding-top 2)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |css-task-top $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'String
+        'css-task-top $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-task-top $ {}
               |$0 $ {} (:display :flex) (:align-items :center) (:gap 8) (:line-height |14px)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |css-tasks-container $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'String
+        'css-tasks-container $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-tasks-container $ {}
               |$0 $ {} (:padding-left 4) (:min-width 200) (:display :flex) (:flex-direction :column) (:gap 4)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |css-time $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'String
+        'css-time $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-time $ {}
               |$0 $ {} (:font-size 10) (:font-family ui/font-code) (:vertical-align :top)
@@ -455,65 +565,113 @@
                 :min-width 40
                 :display :inline-block
           :examples $ []
-          :schema $ :: 'Dynamic
-        |css-week $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'String
+        'css-week $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-week $ {}
               |$0 $ {} (:font-weight |100) (:font-family ui/font-fancy) (:font-size 16)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |css-year $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'String
+        'css-year $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-year $ {}
               |$0 $ {}
                 :border-bottom $ str "|1px solid " (hsl 0 0 94)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |fill-weekdays $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'String
+        'current-dayjs $ %{} 'CodeEntry (:doc "|Create a typed Dayjs value for the current time.")
           :code $ quote
-            defn fill-weekdays (tasks-by-day)
-              let
-                  day-map $ pairs-map tasks-by-day
-                  all-days $ -> (range 1 6)
-                    concat $ -> (keys day-map) (.to-list)
-                    distinct
-                    .sort-by $ fn (x) x
-                -> all-days $ map
-                  fn (d)
-                    [] d $ or (get day-map d) ([])
+            defn current-dayjs () $ unsafe-coerce (dayjs) 'app.comp.viewer/DayjsHost
           :examples $ []
-          :schema $ :: 'Dynamic
-        |first-nonempty-task $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'app.comp.viewer/DayjsHost)
+              :args $ []
+              :features $ #{} :js-ffi
+        'dayjs-day $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defn first-nonempty-task (tasks-by-day)
-              let
-                  groups $ -> tasks-by-day (map last)
-                    filter $ fn (tasks)
-                      not $ empty? tasks
-                  first-group $ option:unwrap-or (first groups) []
-                option:unwrap-or (first first-group) nil
+            defn dayjs-day (value)
+              unsafe-coerce (.!day value) 'Number
           :examples $ []
-          :schema $ :: 'Dynamic
-        |format-duration $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'Number)
+              :args $ [] 'app.comp.viewer/DayjsHost
+              :features $ #{} :js-ffi
+        'dayjs-week $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defn dayjs-week (value)
+              unsafe-coerce (.!week value) 'Number
+          :examples $ []
+          :schema $ :: 'Fn
+            {} (:return 'Number)
+              :args $ [] 'app.comp.viewer/DayjsHost
+              :features $ #{} :js-ffi
+        'dayjs-year $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defn dayjs-year (value)
+              unsafe-coerce (.!year value) 'Number
+          :examples $ []
+          :schema $ :: 'Fn
+            {} (:return 'Number)
+              :args $ [] 'app.comp.viewer/DayjsHost
+              :features $ #{} :js-ffi
+        'diff-days $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defn diff-days (later earlier)
+              unsafe-coerce (.!diff later earlier |day) 'Number
+          :examples $ []
+          :schema $ :: 'Fn
+            {} (:return 'Number)
+              :args $ [] 'app.comp.viewer/DayjsHost 'app.comp.viewer/DayjsHost
+              :features $ #{} :js-ffi
+        'format-dayjs $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defn format-dayjs (value pattern)
+              unsafe-coerce (.!format value pattern) 'String
+          :examples $ []
+          :schema $ :: 'Fn
+            {} (:return 'String)
+              :args $ [] 'app.comp.viewer/DayjsHost 'String
+              :features $ #{} :js-ffi
+        'format-duration $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn format-duration (task)
               let
                   done $ get-done-time task
-                  created $ dayjs
-                    or (&map:get task :created-time) (&map:get task :done-time)
-                  days $ unsafe-coerce (.!diff done created |day) 'Number
+                  created $ make-dayjs (:created-time task)
+                  days $ diff-days done created
                 str (+ days 1) |d
           :examples $ []
-          :schema $ :: 'Dynamic
-        |get-done-time $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'String)
+              :args $ [] 'app.schema/Task
+        'get-done-time $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn get-done-time (task)
-              if
-                option:some? $ &map:get task :done-time
-                dayjs $ &map:get task :done-time
-                dayjs |2021-01-01
+              match (:done-time task)
+                (:some value) (make-dayjs value)
+                (:none) (make-dayjs |2021-01-01)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'app.comp.viewer/DayjsHost)
+              :args $ [] 'app.schema/Task
+        'make-dayjs $ %{} 'CodeEntry (:doc "|Narrow one Dayjs constructor result to the reviewed host trait.")
+          :code $ quote
+            defn make-dayjs (value)
+              unsafe-coerce (dayjs value) 'app.comp.viewer/DayjsHost
+          :examples $ []
+          :schema $ :: 'Fn
+            {} (:return 'app.comp.viewer/DayjsHost)
+              :args $ [] 'Dynamic
+              :features $ #{} :js-ffi
+        'start-of-week $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defn start-of-week (value)
+              unsafe-coerce (.!startOf value |week) 'app.comp.viewer/DayjsHost
+          :examples $ []
+          :schema $ :: 'Fn
+            {} (:return 'app.comp.viewer/DayjsHost)
+              :args $ [] 'app.comp.viewer/DayjsHost
+              :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns app.comp.viewer $ :require
@@ -522,155 +680,241 @@
             respo.core :refer $ defcomp >> list-> <> div button textarea span
             respo.comp.space :refer $ =<
             respo-md.comp.md :refer $ comp-md
-            app.schema :refer $ dev?
+            app.schema :as schema
             respo-ui.comp.icon :refer $ comp-icon
             |dayjs :default dayjs
             app.style :as style
             respo.css :refer $ defstyle
             respo-ui.css :as css
-    |app.config $ %{} 'FileEntry
+    'app.config $ %{} 'FileEntry
       :defs $ {}
-        |dev? $ %{} 'CodeEntry (:doc |)
+        'dev? $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def dev? $ let
                 mode $ option:unwrap-or (get-env |mode) |release
               = mode |dev
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Bool
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote (ns app.config)
-    |app.main $ %{} 'FileEntry
+    'app.main $ %{} 'FileEntry
       :defs $ {}
-        |*reel $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            defatom *reel $ -> reel-schema/reel (assoc :base schema/store) (assoc :store schema/store)
+        '*reel $ %{} 'CodeEntry (:doc |)
+          :code $ quote (defatom *reel schema/store)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |dispatch! $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Ref (:: 'Map 'Tag 'Dynamic)
+        'DayjsFactoryHost $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            deftrait DayjsFactoryHost $ .extend!
+              :: 'Fn $ {}
+                :args $ [] 'app.main/DayjsFactoryHost 'JsObject
+                :return 'Unit
+          :examples $ []
+          :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
+            :names $ {} (:extend! |extend)
+          :schema $ :: 'Trait
+        'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn dispatch! (op)
-              when config/dev? $ js/console.log |Dispatch: op
-              reset! *reel $ reel-updater updater @*reel op
+              when config/dev? $ println |Dispatch: op
+              reset! *reel $ updater
+                assert-type @*reel $ :: 'Map 'Tag 'Dynamic
+                , op (generate-id!) (now-ms)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |main! $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ [] 'Enum
+        'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn main! ()
               if config/dev? $ load-console-formatter!
-              .!extend dayjs week-of-year
+              let
+                  dayjs-host $ unsafe-coerce dayjs DayjsFactoryHost
+                  plugin $ unsafe-coerce week-of-year JsObject
+                dayjs-host .extend! plugin
               render-app!
               add-watch *reel :changes $ fn (r p) (render-app!)
-              listen-devtools! |a dispatch!
-              ; js/window.addEventListener |beforeunload $ fn (? e)
-                js/localStorage.setItem (:storage schema/config)
-                  format-cirru-edn $ :store @*reel
-              let
-                  raw $ js/localStorage.getItem (:storage schema/config)
-                if (js-present? raw)
+              match
+                storage-get $ or (&map:get schema/config :storage) |pudica-schedule-viewer
+                (:some raw)
                   do
-                    ; dispatch! :hydrate-storage $ parse-cirru-edn raw
-                    dispatch! $ :: :content
-                      parse-cirru-edn $ unsafe-coerce raw 'String
+                    dispatch! $ :: :content (parse-cirru-edn raw)
                     dispatch! $ :: :router
                       {} $ :name :viewer
-              ; js/window.addEventListener |message $ fn (event) (js/console.log "|Received message:" event)
-                dispatch! $ :: :content
-                  parse-cirru-edn $ .-data event
-                dispatch! $ :: :router
-                  {} $ :name :viewer
+                (:none) &unit
               println "|App started."
+              , &unit
           :examples $ []
-          :schema $ :: 'Dynamic
-        |mount-target $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ []
+              :features $ #{} :js-ffi
+        'mount-target $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            def mount-target $ js/document.querySelector |.app
+            def mount-target $ query-selector |.app
           :examples $ []
-          :schema $ :: 'Dynamic
-        |reload! $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'calcit.core/Option 'js-ffi.browser/DomElementHost
+        'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn reload! () $ if (nil? build-errors)
               do (remove-watch *reel :changes) (clear-cache!)
-                add-watch *reel :changes $ fn (reel prev) (render-app!)
-                reset! *reel $ refresh-reel @*reel schema/store updater
+                add-watch *reel :changes $ fn (store prev) (render-app!)
+                render-app!
                 hud! |ok~ |Ok
               hud! |error build-errors
           :examples $ []
-          :schema $ :: 'Dynamic
-        |render-app! $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ []
+              :features $ #{} :js-ffi
+        'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defn render-app! () $ render! mount-target (comp-container @*reel) dispatch!
+            defn render-app! () $ if-let (target mount-target)
+              render! target
+                comp-container $ assert-type @*reel (:: 'Map 'Tag 'Dynamic)
+                , dispatch!
+              do (eprintln |Mount-target-not-found.) &unit
           :examples $ []
-          :schema $ :: 'Dynamic
-        |ssr? $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ []
+        'ssr? $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def ssr? $ some? (js/document.querySelector |meta.respo-ssr)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Bool
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns app.main $ :require
             respo.core :refer $ render! clear-cache! realize-ssr!
             app.comp.container :refer $ comp-container
             app.updater :refer $ updater
-            reel.util :refer $ listen-devtools!
-            reel.core :refer $ reel-updater refresh-reel
-            reel.schema :as reel-schema
             app.schema :as schema
             |dayjs :default dayjs
             |dayjs/plugin/weekOfYear :default week-of-year
             |./calcit.build-errors :default build-errors
             |bottom-tip :default hud!
             app.config :as config
-    |app.schema $ %{} 'FileEntry
+            js-ffi.browser :refer $ storage-get query-selector
+            js-ffi.shared :refer $ now-ms
+    'app.schema $ %{} 'FileEntry
       :defs $ {}
-        |config $ %{} 'CodeEntry (:doc |)
+        'Schedule $ %{} 'CodeEntry (:doc "|Decoded active and archived task collections.")
+          :code $ quote
+            defstruct Schedule
+              :tasks $ :: 'Map 'String 'app.schema/Task
+              :archives $ :: 'Map 'String 'app.schema/Task
+          :examples $ []
+          :schema $ :: 'StructDef
+        'Task $ %{} 'CodeEntry (:doc "|Task fields used by the schedule viewer.")
+          :code $ quote
+            defstruct Task (:id 'String) (:text 'String) (:created-time 'Number)
+              :done-time $ :: 'Option 'Number
+              :archived-time $ :: 'Option 'Number
+          :examples $ []
+          :schema $ :: 'StructDef
+        'config $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def config $ {} (:storage |pudica-schedule-viewer)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |store $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Map 'Tag 'String
+        'decode-schedule $ %{} 'CodeEntry (:doc "|Validate legacy parsed storage and construct a typed Schedule.")
+          :code $ quote
+            defn decode-schedule (raw)
+              let
+                  content $ assert-type raw (:: 'Map 'Tag 'Dynamic)
+                  tasks $ assert-type (&map:get content :tasks)
+                    :: 'Map 'String $ :: 'Map 'Tag 'Dynamic
+                  archives $ assert-type (&map:get content :archives)
+                    :: 'Map 'String $ :: 'Map 'Tag 'Dynamic
+                %{} Schedule
+                  :tasks $ decode-task-map tasks
+                  :archives $ decode-task-map archives
+          :examples $ []
+          :schema $ :: 'Fn
+            {} (:return 'app.schema/Schedule)
+              :args $ [] 'Dynamic
+        'decode-task $ %{} 'CodeEntry (:doc "|Validate one legacy task map and construct a typed Task.")
+          :code $ quote
+            defn decode-task (raw)
+              %{} Task
+                :id $ assert-type (&map:get raw :id) 'String
+                :text $ assert-type (&map:get raw :text) 'String
+                :created-time $ assert-type (&map:get raw :created-time) 'Number
+                :done-time $ to-number-option (&map:get raw :done-time)
+                :archived-time $ to-number-option (&map:get raw :archived-time)
+          :examples $ []
+          :schema $ :: 'Fn
+            {} (:return 'app.schema/Task)
+              :args $ [] (:: 'Map 'Tag 'Dynamic)
+        'decode-task-map $ %{} 'CodeEntry (:doc "|Decode every task in a legacy task map.")
+          :code $ quote
+            defn decode-task-map (raw)
+              filter-map-kv raw $ fn (task-id task)
+                hint-fn $ {}
+                  :args $ [] 'String (:: 'Map 'Tag 'Dynamic)
+                  :return $ :: 'calcit.core/MapEntryDecision 'String 'app.schema/Task
+                %:: calcit.core/MapEntryDecision :keep task-id $ decode-task task
+          :examples $ []
+          :schema $ :: 'Fn
+            {}
+              :args $ []
+                :: 'Map 'String $ :: 'Map 'Tag 'Dynamic
+              :return $ :: 'Map 'String 'app.schema/Task
+        'store $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def store $ {}
               :states $ {}
               :router $ {} (:name :home)
-              :content |
+              :content $ {}
+                :tasks $ {}
+                :archives $ {}
               :messages $ {}
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Map 'Tag 'Dynamic
+        'to-number-option $ %{} 'CodeEntry (:doc "|Validate a legacy nil-or-number field and return Option<Number>.")
+          :code $ quote
+            defn to-number-option (value)
+              if (nil? value) (%none)
+                %some $ assert-type value 'Number
+          :examples $ []
+          :schema $ :: 'Fn
+            {}
+              :args $ [] 'Dynamic
+              :return $ :: 'Option 'Number
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote (ns app.schema)
-    |app.style $ %{} 'FileEntry
+    'app.style $ %{} 'FileEntry
       :defs $ {}
-        |css-title $ %{} 'CodeEntry (:doc |)
+        'css-title $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstyle css-title $ {}
               |$0 $ {} (:font-weight |100) (:font-family ui/font-fancy)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'String
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns app.style $ :require (respo-ui.core :as ui)
             respo.css :refer $ defstyle
-    |app.updater $ %{} 'FileEntry
+    'app.updater $ %{} 'FileEntry
       :defs $ {}
-        |updater $ %{} 'CodeEntry (:doc |)
+        'updater $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn updater (store op op-id op-time)
-              tag-match op
-                (:states cursor s) (update-states store cursor s)
-                (:content c) (assoc store :content c)
-                (:router r) (assoc store :router r)
-                (:hydrate-storage d) d
-                _ $ if
-                  action/message-action? $ nth op 0
-                  update store :messages $ fn (messages)
-                    update-messages messages (nth op 0) (nth op 1) op-id op-time
-                  do (eprintln "|Unknown op:" op) store
+              match op
+                (:states cursor state)
+                  assert-type (update-states store cursor state) (:: 'Map 'Tag 'Dynamic)
+                (:content content) (assoc store :content content)
+                (:router router) (assoc store :router router)
+                (:hydrate-storage data)
+                  assert-type data $ :: 'Map 'Tag 'Dynamic
+                _ $ do (eprintln "|Unknown op:" op) store
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {}
+              :args $ [] (:: 'Map 'Tag 'Dynamic) 'Enum 'String 'Number
+              :return $ :: 'Map 'Tag 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns app.updater $ :require
             [] respo.cursor :refer $ [] update-states
-            respo-message.action :as action
-            respo-message.updater :refer $ update-messages

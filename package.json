@@ -10,12 +10,19 @@
   },
   "author": "jiyinyiyong",
   "license": "MIT",
+  "scripts": {
+    "check": "calcit calcit.cirru --check-only && calcit calcit.cirru analyze dynamic-methods --max 0 && calcit calcit.cirru analyze deprecated --summary-only",
+    "compile": "calcit calcit.cirru js",
+    "dev": "yarn compile && vite",
+    "test:storage": "yarn compile && node tests/storage-read.mjs",
+    "test:canvas": "yarn compile && node tests/canvas-context.mjs"
+  },
   "devDependencies": {
     "bottom-tip": "^0.1.5",
     "vite": "^7.3.1"
   },
   "dependencies": {
-    "@calcit/procs": "^0.13.27",
+    "@calcit/procs": "0.14.7",
     "axios": "^1.13.3",
     "dayjs": "^1.11.19",
     "feather-icons": "^4.29.2"
