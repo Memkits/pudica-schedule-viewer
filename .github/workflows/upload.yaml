@@ -22,12 +22,33 @@ jobs:
           corepack prepare yarn@4.12.0 --activate
           yarn --version
 
-      - uses: calcit-lang/setup-cr@0.0.9
+      - name: Install Calcit and Caps
+        env:
+          CALCIT_VERSION: 0.14.7
+          CALCIT_SHA256: 85dcf721993058c628b948f21f12e4d12c4feb6ffc4eed5bdd520c4662ac65d8
+          CAPS_VERSION: 0.1.1
+          CAPS_SHA256: 3eb13b12cae24018e9aa079d43f3245030e85db0823c64c5ba39fd8217b7b5f9
+        run: |
+          tool_dir="$RUNNER_TEMP/calcit-bin"
+          mkdir -p "$tool_dir"
+          curl --fail --location --silent --show-error \
+            "https://github.com/calcit-lang/calcit/releases/download/$CALCIT_VERSION/calcit" \
+            --output "$tool_dir/calcit"
+          curl --fail --location --silent --show-error \
+            "https://github.com/calcit-lang/caps/releases/download/$CAPS_VERSION/caps" \
+            --output "$tool_dir/caps"
+          echo "$CALCIT_SHA256  $tool_dir/calcit" | sha256sum --check
+          echo "$CAPS_SHA256  $tool_dir/caps" | sha256sum --check
+          chmod +x "$tool_dir/calcit" "$tool_dir/caps"
+          echo "$tool_dir" >> "$GITHUB_PATH"
 
       - name: "compiles to js"
-        run: >
-          caps --ci && cr js
-          && yarn install --immutable && yarn vite build --base=./
+        run: |
+          caps --ci
+          yarn install --immutable
+          yarn check
+          yarn test:storage
+          yarn vite build --base=./
 
       - name: Deploy to server
         id: deploy
