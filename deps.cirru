@@ -6,4 +6,4 @@
     |Respo/respo-markdown.calcit |0.4.33
     |Respo/respo-message.calcit |0.0.20
     |Respo/respo-ui.calcit |0.7.19
-    |Respo/respo.calcit |0.16.97
+    |Respo/respo.calcit |0.16.98
