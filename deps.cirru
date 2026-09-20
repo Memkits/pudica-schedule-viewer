@@ -1,9 +1,9 @@
 
-{} (:calcit-version |0.14.16)
-  :version |0.1.1
-  :dependencies $ {} (|Respo/reel.calcit |0.6.19)
-    |Respo/respo-feather.calcit |0.4.11
-    |Respo/respo-markdown.calcit |0.4.33
-    |Respo/respo-message.calcit |0.0.20
-    |Respo/respo-ui.calcit |0.7.19
-    |Respo/respo.calcit |0.16.98
+{} (:calcit-version |0.17.1)
+  :version |0.1.2
+  :dependencies $ {} (|Respo/reel.calcit |0.6.28)
+    |Respo/respo-feather.calcit |0.4.16
+    |Respo/respo-markdown.calcit |0.4.41
+    |Respo/respo-message.calcit |0.0.25
+    |Respo/respo-ui.calcit |0.7.28
+    |Respo/respo.calcit |0.16.111
