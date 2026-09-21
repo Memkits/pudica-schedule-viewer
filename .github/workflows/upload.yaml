@@ -24,8 +24,8 @@ jobs:
 
       - name: Install Calcit and Caps
         env:
-          CALCIT_VERSION: 0.14.7
-          CALCIT_SHA256: 85dcf721993058c628b948f21f12e4d12c4feb6ffc4eed5bdd520c4662ac65d8
+          CALCIT_VERSION: 0.17.1
+          CALCIT_SHA256: 6e378e9c256912de130c6276462b14144c73217ae70109911e7b59c384d239ca
           CAPS_VERSION: 0.1.1
           CAPS_SHA256: 3eb13b12cae24018e9aa079d43f3245030e85db0823c64c5ba39fd8217b7b5f9
         run: |

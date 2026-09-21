@@ -3,8 +3,7 @@
   :about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `calcit query` to inspect and `calcit edit`/`calcit tree` to modify. Run `calcit docs agents --contract` before mutations; use `--full` for first orientation or changed contract digest. Manual edits must follow format and schema conventions, then run `calcit edit format`."
   :package |app
   :entries $ {} $ :default
-    {} (:description |) (:init-fn 'app.main/main!) (:mode :native)
-      :reload-fn 'app.main/reload!
+    {} (:description |) (:init-fn 'app.main/main!) (:mode :native) (:reload-fn 'app.main/reload!)
       :feature-policy $ {}
       :modules $ [] |respo.calcit/ |respo-ui.calcit/ |respo-markdown.calcit/ |reel.calcit/ |respo-feather.calcit/ |respo-message.calcit/ |js-ffi/
       :type-slots $ {}
@@ -27,13 +26,12 @@
                 comp-upload $ &map:get store :content
                 when dev? $ comp-inspect |Store store $ {}
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Component
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] $ :: 'Map 'Tag 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.container
           :require
-            respo-ui.core :refer $ hsl
+            respo.util.format :refer $ hsl
             respo-ui.core :as ui
             respo.core :refer $ defcomp >> <> div button textarea span
             respo.comp.space :refer $ =<
@@ -75,8 +73,7 @@
                           d! $ :: :router $ {} (:name :viewer)
                     <> |Submit
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Component
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] $ :: 'Map 'Tag 'Dynamic
         'css-textbox $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-textbox
@@ -97,7 +94,7 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.editor
           :require
-            respo-ui.core :refer $ hsl
+            respo.util.format :refer $ hsl
             respo-ui.core :as ui
             respo.core :refer $ defcomp <> div button textarea span
             respo.comp.space :refer $ =<
@@ -123,8 +120,7 @@
                   d! $ :: :router $ {} (:name page)
               <> $ if (= icon :code) |Edit |View
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Component
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] 'Tag 'Tag 'Bool
         'comp-nav $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-nav (current-page)
@@ -135,8 +131,7 @@
               =< 8 0
               comp-link :viewer :monitor $ = current-page :viewer
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Component
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] 'Tag
         'comp-upload $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-upload (content)
@@ -148,8 +143,7 @@
                   js-await $ upload-schedule! content
               <> |Upload
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Component
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] 'T
             :features $ #{} :js-ffi
             :generics $ [] 'T
@@ -182,7 +176,7 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.nav
           :require
-            respo-ui.core :refer $ hsl
+            respo.util.format :refer $ hsl
             respo-ui.core :as ui
             respo.core :refer $ defcomp >> <> div button textarea span
             respo.comp.space :refer $ =<
@@ -191,8 +185,7 @@
             |../upload.mjs :refer $ uploadSchedule
     'app.comp.viewer $ %{} 'FileEntry
       :defs $ {}
-        'DayjsHost $ %{} 'CodeEntry
-          :doc "|Typed Dayjs methods used by schedule rendering."
+        'DayjsHost $ %{} 'CodeEntry (:doc "|Typed Dayjs methods used by schedule rendering.")
           :code $ quote $ deftrait DayjsHost
             .format $ :: 'Fn $ {}
               :args $ [] 'app.comp.viewer/DayjsHost 'String
@@ -223,8 +216,7 @@
           :code $ quote $ defn add-days (value amount)
             unsafe-coerce (.!add value amount |day) 'app.comp.viewer/DayjsHost
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'app.comp.viewer/DayjsHost
+          :schema $ :: 'Fn $ {} (:return 'app.comp.viewer/DayjsHost)
             :args $ [] 'app.comp.viewer/DayjsHost 'Number
             :features $ #{} :js-ffi
         'by-larger $ %{} 'CodeEntry (:doc |)
@@ -267,8 +259,7 @@
                       =< 8 0
                       <> $ :text task
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Component
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] $ :: 'Map 'String 'app.schema/Task
         'comp-day $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-day (day month-date amount)
@@ -282,8 +273,7 @@
               <> (str "|(" amount "|)")
                 {} $ :font-size 12
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Component
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] 'Number 'String 'Number
         'comp-day-card $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-day-card (day tasks week-start)
@@ -315,8 +305,7 @@
                             {} $ :class-name css-task-duration
                             <> $ format-duration task
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Component
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] 'Number (:: 'List 'app.schema/Task) 'app.comp.viewer/DayjsHost
         'comp-time $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-time (time)
@@ -327,8 +316,7 @@
                   <> $ format-dayjs (make-dayjs value) |HH:mm
                 (:none) (<> |??:??)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Component
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] $ :: 'Option 'Number
         'comp-viewer $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-viewer (content)
@@ -432,8 +420,7 @@
                                           :: 'List 'app.schema/Task
                                         , week-start
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Component
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] 'Dynamic
         'comp-week $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-week (week amount week-start)
@@ -449,15 +436,13 @@
                     end $ add-days week-start 4
                   str (format-dayjs week-start |YYYY-MM-DD) "| ~ " $ format-dayjs end |YYYY-MM-DD
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Component
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] 'Number 'Number 'app.comp.viewer/DayjsHost
         'comp-year $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-year (year)
             <> (str year) (str-spaced style/css-title css-year)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Component
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] 'Number
         'css-day $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-day
@@ -482,11 +467,7 @@
           :schema $ :: 'String
         'css-day-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-day-list
-            {} $ |$0 $ {} (:display |flex) (:align-items :stretch) (:flex-direction |row) (:flex-wrap :wrap)
-              :border-top "|1px solid #f8f8f8ca"
-              :padding-top 16
-              :padding-left 16
-              :gap 16
+            {} $ |$0 $ {} (:display |flex) (:align-items :stretch) (:flex-direction |row) (:flex-wrap :wrap) (:border-top "|1px solid #f8f8f8ca") (:padding-top 16) (:padding-left 16) (:gap 16)
           :examples $ []
           :schema $ :: 'String
         'css-task-duration $ %{} 'CodeEntry (:doc |)
@@ -539,8 +520,7 @@
           :code $ quote $ defn current-dayjs ()
             unsafe-coerce (dayjs) 'app.comp.viewer/DayjsHost
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'app.comp.viewer/DayjsHost
+          :schema $ :: 'Fn $ {} (:return 'app.comp.viewer/DayjsHost)
             :args $ []
             :features $ #{} :js-ffi
         'dayjs-day $ %{} 'CodeEntry (:doc |)
@@ -594,30 +574,27 @@
               (:some value) (make-dayjs value)
               (:none) (make-dayjs |2021-01-01)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'app.comp.viewer/DayjsHost
+          :schema $ :: 'Fn $ {} (:return 'app.comp.viewer/DayjsHost)
             :args $ [] 'app.schema/Task
         'make-dayjs $ %{} 'CodeEntry
           :doc "|Narrow one Dayjs constructor result to the reviewed host trait."
           :code $ quote $ defn make-dayjs (value)
             unsafe-coerce (dayjs value) 'app.comp.viewer/DayjsHost
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'app.comp.viewer/DayjsHost
+          :schema $ :: 'Fn $ {} (:return 'app.comp.viewer/DayjsHost)
             :args $ [] 'Dynamic
             :features $ #{} :js-ffi
         'start-of-week $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn start-of-week (value)
             unsafe-coerce (.!startOf value |week) 'app.comp.viewer/DayjsHost
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'app.comp.viewer/DayjsHost
+          :schema $ :: 'Fn $ {} (:return 'app.comp.viewer/DayjsHost)
             :args $ [] 'app.comp.viewer/DayjsHost
             :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.viewer
           :require
-            respo-ui.core :refer $ hsl
+            respo.util.format :refer $ hsl
             respo-ui.core :as ui
             respo.core :refer $ defcomp >> list-> <> div button textarea span
             respo.comp.space :refer $ =<
@@ -707,9 +684,7 @@
               render! target
                 comp-container $ assert-type @*reel $ :: 'Map 'Tag 'Dynamic
                 , dispatch!
-              do
-                eprintln |Mount-target-not-found.
-                , &unit
+              do (eprintln |Mount-target-not-found.) &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
@@ -734,15 +709,13 @@
             js-ffi.shared :refer $ now-ms
     'app.schema $ %{} 'FileEntry
       :defs $ {}
-        'Schedule $ %{} 'CodeEntry
-          :doc "|Decoded active and archived task collections."
+        'Schedule $ %{} 'CodeEntry (:doc "|Decoded active and archived task collections.")
           :code $ quote $ defstruct Schedule
             :tasks $ :: 'Map 'String 'app.schema/Task
             :archives $ :: 'Map 'String 'app.schema/Task
           :examples $ []
           :schema $ :: 'StructDef
-        'Task $ %{} 'CodeEntry
-          :doc "|Task fields used by the schedule viewer."
+        'Task $ %{} 'CodeEntry (:doc "|Task fields used by the schedule viewer.")
           :code $ quote $ defstruct Task (:id 'String) (:text 'String) (:created-time 'Number)
             :done-time $ :: 'Option 'Number
             :archived-time $ :: 'Option 'Number
@@ -766,8 +739,7 @@
                 :tasks $ decode-task-map tasks
                 :archives $ decode-task-map archives
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'app.schema/Schedule
+          :schema $ :: 'Fn $ {} (:return 'app.schema/Schedule)
             :args $ [] 'Dynamic
         'decode-task $ %{} 'CodeEntry
           :doc "|Validate one legacy task map and construct a typed Task."
@@ -781,8 +753,7 @@
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'app.schema/Task)
             :args $ [] $ :: 'Map 'Tag 'Dynamic
-        'decode-task-map $ %{} 'CodeEntry
-          :doc "|Decode every task in a legacy task map."
+        'decode-task-map $ %{} 'CodeEntry (:doc "|Decode every task in a legacy task map.")
           :code $ quote $ defn decode-task-map (raw)
             filter-map-kv raw $ fn (task-id task)
               hint-fn $ {}
