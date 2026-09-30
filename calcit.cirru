@@ -3,7 +3,7 @@
   :about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `calcit query` to inspect and `calcit edit`/`calcit tree` to modify. Run `calcit docs agents --contract` before mutations; use `--full` for first orientation or changed contract digest. Manual edits must follow format and schema conventions, then run `calcit edit format`."
   :package |app
   :entries $ {} $ :default
-    {} (:description |) (:init-fn 'app.main/main!) (:mode :native) (:reload-fn 'app.main/reload!)
+    {} (:description |) (:init-fn 'app.main/main!) (:mode :js) (:reload-fn 'app.main/reload!) (:target :browser)
       :feature-policy $ {}
       :modules $ [] |respo.calcit/ |respo-ui.calcit/ |respo-markdown.calcit/ |reel.calcit/ |respo-feather.calcit/ |respo-message.calcit/ |js-ffi/
       :type-slots $ {}
@@ -68,9 +68,8 @@
                   button
                     {} (:class-name css/button)
                       :on-click $ fn (e d!)
-                        do
-                          d! $ :: :content $ parse-cirru-edn (&map:get state :text)
-                          d! $ :: :router $ {} (:name :viewer)
+                        d! $ :: :content $ parse-cirru-edn (&map:get state :text)
+                        d! $ :: :router $ {} (:name :viewer)
                     <> |Submit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
@@ -255,7 +254,7 @@
                     :return $ :: 'List 'Dynamic
                   [] (:id task)
                     div ({})
-                      comp-time $ %some $ :created-time task
+                      comp-time $ Option :some $ :created-time task
                       =< 8 0
                       <> $ :text task
           :examples $ []
@@ -690,7 +689,7 @@
             :args $ []
         'ssr? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def ssr?
-            some? $ js/document.querySelector |meta.respo-ssr
+            option:some? $ query-selector |meta.respo-ssr
           :examples $ []
           :schema $ :: 'Bool
       :ns $ %{} 'NsEntry (:doc |)
@@ -735,21 +734,22 @@
                   :: 'Map 'String $ :: 'Map 'Tag 'Dynamic
                 archives $ assert-type (&map:get content :archives)
                   :: 'Map 'String $ :: 'Map 'Tag 'Dynamic
-              %{} Schedule
-                :tasks $ decode-task-map tasks
-                :archives $ decode-task-map archives
+              Schedule :tasks (decode-task-map tasks) :archives $ decode-task-map archives
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'app.schema/Schedule)
             :args $ [] 'Dynamic
         'decode-task $ %{} 'CodeEntry
           :doc "|Validate one legacy task map and construct a typed Task."
           :code $ quote $ defn decode-task (raw)
-            %{} Task
-              :id $ assert-type (&map:get raw :id) 'String
-              :text $ assert-type (&map:get raw :text) 'String
-              :created-time $ assert-type (&map:get raw :created-time) 'Number
-              :done-time $ to-number-option $ &map:get raw :done-time
-              :archived-time $ to-number-option $ &map:get raw :archived-time
+            Task :id
+              assert-type (&map:get raw :id) 'String
+              , :text
+                assert-type (&map:get raw :text) 'String
+                , :created-time
+                  assert-type (&map:get raw :created-time) 'Number
+                  , :done-time
+                    to-number-option $ &map:get raw :done-time
+                    , :archived-time $ to-number-option $ &map:get raw :archived-time
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'app.schema/Task)
             :args $ [] $ :: 'Map 'Tag 'Dynamic
@@ -778,8 +778,8 @@
         'to-number-option $ %{} 'CodeEntry
           :doc "|Validate a legacy nil-or-number field and return Option<Number>."
           :code $ quote $ defn to-number-option (value)
-            if (nil? value) (%none)
-              %some $ assert-type value 'Number
+            if (nil? value) (Option :none)
+              Option :some $ assert-type value 'Number
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] 'Dynamic

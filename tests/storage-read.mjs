@@ -11,11 +11,13 @@ const storedSchedule = `{}
       :archived-time 1700000001000
   :archives $ {}`
 
-globalThis.localStorage = {
+const localStorage = {
   getItem(key) {
     return key === storageKey ? storedSchedule : null
   },
 }
+
+globalThis.window = { localStorage }
 
 const { storage_get } = await import("../js-out/js-ffi.browser.mjs")
 const calcit = await import("../js-out/calcit.core.mjs")
