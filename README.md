@@ -34,8 +34,8 @@ browser data.
 
 Use `caps --ci --strict` and `yarn install --immutable`. The canonical files are
 `calcit.cirru` and `deps.cirru`; retired `compact.cirru` / `package.cirru`
-snapshots are ignored and rejected by CI. CI checks generated frontend CDN paths;
-public upload verification stays inside cos-upload-action. Original server
+snapshots are ignored and rejected by CI. Public upload verification uses
+cos-upload-action's built-in verify settings, with no extra CDN checker. Original server
 deployment paths and shared external resource URLs remain unchanged.
 
 ### License
