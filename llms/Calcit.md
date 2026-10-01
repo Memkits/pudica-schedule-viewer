@@ -2,6 +2,8 @@
 
 本文档为 AI Agent 提供 Calcit 项目的操作指南。
 
+> 本仓库当前使用 Calcit 0.27.0。唯一 canonical 项目文件是 `calcit.cirru` 和 `deps.cirru`；不要创建或修改旧的 `compact.cirru`、`package.cirru`。下文的 `cr` 示例属于历史版本，实际命令以 `calcit --help` 和 `calcit docs agents --contract` 为准。
+
 ## 🚀 快速开始（新 LLM 必读）
 
 **核心原则：用命令行工具（不要直接编辑文件），用 search 定位（比逐层导航快 10 倍）**
@@ -37,8 +39,8 @@ cr tree replace-leaf 'ns/def' --pattern 'old' --replacement 'new'  # 批量替�
 
 以下文件**严格禁止使用文本替换或直接编辑**：
 
-- **`calcit.cirru`** - 这是 calcit-editor 结构化编辑器的专用格式，包含完整的编辑器元数据
-- **`compact.cirru`** - 这是 Calcit 程序的紧凑快照格式，必须使用 `cr edit` 相关命令进行修改
+- **`calcit.cirru`** - 本仓库当前的 canonical Calcit 快照；通过当前 CLI 结构化编辑
+- **`compact.cirru`** - 已退役，CI 会拒绝它
 
 这两个文件的格式对空格和结构极其敏感，直接文本修改会破坏文件结构。请使用下面文档中的 CLI 命令进行代码查询和修改。
 
@@ -72,8 +74,8 @@ Calcit 程序使用 `cr` 命令：
 
 ### 主要运行命令
 
-- `cr` 或 `cr compact.cirru` - 代码解释执行，默认读取 config 执行 init-fn 定义的入口
-- `cr compact.cirru js` - 编译生成 JavaScript 代码
+- `calcit calcit.cirru` - 当前项目的解释执行入口
+- `calcit calcit.cirru js` - 当前项目的 JavaScript 编译命令
 - `cr -1 <filepath>` - 执行一次然后退出（不进入监听模式）
 - `cr --check-only` - 仅检查代码正确性，不执行程序
   - 对 init_fn 和 reload_fn 进行预处理验证
@@ -112,7 +114,7 @@ Calcit 程序使用 `cr` 命令：
 - `cr query pkg` - 获取项目包名
 - `cr query config` - 读取项目配置（init_fn, reload_fn, version）
 - `cr query error` - 读取 .calcit-error.cirru 错误堆栈文件
-- `cr query modules` - 列出项目依赖的模块（来自 compact.cirru 配置）
+- `calcit` 当前 CLI 的模块查询命令请以 `calcit --help` 为准；依赖配置来自 `deps.cirru`
 
 **渐进式代码探索（Progressive Disclosure）：**
 

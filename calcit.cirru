@@ -5,7 +5,7 @@
   :entries $ {} $ :default
     {} (:description |) (:init-fn 'app.main/main!) (:mode :js) (:reload-fn 'app.main/reload!) (:target :browser)
       :feature-policy $ {}
-      :modules $ [] |respo.calcit/ |respo-ui.calcit/ |respo-markdown.calcit/ |reel.calcit/ |respo-feather.calcit/ |respo-message.calcit/ |js-ffi/
+      :modules $ [] |respo.calcit/ |respo-ui.calcit/ |reel.calcit/ |js-ffi/
       :type-slots $ {}
   :files $ {}
     'app.comp.container $ %{} 'FileEntry
@@ -36,7 +36,6 @@
             respo.core :refer $ defcomp >> <> div button textarea span
             respo.comp.space :refer $ =<
             respo.comp.inspect :refer $ comp-inspect
-            respo-md.comp.md :refer $ comp-md
             app.config :refer $ dev?
             app.comp.nav :refer $ comp-nav comp-upload
             app.comp.editor :refer $ comp-editor
@@ -97,7 +96,6 @@
             respo-ui.core :as ui
             respo.core :refer $ defcomp <> div button textarea span
             respo.comp.space :refer $ =<
-            respo-md.comp.md :refer $ comp-md
             respo-ui.comp.icon :refer $ comp-icon
             respo.css :refer $ defstyle
             respo-ui.css :as css
@@ -179,7 +177,6 @@
             respo-ui.core :as ui
             respo.core :refer $ defcomp >> <> div button textarea span
             respo.comp.space :refer $ =<
-            respo-md.comp.md :refer $ comp-md
             respo.css :refer $ defstyle
             |../upload.mjs :refer $ uploadSchedule
     'app.comp.viewer $ %{} 'FileEntry
@@ -597,7 +594,6 @@
             respo-ui.core :as ui
             respo.core :refer $ defcomp >> list-> <> div button textarea span
             respo.comp.space :refer $ =<
-            respo-md.comp.md :refer $ comp-md
             app.schema :as schema
             respo-ui.comp.icon :refer $ comp-icon
             |dayjs :default dayjs
@@ -741,15 +737,14 @@
         'decode-task $ %{} 'CodeEntry
           :doc "|Validate one legacy task map and construct a typed Task."
           :code $ quote $ defn decode-task (raw)
-            Task :id
-              assert-type (&map:get raw :id) 'String
-              , :text
-                assert-type (&map:get raw :text) 'String
-                , :created-time
-                  assert-type (&map:get raw :created-time) 'Number
-                  , :done-time
-                    to-number-option $ &map:get raw :done-time
-                    , :archived-time $ to-number-option $ &map:get raw :archived-time
+            decode-map-as
+              {}
+                :id $ &map:get raw :id
+                :text $ &map:get raw :text
+                :created-time $ &map:get raw :created-time
+                :done-time $ to-number-option $ &map:get raw :done-time
+                :archived-time $ to-number-option $ &map:get raw :archived-time
+              , Task
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'app.schema/Task)
             :args $ [] $ :: 'Map 'Tag 'Dynamic

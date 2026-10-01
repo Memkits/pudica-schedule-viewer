@@ -45,12 +45,14 @@
           :return 'app.schema/Task
       :code $ quote
         defn decode-task (raw)
-          %{} Task
-            :id $ assert-type (&map:get raw :id) 'String
-            :text $ assert-type (&map:get raw :text) 'String
-            :created-time $ assert-type (&map:get raw :created-time) 'Number
-            :done-time $ to-number-option (&map:get raw :done-time)
-            :archived-time $ to-number-option (&map:get raw :archived-time)
+          decode-map-as
+            {}
+              :id $ &map:get raw :id
+              :text $ &map:get raw :text
+              :created-time $ &map:get raw :created-time
+              :done-time $ to-number-option $ &map:get raw :done-time
+              :archived-time $ to-number-option $ &map:get raw :archived-time
+            , Task
     'app.schema/decode-task-map $ {}
       :mode :ensure
       :kind :fn

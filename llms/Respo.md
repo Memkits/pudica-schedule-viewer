@@ -11,12 +11,14 @@
 
 ---
 
+> 本文中的项目结构和 `cr` 命令是历史 Respo 示例。本仓库当前使用 Calcit 0.27.0，canonical 文件为 `calcit.cirru`、`deps.cirru`；不要恢复 `compact.cirru`。实际操作以当前 `calcit` CLI 帮助为准。
+
 ## Project Structure
 
 The Respo project is a virtual DOM library written in Calcit-js, containing:
 
-- **Main codebase**: `compact.cirru` (2314 lines) - serialized source code
-- **Compiled source**: `calcit.cirru` (13806 lines) - full AST representation
+- **Current project source**: `calcit.cirru` - canonical serialized source in this repository
+- **Dependencies**: `deps.cirru`; `compact.cirru` is retired here
 - **Namespaces**: 33 total namespaces organized by functionality
 - **Version**: 0.16.21
 - **Dependencies**: memof (memoization), lilac (UI utilities), calcit-test (testing)
@@ -807,9 +809,9 @@ cr query ns namespace-name  # Check imports
 
 ### ⚠️ Critical Rules
 
-1. **NEVER directly edit `calcit.cirru` or `compact.cirru`** with text editors
-   - Use `cr edit` commands instead
-   - These are serialized AST structures, not human-readable code
+1. **Use the current `calcit` CLI for structured source edits**
+   - Edit canonical `calcit.cirru`; do not recreate `compact.cirru`
+   - Consult `calcit --help` and `calcit docs agents --contract` before editing
 
 2. **ALWAYS use relative paths for documentation links**
    - Use `../` and `../../` for navigation
