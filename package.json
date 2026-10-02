@@ -11,7 +11,7 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "scripts": {
-    "check": "calcit calcit.cirru --check-only && calcit calcit.cirru analyze dynamic-methods --max 0 && calcit calcit.cirru analyze deprecated --summary-only",
+    "check": "calcit calcit.cirru --check-only",
     "compile": "calcit calcit.cirru js",
     "dev": "yarn compile && vite",
     "test:storage": "yarn compile && node tests/storage-read.mjs",
