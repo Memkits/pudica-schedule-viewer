@@ -11,13 +11,20 @@ const storedSchedule = `{}
       :archived-time 1700000001000
   :archives $ {}`
 
+const entries = new Map([[storageKey, storedSchedule]])
 const localStorage = {
+  get length() { return entries.size },
   getItem(key) {
-    return key === storageKey ? storedSchedule : null
+    return entries.get(key) ?? null
   },
+  key(index) { return [...entries.keys()][index] ?? null },
+  setItem(key, value) { entries.set(key, value) },
+  removeItem(key) { entries.delete(key) },
+  clear() { entries.clear() },
 }
 
 globalThis.window = { localStorage }
+globalThis.localStorage = localStorage
 
 const { storage_get } = await import("../js-out/js-ffi.browser.mjs")
 const calcit = await import("../js-out/calcit.core.mjs")
