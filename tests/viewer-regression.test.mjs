@@ -10,7 +10,7 @@ import { comp_viewer, comp_time, format_duration, get_done_time, format_dayjs } 
 import { make_string } from "../js-out/respo.render.html.mjs";
 import { component_$q_, component_tree } from "../js-out/respo.util.detect.mjs";
 dayjs.extend(weekOfYear);
-const t = c.init_tags(["tasks", "archives", "id", "text", "created-time", "done-time", "archived-time", "content", "router", "name", "viewer", "states", "cursor", "data", "editor", "value", "event", "children", "input", "click", "node"]);
+const t = c.init_tags(["tasks", "archives", "id", "text", "created-time", "done-time", "archived-time", "content", "router", "name", "viewer", "states", "cursor", "data", "editor", "value", "event", "children", "input", "click", "node", "messages", "hydrate-storage"]);
 const map = c._$n__$M_;
 const field = (v, key) => c.option_$o_unwrap(c.get(v, key));
 const nth = (v, i) => c.option_$o_unwrap(c.nth(v, i));
@@ -80,6 +80,8 @@ test("editor input and submit dispatch Enum content and router updates", () => {
 });
 test("nested editor state changes preserve content and routing", () => {
   const original = c.assoc(store, t.content, content());
+  const legacyStore = map(...[t.states, t.router, t.content, t.messages].flatMap(key => [key, field(original, key)]));
+  assert.ok(c._$e_(updater(store, c._$o__$o_(t["hydrate-storage"], legacyStore), "fixture", 0), original));
   const next = updater(original, c._$o__$o_(c.init_tags(["states"]).states, c._$L_(t.editor), map(t.text, "draft")), "fixture", 0);
   assert.ok(c._$e_(field(next, t.content), field(original, t.content)));
   assert.ok(c._$e_(field(next, t.router), field(original, t.router)));

@@ -15,6 +15,11 @@ storage maps and current Schedule Struct/Option exports are validated and conver
 the remaining `Dynamic` positions are limited to storage, Respo state, and
 host boundaries:
 
+Application state uses a nominal `Store` shared by the atom, updater and container.
+Its `content` keeps the original parsed storage value for uploads; rendering still
+validates it as `Schedule`/`Task`. Respo's heterogeneous state tree keeps its existing
+interface, and legacy whole-store hydration is decoded into `Store` at the boundary.
+
 ```bash
 yarn check
 yarn compile

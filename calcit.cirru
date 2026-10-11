@@ -13,22 +13,22 @@
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-container (store-value)
             let
-                store $ assert-type store-value $ :: 'Map 'Tag 'Dynamic
-                states $ assert-type (&map:get store :states) (:: 'Map 'Tag 'Dynamic)
-                router $ assert-type (&map:get store :router) (:: 'Map 'Tag 'Tag)
-                route-name $ assert-type (&map:get router :name) 'Tag
+                store store-value
+                states $ :states store
+                router $ :router store
+                route-name $ &map:get router :name
               div
                 {} $ :class-name $ str-spaced css/global css/fullscreen css/column
                 match route-name
                   :home $ comp-editor $ assert-type (>> states :editor) (:: 'Map 'Tag 'Dynamic)
-                  :viewer $ comp-viewer $ &map:get store :content
+                  :viewer $ comp-viewer $ :content store
                   _ $ <> |Unknown
                 comp-nav route-name
-                comp-upload $ &map:get store :content
+                comp-upload $ :content store
                 when dev? $ comp-inspect |Store store $ {}
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
-            :args $ [] $ :: 'Map 'Tag 'Dynamic
+            :args $ [] 'app.schema/Store
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.container
           :require
@@ -611,7 +611,7 @@
         '*reel $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defatom *reel schema/store
           :examples $ []
-          :schema $ :: 'Ref $ :: 'Map 'Tag 'Dynamic
+          :schema $ :: 'Ref 'app.schema/Store
         'DayjsFactoryHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait DayjsFactoryHost
             .extend! $ :: 'Fn $ {}
@@ -624,9 +624,7 @@
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             when config/dev? $ println |Dispatch: op
-            reset! *reel $ updater
-              assert-type @*reel $ :: 'Map 'Tag 'Dynamic
-              , op (generate-id!) (now-ms)
+            reset! *reel $ updater @*reel op (generate-id!) (now-ms)
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -672,9 +670,7 @@
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             if-let (target mount-target)
-              render! (narrow-element target)
-                comp-container $ assert-type @*reel $ :: 'Map 'Tag 'Dynamic
-                , dispatch!
+              render! (narrow-element target) (comp-container @*reel) dispatch!
               do (eprintln |Mount-target-not-found.) &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -705,6 +701,14 @@
           :code $ quote $ defstruct Schedule
             :tasks $ :: 'Map 'String 'app.schema/Task
             :archives $ :: 'Map 'String 'app.schema/Task
+          :examples $ []
+          :schema $ :: 'StructDef
+        'Store $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct Store
+            :states $ :: 'Map 'Tag 'Dynamic
+            :router $ :: 'Map 'Tag 'Tag
+            :content 'Dynamic
+            :messages $ :: 'Map 'Tag 'Dynamic
           :examples $ []
           :schema $ :: 'StructDef
         'Task $ %{} 'CodeEntry (:doc "|Task fields used by the schedule viewer.")
@@ -764,7 +768,7 @@
             :return $ :: 'Map 'Tag 'Dynamic
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
-            {}
+            %{} Store
               :states $ {}
               :router $ {} $ :name :home
               :content $ {}
@@ -772,7 +776,7 @@
                 :archives $ {}
               :messages $ {}
           :examples $ []
-          :schema $ :: 'Map 'Tag 'Dynamic
+          :schema $ :: 'app.schema/Store
         'to-number-option $ %{} 'CodeEntry
           :doc "|Validate a legacy nil-or-number field and return Option<Number>."
           :code $ quote $ defn to-number-option (value)
@@ -806,16 +810,15 @@
           :code $ quote $ defn updater (store op op-id op-time)
             match op
               (:states cursor state)
-                assert-type (update-states store cursor state) (:: 'Map 'Tag 'Dynamic)
+                assert-type (update-states store cursor state) 'app.schema/Store
               (:content content) (assoc store :content content)
-              (:router router) (assoc store :router router)
-              (:hydrate-storage data)
-                assert-type data $ :: 'Map 'Tag 'Dynamic
+              (:router router)
+                assoc store :router $ assert-type router $ :: 'Map 'Tag 'Tag
+              (:hydrate-storage data) (decode-map-as data 'app.schema/Store)
               _ $ do (eprintln "|Unknown op:" op) store
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'Map 'Tag 'Dynamic) 'Enum 'String 'Number
-            :return $ :: 'Map 'Tag 'Dynamic
+          :schema $ :: 'Fn $ {} (:return 'app.schema/Store)
+            :args $ [] 'app.schema/Store 'Enum 'String 'Number
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater
           :require $ [] respo.cursor :refer $ [] update-states
