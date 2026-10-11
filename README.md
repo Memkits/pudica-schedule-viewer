@@ -19,6 +19,9 @@ Application state uses a nominal `Store` shared by the atom, updater and contain
 Its `content` keeps the original parsed storage value for uploads; rendering still
 validates it as `Schedule`/`Task`. Respo's heterogeneous state tree keeps its existing
 interface, and legacy whole-store hydration is decoded into `Store` at the boundary.
+Routes use `Router`, and the updater consumes the nominal `Op` enum. The Respo
+dispatch boundary matches operation variants and decodes route/hydration fields;
+raw content remains untouched. The unused Reel dependency has been removed.
 
 ```bash
 yarn check
@@ -37,7 +40,7 @@ browser data.
 `yarn compile` directly generates JavaScript without editing generated output.
 `yarn test:canvas` verifies startup calls `canvas.getContext("2d")`.
 
-正式 Respo、UI、Reel 与 js-ffi 标签替换旧 alpha；DOM 类型衔接复用 Respo 的 `narrow-element`。测试夹具按 Storage 接口和 Respo 的 ChildPair/RenderNode 更新，原业务断言保留。存档解码仍校验任务字段及时间值，旧 nil/数字与新 Option 均转换为规范 Option；不直接信任解析后的 Struct/Enum。
+正式 Respo、UI 与 js-ffi 标签替换旧 alpha；DOM 类型衔接复用 Respo 的 `narrow-element`。测试夹具按 Storage 接口和 Respo 的 ChildPair/RenderNode 更新，原业务断言保留。存档解码仍校验任务字段及时间值，旧 nil/数字与新 Option 均转换为规范 Option；不直接信任解析后的 Struct/Enum。上传函数的 schema 明确声明 async，与原有 await 行为一致。
 
 Use `caps --ci --strict` and `yarn install --immutable`. The canonical files are
 `calcit.cirru` and `deps.cirru`; retired `compact.cirru` / `package.cirru`

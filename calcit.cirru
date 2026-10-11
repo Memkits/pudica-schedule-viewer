@@ -5,7 +5,7 @@
   :entries $ {} $ :default
     {} (:description |) (:init-fn 'app.main/main!) (:mode :js) (:reload-fn 'app.main/reload!) (:target :browser)
       :feature-policy $ {}
-      :modules $ [] |respo.calcit/ |respo-ui.calcit/ |reel.calcit/ |js-ffi/
+      :modules $ [] |respo.calcit/ |respo-ui.calcit/ |js-ffi/
       :type-slots $ {}
   :files $ {}
     'app.comp.container $ %{} 'FileEntry
@@ -16,7 +16,7 @@
                 store store-value
                 states $ :states store
                 router $ :router store
-                route-name $ &map:get router :name
+                route-name $ :name router
               div
                 {} $ :class-name $ str-spaced css/global css/fullscreen css/column
                 match route-name
@@ -47,7 +47,7 @@
         'comp-editor $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-editor (states)
             let
-                cursor $ &map:get states :cursor
+                cursor $ assert-type (&map:get states :cursor) (:: 'List 'Dynamic)
                 state $ assert-type
                   or (&map:get states :data)
                     {} $ :text |
@@ -61,15 +61,15 @@
                   :placeholder $ &map:get state :text
                   :class-name css-textbox
                   :on-input $ fn (e d!)
-                    d! $ :: :states cursor $ assoc state :text
+                    d! $ %:: schema/Op :states cursor $ assoc state :text
                       assert-type (&map:get e :value) 'String
                 =< 0 16
                 div ({})
                   button
                     {} (:class-name css/button)
                       :on-click $ fn (e d!)
-                        d! $ :: :content $ parse-cirru-edn (&map:get state :text)
-                        d! $ :: :router $ {} (:name :viewer)
+                        d! $ %:: schema/Op :content $ parse-cirru-edn (&map:get state :text)
+                        d! $ %:: schema/Op :router $ %{} schema/Router (:name :viewer)
                     <> |Submit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
@@ -100,6 +100,7 @@
             respo-ui.comp.icon :refer $ comp-icon
             respo.css :refer $ defstyle
             respo-ui.css :as css
+            app.schema :as schema
     'app.comp.nav $ %{} 'FileEntry
       :defs $ {}
         'begin-upload $ %{} 'CodeEntry (:doc |)
@@ -115,7 +116,7 @@
               {} (:class-name css-icon)
                 :style $ if active? $ {} (:color :black)
                 :on-click $ fn (e d!)
-                  d! $ :: :router $ {} (:name page)
+                  d! $ %:: schema/Op :router $ %{} schema/Router (:name page)
               <> $ if (= icon :code) |Edit |View
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
@@ -168,7 +169,7 @@
             hint-fn $ {} $ :async true
             js-await $ begin-upload content
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
+          :schema $ :: 'Fn $ {} (:async true) (:return 'Unit)
             :args $ [] 'Dynamic
             :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
@@ -180,6 +181,7 @@
             respo.comp.space :refer $ =<
             respo.css :refer $ defstyle
             |../upload.mjs :refer $ uploadSchedule
+            app.schema :as schema
     'app.comp.viewer $ %{} 'FileEntry
       :defs $ {}
         'DayjsHost $ %{} 'CodeEntry (:doc "|Typed Dayjs methods used by schedule rendering.")
@@ -624,7 +626,7 @@
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             when config/dev? $ println |Dispatch: op
-            reset! *reel $ updater @*reel op (generate-id!) (now-ms)
+            reset! *reel $ updater @*reel (schema/decode-op op) (generate-id!) (now-ms)
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -642,8 +644,8 @@
               storage-get $ or (&map:get schema/config :storage) |pudica-schedule-viewer
               (:some raw)
                 do
-                  dispatch! $ :: :content $ parse-cirru-edn raw
-                  dispatch! $ :: :router $ {} (:name :viewer)
+                  dispatch! $ %:: schema/Op :content $ parse-cirru-edn raw
+                  dispatch! $ %:: schema/Op :router $ %{} schema/Router (:name :viewer)
               (:none) &unit
             println "|App started."
             , &unit
@@ -697,6 +699,18 @@
             respo.ffi.browser :refer $ narrow-element
     'app.schema $ %{} 'FileEntry
       :defs $ {}
+        'Op $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defenum Op
+            :states (:: 'List 'Dynamic) 'Dynamic
+            :content 'Dynamic
+            :router 'app.schema/Router
+            :hydrate-storage 'app.schema/Store
+          :examples $ []
+          :schema $ :: 'Enum
+        'Router $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct Router (:name 'Tag)
+          :examples $ []
+          :schema $ :: 'StructDef
         'Schedule $ %{} 'CodeEntry (:doc "|Decoded active and archived task collections.")
           :code $ quote $ defstruct Schedule
             :tasks $ :: 'Map 'String 'app.schema/Task
@@ -706,7 +720,7 @@
         'Store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct Store
             :states $ :: 'Map 'Tag 'Dynamic
-            :router $ :: 'Map 'Tag 'Tag
+            :router 'app.schema/Router
             :content 'Dynamic
             :messages $ :: 'Map 'Tag 'Dynamic
           :examples $ []
@@ -722,6 +736,24 @@
             {} $ :storage |pudica-schedule-viewer
           :examples $ []
           :schema $ :: 'Map 'Tag 'String
+        'decode-op $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn decode-op (op)
+            match op
+              (:states cursor state)
+                if (list? cursor) (%:: Op :states cursor state) (raise |Invalid-state-cursor)
+              (:content content) (%:: Op :content content)
+              (:router router)
+                %:: Op :router $ decode-map-as (storage-map router) 'app.schema/Router
+              (:hydrate-storage data)
+                let
+                    fields $ storage-map data
+                  %:: Op :hydrate-storage $ decode-map-as
+                    assoc fields :router $ storage-map $ &map:get fields :router
+                    , 'app.schema/Store
+              _ $ raise |Unknown-viewer-operation
+          :examples $ []
+          :schema $ :: 'Fn $ {} (:return 'app.schema/Op)
+            :args $ [] 'Enum
         'decode-schedule $ %{} 'CodeEntry
           :doc "|Validate legacy parsed storage and construct a typed Schedule."
           :code $ quote $ defn decode-schedule (raw)
@@ -770,7 +802,7 @@
           :code $ quote $ def store
             %{} Store
               :states $ {}
-              :router $ {} $ :name :home
+              :router $ %{} Router $ :name :home
               :content $ {}
                 :tasks $ {}
                 :archives $ {}
@@ -812,13 +844,12 @@
               (:states cursor state)
                 assert-type (update-states store cursor state) 'app.schema/Store
               (:content content) (assoc store :content content)
-              (:router router)
-                assoc store :router $ assert-type router $ :: 'Map 'Tag 'Tag
-              (:hydrate-storage data) (decode-map-as data 'app.schema/Store)
+              (:router router) (assoc store :router router)
+              (:hydrate-storage data) data
               _ $ do (eprintln "|Unknown op:" op) store
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'app.schema/Store)
-            :args $ [] 'app.schema/Store 'Enum 'String 'Number
+            :args $ [] 'app.schema/Store 'app.schema/Op 'String 'Number
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater
           :require $ [] respo.cursor :refer $ [] update-states

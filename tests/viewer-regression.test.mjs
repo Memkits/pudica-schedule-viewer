@@ -3,7 +3,7 @@ import { test } from "node:test";
 import dayjs from "dayjs";
 import weekOfYear from "dayjs/plugin/weekOfYear.js";
 import * as c from "../js-out/calcit.core.mjs";
-import { decode_schedule, decode_task, store } from "../js-out/app.schema.mjs";
+import { decode_op, decode_schedule, decode_task, store } from "../js-out/app.schema.mjs";
 import { updater } from "../js-out/app.updater.mjs";
 import { comp_editor } from "../js-out/app.comp.editor.mjs";
 import { comp_viewer, comp_time, format_duration, get_done_time, format_dayjs } from "../js-out/app.comp.viewer.mjs";
@@ -66,7 +66,7 @@ test("editor input and submit dispatch Enum content and router updates", () => {
   let db = store;
   const dispatch = (...args) => {
     assert.equal(args.length, 1);
-    db = updater(db, args[0], "fixture", 0);
+    db = updater(db, decode_op(args[0]), "fixture", 0);
   };
   const input = handler(comp_editor(states), t.input);
   assert.equal(typeof input, "function");
@@ -80,9 +80,10 @@ test("editor input and submit dispatch Enum content and router updates", () => {
 });
 test("nested editor state changes preserve content and routing", () => {
   const original = c.assoc(store, t.content, content());
-  const legacyStore = map(...[t.states, t.router, t.content, t.messages].flatMap(key => [key, field(original, key)]));
-  assert.ok(c._$e_(updater(store, c._$o__$o_(t["hydrate-storage"], legacyStore), "fixture", 0), original));
-  const next = updater(original, c._$o__$o_(c.init_tags(["states"]).states, c._$L_(t.editor), map(t.text, "draft")), "fixture", 0);
+  const legacyStore = c.assoc(map(...[t.states, t.router, t.content, t.messages].flatMap(key => [key, field(original, key)])), t.router, map(t.name, field(field(original, t.router), t.name)));
+  assert.ok(c._$e_(updater(store, decode_op(c._$o__$o_(t["hydrate-storage"], legacyStore)), "fixture", 0), original));
+  assert.throws(() => decode_op(c._$o__$o_(t.router, map(t.name, "not a route tag"))));
+  const next = updater(original, decode_op(c._$o__$o_(c.init_tags(["states"]).states, c._$L_(t.editor), map(t.text, "draft"))), "fixture", 0);
   assert.ok(c._$e_(field(next, t.content), field(original, t.content)));
   assert.ok(c._$e_(field(next, t.router), field(original, t.router)));
   assert.equal(field(field(field(field(next, t.states), t.editor), t.data), t.text), "draft");
