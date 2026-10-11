@@ -210,8 +210,7 @@
             :names $ {} (:add |add) (:day |day) (:diff |diff) (:format |format) (:startOf |startOf) (:week |week) (:year |year)
           :schema $ :: 'Trait
         'add-days $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn add-days (value amount)
-            unsafe-coerce (.!add value amount |day) 'app.comp.viewer/DayjsHost
+          :code $ quote $ defn add-days (value amount) (value .add amount |day)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'app.comp.viewer/DayjsHost)
             :args $ [] 'app.comp.viewer/DayjsHost 'Number
@@ -516,42 +515,37 @@
         'current-dayjs $ %{} 'CodeEntry
           :doc "|Create a typed Dayjs value for the current time."
           :code $ quote $ defn current-dayjs ()
-            unsafe-coerce (dayjs) 'app.comp.viewer/DayjsHost
+            js-cast (dayjs) 'app.comp.viewer/DayjsHost
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'app.comp.viewer/DayjsHost)
             :args $ []
             :features $ #{} :js-ffi
         'dayjs-day $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn dayjs-day (value)
-            unsafe-coerce (.!day value) 'Number
+          :code $ quote $ defn dayjs-day (value) (value .day)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'app.comp.viewer/DayjsHost
             :features $ #{} :js-ffi
         'dayjs-week $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn dayjs-week (value)
-            unsafe-coerce (.!week value) 'Number
+          :code $ quote $ defn dayjs-week (value) (value .week)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'app.comp.viewer/DayjsHost
             :features $ #{} :js-ffi
         'dayjs-year $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn dayjs-year (value)
-            unsafe-coerce (.!year value) 'Number
+          :code $ quote $ defn dayjs-year (value) (value .year)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'app.comp.viewer/DayjsHost
             :features $ #{} :js-ffi
         'diff-days $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn diff-days (later earlier)
-            unsafe-coerce (.!diff later earlier |day) 'Number
+          :code $ quote $ defn diff-days (later earlier) (later .diff earlier |day)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'app.comp.viewer/DayjsHost 'app.comp.viewer/DayjsHost
             :features $ #{} :js-ffi
         'format-dayjs $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn format-dayjs (value pattern)
-            unsafe-coerce (.!format value pattern) 'String
+          :code $ quote $ defn format-dayjs (value pattern) (value .format pattern)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'String)
             :args $ [] 'app.comp.viewer/DayjsHost 'String
@@ -577,14 +571,13 @@
         'make-dayjs $ %{} 'CodeEntry
           :doc "|Narrow one Dayjs constructor result to the reviewed host trait."
           :code $ quote $ defn make-dayjs (value)
-            unsafe-coerce (dayjs value) 'app.comp.viewer/DayjsHost
+            js-cast (dayjs value) 'app.comp.viewer/DayjsHost
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'app.comp.viewer/DayjsHost)
             :args $ [] 'Dynamic
             :features $ #{} :js-ffi
         'start-of-week $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn start-of-week (value)
-            unsafe-coerce (.!startOf value |week) 'app.comp.viewer/DayjsHost
+          :code $ quote $ defn start-of-week (value) (value .startOf |week)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'app.comp.viewer/DayjsHost)
             :args $ [] 'app.comp.viewer/DayjsHost
@@ -623,7 +616,7 @@
           :code $ quote $ deftrait DayjsFactoryHost
             .extend! $ :: 'Fn $ {}
               :args $ [] 'app.main/DayjsFactoryHost 'JsObject
-              :return 'Unit
+              :return 'app.main/DayjsFactoryHost
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
             :names $ {} $ :extend! |extend
