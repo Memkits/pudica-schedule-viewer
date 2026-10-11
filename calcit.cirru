@@ -19,9 +19,10 @@
                 route-name $ assert-type (&map:get router :name) 'Tag
               div
                 {} $ :class-name $ str-spaced css/global css/fullscreen css/column
-                case-default route-name (<> |Unknown)
-                  :home $ comp-editor $ >> states :editor
+                match route-name
+                  :home $ comp-editor $ assert-type (>> states :editor) (:: 'Map 'Tag 'Dynamic)
                   :viewer $ comp-viewer $ &map:get store :content
+                  _ $ <> |Unknown
                 comp-nav route-name
                 comp-upload $ &map:get store :content
                 when dev? $ comp-inspect |Store store $ {}
@@ -239,7 +240,7 @@
                 :background-color $ hsl 20 80 97
                 :border $ str "|1px solid " $ hsl 20 80 84
                 :border-radius |0px
-              -> tasks (vals) (&set:to-list)
+              -> tasks (distinct-values) (&set:to-list)
                 sort $ fn (task-a task-b)
                   hint-fn $ {}
                     :args $ [] 'app.schema/Task 'app.schema/Task
@@ -261,7 +262,8 @@
           :code $ quote $ defcomp comp-day (day month-date amount)
             div
               {} $ :class-name css-day
-              <> $ case-default day (str |Invalid: day) (0 |Sun) (1 |Mon) (2 |Tue) (3 |Wed) (4 |Thu) (5 |Fri) (6 |Sat)
+              <> $ match day (0 |Sun) (1 |Mon) (2 |Tue) (3 |Wed) (4 |Thu) (5 |Fri) (6 |Sat)
+                _ $ str |Invalid: day
               =< 8 0
               <> month-date $ {} (:font-size 12)
                 :color $ hsl 0 0 0
@@ -318,7 +320,7 @@
           :code $ quote $ defcomp comp-viewer (content)
             let
                 content $ schema/decode-schedule content
-                tasks $ &set:to-list $ vals (:archives content)
+                tasks $ &set:to-list $ distinct-values (:archives content)
                 tasks-by-year $ assert-type
                   group-by tasks $ fn (task)
                     hint-fn $ {}
@@ -632,6 +634,7 @@
             reset! *reel $ updater
               assert-type @*reel $ :: 'Map 'Tag 'Dynamic
               , op (generate-id!) (now-ms)
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Enum
@@ -643,7 +646,7 @@
                 plugin $ unsafe-coerce week-of-year JsObject
               dayjs-host .extend! plugin
             render-app!
-            add-watch *reel :changes $ fn (r p) (render-app!)
+            add-watch! *reel :changes $ fn (r p) (render-app!)
             match
               storage-get $ or (&map:get schema/config :storage) |pudica-schedule-viewer
               (:some raw)
@@ -664,8 +667,8 @@
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if (nil? build-errors)
-              do (remove-watch *reel :changes) (clear-cache!)
-                add-watch *reel :changes $ fn (store prev) (render-app!)
+              do (remove-watch! *reel :changes) (clear-cache!)
+                add-watch! *reel :changes $ fn (store prev) (render-app!)
                 render-app!
                 hud! |ok~ |Ok
               hud! |error build-errors
@@ -676,7 +679,7 @@
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             if-let (target mount-target)
-              render! target
+              render! (narrow-element target)
                 comp-container $ assert-type @*reel $ :: 'Map 'Tag 'Dynamic
                 , dispatch!
               do (eprintln |Mount-target-not-found.) &unit
@@ -702,6 +705,7 @@
             app.config :as config
             js-ffi.browser :refer $ storage-get query-selector
             js-ffi.shared :refer $ now-ms
+            respo.ffi.browser :refer $ narrow-element
     'app.schema $ %{} 'FileEntry
       :defs $ {}
         'Schedule $ %{} 'CodeEntry (:doc "|Decoded active and archived task collections.")
@@ -725,11 +729,9 @@
           :doc "|Validate legacy parsed storage and construct a typed Schedule."
           :code $ quote $ defn decode-schedule (raw)
             let
-                content $ assert-type raw $ :: 'Map 'Tag 'Dynamic
-                tasks $ assert-type (&map:get content :tasks)
-                  :: 'Map 'String $ :: 'Map 'Tag 'Dynamic
-                archives $ assert-type (&map:get content :archives)
-                  :: 'Map 'String $ :: 'Map 'Tag 'Dynamic
+                content $ storage-map raw
+                tasks $ assert-type (&map:get content :tasks) (:: 'Map 'String 'Dynamic)
+                archives $ assert-type (&map:get content :archives) (:: 'Map 'String 'Dynamic)
               Schedule :tasks (decode-task-map tasks) :archives $ decode-task-map archives
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'app.schema/Schedule)
@@ -752,13 +754,21 @@
           :code $ quote $ defn decode-task-map (raw)
             filter-map-kv raw $ fn (task-id task)
               hint-fn $ {}
-                :args $ [] 'String $ :: 'Map 'Tag 'Dynamic
+                :args $ [] 'String 'Dynamic
                 :return $ :: 'calcit.core/MapEntryDecision 'String 'app.schema/Task
-              %:: calcit.core/MapEntryDecision :keep task-id $ decode-task task
+              %:: calcit.core/MapEntryDecision :keep task-id $ decode-task $ storage-map task
           :examples $ []
           :schema $ :: 'Fn $ {}
-            :args $ [] $ :: 'Map 'String (:: 'Map 'Tag 'Dynamic)
+            :args $ [] $ :: 'Map 'String 'Dynamic
             :return $ :: 'Map 'String 'app.schema/Task
+        'storage-map $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn storage-map (raw)
+            if (struct? raw) (&struct:to-map raw)
+              assert-type raw $ :: 'Map 'Tag 'Dynamic
+          :examples $ []
+          :schema $ :: 'Fn $ {}
+            :args $ [] 'Dynamic
+            :return $ :: 'Map 'Tag 'Dynamic
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             {}
@@ -774,7 +784,12 @@
           :doc "|Validate a legacy nil-or-number field and return Option<Number>."
           :code $ quote $ defn to-number-option (value)
             if (nil? value) (Option :none)
-              Option :some $ assert-type value 'Number
+              if (enum? value)
+                match value
+                  (:none) (Option :none)
+                  (:some timestamp)
+                    if (number? timestamp) (Option :some timestamp) (raise "|Invalid stored timestamp")
+                if (number? value) (Option :some value) (raise "|Invalid stored timestamp")
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] 'Dynamic

@@ -10,13 +10,17 @@ import { comp_viewer, comp_time, format_duration, get_done_time, format_dayjs } 
 import { make_string } from "../js-out/respo.render.html.mjs";
 import { component_$q_, component_tree } from "../js-out/respo.util.detect.mjs";
 dayjs.extend(weekOfYear);
-const t = c.init_tags(["tasks", "archives", "id", "text", "created-time", "done-time", "archived-time", "content", "router", "name", "viewer", "states", "cursor", "data", "editor", "value", "event", "children", "input", "click"]);
+const t = c.init_tags(["tasks", "archives", "id", "text", "created-time", "done-time", "archived-time", "content", "router", "name", "viewer", "states", "cursor", "data", "editor", "value", "event", "children", "input", "click", "node"]);
 const map = c._$n__$M_;
 const field = (v, key) => c.option_$o_unwrap(c.get(v, key));
 const nth = (v, i) => c.option_$o_unwrap(c.nth(v, i));
 const task = (id, text, done = null) => map(t.id, id, t.text, text, t["created-time"], Date.UTC(2024, 0, 1, 12), t["done-time"], done, t["archived-time"], null);
 const content = () => map(t.tasks, map("active", task("active", "active fixture")), t.archives, map("archived", task("archived", "archived fixture", Date.UTC(2024, 0, 3, 12))));
 function handler(node, kind) {
+  if (c.enum_$q_(node)) {
+    if (node.tag.value === "none") return;
+    return handler(c._$n_enum_$o_nth(node, 1), kind);
+  }
   if (component_$q_(node)) return handler(c.option_$o_unwrap(component_tree(node)), kind);
   const event = c.get(node, t.event);
   if (c.option_$o_some_$q_(event)) {
@@ -25,7 +29,7 @@ function handler(node, kind) {
   }
   const children = c.get(node, t.children);
   if (c.option_$o_some_$q_(children)) for (const pair of c.option_$o_unwrap(children).toArray()) {
-    const found = handler(nth(pair, 1), kind);
+    const found = handler(field(pair, t.node), kind);
     if (found) return found;
   }
 }
@@ -34,6 +38,16 @@ test("decode validates all task fields and rejects malformed storage", () => {
   assert.match(c.format_cirru_edn(decoded), /Schedule/);
   for (const invalid of ["not a map", map(), map(t.tasks, map("bad", map(t.id, "bad")), t.archives, map())]) assert.throws(() => decode_schedule(invalid));
   assert.throws(() => decode_task(c.assoc(task("bad", "text"), t["done-time"], "not a timestamp")));
+  const currentStorage = `%{} 'Store (:dragging-id |) (:dropping-id |) (:pointer 0)
+  :archives $ {}
+  :states $ {}
+  :tasks $ {} $ |root
+    %{} 'Task (:created-time 0) (:done? false) (:id |root) (:sort-id |T)
+      :text |Current-Schedule-Struct-fixture
+      :archived-time $ %:: 'Option 'none
+      :done-time $ %:: 'Option 'none`;
+  assert.match(c.format_cirru_edn(decode_schedule(c.parse_cirru_edn(currentStorage))), /Current-Schedule-Struct-fixture/);
+  assert.throws(() => decode_schedule(c.parse_cirru_edn(currentStorage.replace(":done-time $ %:: 'Option 'none", ":done-time $ %:: 'Option 'some |invalid"))));
 });
 test("active and archived tasks render with year grouping", () => {
   const html = make_string(comp_viewer(content()));
