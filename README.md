@@ -10,7 +10,8 @@ Site http://r.tiye.me/Memkits/pudica-schedule-viewer/
 
 Workflow https://github.com/calcit-lang/respo-calcit-workflow
 
-The project targets stable Calcit `0.29.0` with strict dependency and source checks. Legacy Pudica
+The project pairs published Calcit/procs `0.30.1-alpha.4` (not stable 0.30.1), with formal
+Respo 0.16.122, UI 0.7.41 and JS-FFI 0.2.3 modules. Legacy Pudica
 storage maps and current Schedule Struct/Option exports are validated and converted to typed schedule/task structs;
 the remaining `Dynamic` positions are limited to storage, Respo state, and
 host boundaries:
@@ -48,7 +49,9 @@ snapshots are ignored and rejected by CI. Public upload verification uses
 cos-upload-action's built-in verify settings, with no extra CDN checker. Original server
 deployment paths and shared external resource URLs remain unchanged.
 
-CI 使用正式 COS action v1.2.0 内置生成 HTML 同域资源引用及公开字节/SHA-256 校验，不再重复 CDN 构建测试。规范格式、全定义严格检查、弃用调用零门禁及工具链一致性检查保留；五项真实业务测试与原存储/Canvas 适配测试不变，构建一次后直接运行，避免重复编译。
+CI 使用精确正式 tag 的 Actions，COS action v1.2.0 内置生成 HTML 同域资源引用及公开字节/SHA-256 校验，不再重复 CDN 构建测试。规范格式、全定义/公开定义/完整 strict、弃用调用零门禁及工具链一致性检查保留；五项真实业务测试与原存储/Canvas 适配测试不变，构建一次后直接运行，避免重复编译。job 15 分钟、上传 10 分钟限时，不改变串行队列及部署条件。
+
+Map 查询显式处理 Option，旧 nil 时间和新 Option 在存档边界规范化。事件实际是 Map，检查具体输入字段；混合 key 的 Respo states 保留真实开放合同，不用伪强转或 Dynamic 数量证明类型安全。`llms/` 只保留当前 CLI 与项目边界入口，退役重复的旧语言/框架教程。
 
 `yarn check` 使用当前严格 `--check-only`，不再调用已移除的 `dynamic-methods --max` 或重复诊断。`yarn dev` 仍编译一次再启动 Vite；实时编译另开终端运行 `calcit calcit.cirru js -w`，无需 concurrently。PR 上传按 PR/run/attempt 隔离，原生产/服务器路径及存储数据保持不变，不新增模块 hash 或机械降级 alpha。
 

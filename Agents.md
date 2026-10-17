@@ -1,6 +1,6 @@
-This repository uses Calcit 0.27.0. `calcit.cirru` and `deps.cirru` are the canonical project files; do not recreate `compact.cirru` or `package.cirru`. Use the current `calcit` CLI and its live help for structured edits and code generation. The linked `llms/` guides contain historical examples that do not override this rule.
+This repository uses paired Calcit/procs 0.30.1-alpha.4 (a published prerelease). `calcit.cirru` and `deps.cirru` are canonical; do not recreate `compact.cirru` or `package.cirru`. Use the pinned `calcit` CLI and its live help for structured edits and code generation.
 
-- make sure reading `llms/Calcit.md` for Calcit language tools, aka `cr` command.
+- read `llms/Calcit.md` for the current Calcit tool entry points.
 - read `llms/Respo.md` for UI library usages.
 
 ## LLM 执行效率优化（不重复 llms/Calcit.md）
