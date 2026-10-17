@@ -6,7 +6,7 @@
     {} (:description |) (:init-fn 'app.main/main!) (:mode :js) (:reload-fn 'app.main/reload!) (:target :browser)
       :feature-policy $ {}
       :modules $ [] |respo.calcit/ |respo-ui.calcit/ |js-ffi/
-      :type-slots $ {}
+      :type-slots $ {} $ :dispatch-op |app.schema/Op
   :files $ {}
     'app.comp.container $ %{} 'FileEntry
       :defs $ {} $ 'comp-container
@@ -20,7 +20,7 @@
               div
                 {} $ :class-name $ str-spaced css/global css/fullscreen css/column
                 match route-name
-                  :home $ comp-editor $ assert-type (>> states :editor) (:: 'Map 'Tag 'Dynamic)
+                  :home $ comp-editor $ >> states :editor
                   :viewer $ comp-viewer $ :content store
                   _ $ <> |Unknown
                 comp-nav route-name
@@ -47,9 +47,12 @@
         'comp-editor $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-editor (states)
             let
-                cursor $ assert-type (&map:get states :cursor) (:: 'List 'Dynamic)
-                state $ assert-type
-                  or (&map:get states :data)
+                cursor $ decode-map-as
+                  .unwrap $ get states :cursor
+                  :: 'List 'Dynamic
+                state $ decode-map-as
+                  or
+                    .unwrap-or (get states :data) nil
                     {} $ :text |
                   :: 'Map 'Tag 'String
               div
@@ -57,23 +60,26 @@
                   :class-name $ str-spaced css/flex css/flex
                   :style $ {} $ :padding |16px
                 textarea $ {}
-                  :value $ &map:get state :text
-                  :placeholder $ &map:get state :text
+                  :value $ .unwrap $ get state :text
+                  :placeholder $ .unwrap $ get state :text
                   :class-name css-textbox
                   :on-input $ fn (e d!)
-                    d! $ %:: schema/Op :states cursor $ assoc state :text
-                      assert-type (&map:get e :value) 'String
+                    d! $ schema/Op :states cursor $ assoc state :text
+                      decode-map-as
+                        .unwrap $ get e :value
+                        , 'String
                 =< 0 16
                 div ({})
                   button
                     {} (:class-name css/button)
                       :on-click $ fn (e d!)
-                        d! $ %:: schema/Op :content $ parse-cirru-edn (&map:get state :text)
-                        d! $ %:: schema/Op :router $ %{} schema/Router (:name :viewer)
+                        d! $ schema/Op :content $ parse-cirru-edn
+                          .unwrap $ get state :text
+                        d! $ schema/Op :router $ schema/Router :name :viewer
                     <> |Submit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
-            :args $ [] $ :: 'Map 'Tag 'Dynamic
+            :args $ [] $ :: 'Map 'Dynamic 'Dynamic
         'css-textbox $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-textbox
             {} $ |$0 $ {} (:outline :none)
@@ -116,7 +122,7 @@
               {} (:class-name css-icon)
                 :style $ if active? $ {} (:color :black)
                 :on-click $ fn (e d!)
-                  d! $ %:: schema/Op :router $ %{} schema/Router (:name page)
+                  d! $ schema/Op :router $ schema/Router :name page
               <> $ if (= icon :code) |Edit |View
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
@@ -168,6 +174,7 @@
           :code $ quote $ defn upload-schedule! (content)
             hint-fn $ {} $ :async true
             js-await $ begin-upload content
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:async true) (:return 'Unit)
             :args $ [] 'Dynamic
@@ -352,7 +359,7 @@
                       :return $ :: 'List 'Dynamic
                     let
                         tasks-in-year $ assert-type
-                          or (&map:get tasks-by-year year) ([])
+                          .unwrap-or (get tasks-by-year year) ([])
                           :: 'List 'app.schema/Task
                         tasks-by-week $ assert-type
                           group-by tasks-in-year $ fn (task)
@@ -376,7 +383,7 @@
                               :return $ :: 'List 'Dynamic
                             let
                                 tasks-in-week $ assert-type
-                                  or (&map:get tasks-by-week week) ([])
+                                  .unwrap-or (get tasks-by-week week) ([])
                                   :: 'List 'app.schema/Task
                                 tasks-by-day $ assert-type
                                   group-by tasks-in-week $ fn (task)
@@ -399,7 +406,7 @@
                                       :args $ [] 'Number
                                       :return 'Number
                                     count $ assert-type
-                                      or (&map:get tasks-by-day day) ([])
+                                      .unwrap-or (get tasks-by-day day) ([])
                                       :: 'List 'app.schema/Task
                                   reduce 0 &+
                               [] week $ div
@@ -415,7 +422,7 @@
                                         :return $ :: 'List 'Dynamic
                                       [] day $ comp-day-card day
                                         assert-type
-                                          or (&map:get tasks-by-day day) ([])
+                                          .unwrap-or (get tasks-by-day day) ([])
                                           :: 'List 'app.schema/Task
                                         , week-start
           :examples $ []
@@ -611,7 +618,7 @@
     'app.main $ %{} 'FileEntry
       :defs $ {}
         '*reel $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defatom *reel schema/store
+          :code $ quote $ defref *reel schema/store
           :examples $ []
           :schema $ :: 'Ref 'app.schema/Store
         'DayjsFactoryHost $ %{} 'CodeEntry (:doc |)
@@ -625,12 +632,17 @@
           :schema $ :: 'Trait
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
-            when config/dev? $ println |Dispatch: op
-            reset! *reel $ updater @*reel (schema/decode-op op) (generate-id!) (now-ms)
+            if (enum? op)
+              do
+                when config/dev? $ println |Dispatch: op
+                reset! *reel $ updater @*reel (schema/decode-op op) (generate-id!) (now-ms)
+                , &unit
+              raise |Expected-Enum-operation
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Enum
+            :args $ [] 'Dynamic
+            :features $ #{} :js-ffi
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             if config/dev? $ load-console-formatter!
@@ -641,11 +653,11 @@
             render-app!
             add-watch! *reel :changes $ fn (r p) (render-app!)
             match
-              storage-get $ or (&map:get schema/config :storage) |pudica-schedule-viewer
+              storage-get $ .unwrap-or (get schema/config :storage) |pudica-schedule-viewer
               (:some raw)
                 do
-                  dispatch! $ %:: schema/Op :content $ parse-cirru-edn raw
-                  dispatch! $ %:: schema/Op :router $ %{} schema/Router (:name :viewer)
+                  dispatch! $ schema/Op :content $ parse-cirru-edn raw
+                  dispatch! $ schema/Op :router $ schema/Router :name :viewer
               (:none) &unit
             println "|App started."
             , &unit
@@ -665,6 +677,7 @@
                 render-app!
                 hud! |ok~ |Ok
               hud! |error build-errors
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
@@ -706,7 +719,7 @@
             :router 'app.schema/Router
             :hydrate-storage 'app.schema/Store
           :examples $ []
-          :schema $ :: 'Enum
+          :schema $ :: 'EnumDef
         'Router $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct Router (:name 'Tag)
           :examples $ []
@@ -740,15 +753,15 @@
           :code $ quote $ defn decode-op (op)
             match op
               (:states cursor state)
-                if (list? cursor) (%:: Op :states cursor state) (raise |Invalid-state-cursor)
-              (:content content) (%:: Op :content content)
+                if (list? cursor) (Op :states cursor state) (raise |Invalid-state-cursor)
+              (:content content) (Op :content content)
               (:router router)
-                %:: Op :router $ decode-map-as (storage-map router) 'app.schema/Router
+                Op :router $ decode-map-as (storage-map router) 'app.schema/Router
               (:hydrate-storage data)
                 let
                     fields $ storage-map data
-                  %:: Op :hydrate-storage $ decode-map-as
-                    assoc fields :router $ storage-map $ &map:get fields :router
+                  Op :hydrate-storage $ decode-map-as
+                    assoc fields :router $ storage-map $ .unwrap (get fields :router)
                     , 'app.schema/Store
               _ $ raise |Unknown-viewer-operation
           :examples $ []
@@ -759,8 +772,12 @@
           :code $ quote $ defn decode-schedule (raw)
             let
                 content $ storage-map raw
-                tasks $ assert-type (&map:get content :tasks) (:: 'Map 'String 'Dynamic)
-                archives $ assert-type (&map:get content :archives) (:: 'Map 'String 'Dynamic)
+                tasks $ decode-map-as
+                  .unwrap $ get content :tasks
+                  :: 'Map 'String 'Dynamic
+                archives $ decode-map-as
+                  .unwrap $ get content :archives
+                  :: 'Map 'String 'Dynamic
               Schedule :tasks (decode-task-map tasks) :archives $ decode-task-map archives
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'app.schema/Schedule)
@@ -770,11 +787,11 @@
           :code $ quote $ defn decode-task (raw)
             decode-map-as
               {}
-                :id $ &map:get raw :id
-                :text $ &map:get raw :text
-                :created-time $ &map:get raw :created-time
-                :done-time $ to-number-option $ &map:get raw :done-time
-                :archived-time $ to-number-option $ &map:get raw :archived-time
+                :id $ .unwrap $ get raw :id
+                :text $ .unwrap $ get raw :text
+                :created-time $ .unwrap $ get raw :created-time
+                :done-time $ to-number-option $ .unwrap-or (get raw :done-time) nil
+                :archived-time $ to-number-option $ .unwrap-or (get raw :archived-time) nil
               , Task
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'app.schema/Task)
@@ -785,7 +802,7 @@
               hint-fn $ {}
                 :args $ [] 'String 'Dynamic
                 :return $ :: 'calcit.core/MapEntryDecision 'String 'app.schema/Task
-              %:: calcit.core/MapEntryDecision :keep task-id $ decode-task $ storage-map task
+              calcit.core/MapEntryDecision :keep task-id $ decode-task $ storage-map task
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] $ :: 'Map 'String 'Dynamic
@@ -793,20 +810,18 @@
         'storage-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn storage-map (raw)
             if (struct? raw) (&struct:to-map raw)
-              assert-type raw $ :: 'Map 'Tag 'Dynamic
+              decode-map-as raw $ :: 'Map 'Tag 'Dynamic
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] 'Dynamic
             :return $ :: 'Map 'Tag 'Dynamic
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
-            %{} Store
-              :states $ {}
-              :router $ %{} Router $ :name :home
-              :content $ {}
+            Store :states ({}) :router (Router :name :home) :content
+              {}
                 :tasks $ {}
                 :archives $ {}
-              :messages $ {}
+              , :messages $ {}
           :examples $ []
           :schema $ :: 'app.schema/Store
         'to-number-option $ %{} 'CodeEntry
@@ -842,7 +857,9 @@
           :code $ quote $ defn updater (store op op-id op-time)
             match op
               (:states cursor state)
-                assert-type (update-states store cursor state) 'app.schema/Store
+                assoc store :states $ decode-map-as
+                  assoc-in (:states store) (conj cursor :data) state
+                  :: 'Map 'Tag 'Dynamic
               (:content content) (assoc store :content content)
               (:router router) (assoc store :router router)
               (:hydrate-storage data) data
@@ -852,4 +869,3 @@
             :args $ [] 'app.schema/Store 'app.schema/Op 'String 'Number
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater
-          :require $ [] respo.cursor :refer $ [] update-states
