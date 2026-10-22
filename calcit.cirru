@@ -111,9 +111,9 @@
       :defs $ {}
         'begin-upload $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn begin-upload (content)
-            unsafe-coerce (uploadSchedule content) 'JsObject
+            js-cast (uploadSchedule content) 'js-ffi.shared/PromiseHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
+          :schema $ :: 'Fn $ {} (:return 'js-ffi.shared/PromiseHost)
             :args $ [] 'Dynamic
             :features $ #{} :js-ffi
         'comp-link $ %{} 'CodeEntry (:doc |)
