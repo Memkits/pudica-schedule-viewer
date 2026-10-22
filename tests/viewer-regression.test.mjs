@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import dayjs from "dayjs";
 import weekOfYear from "dayjs/plugin/weekOfYear.js";
+import axios from "axios";
 import * as c from "../js-out/calcit.core.mjs";
 import { decode_op, decode_schedule, decode_task, store } from "../js-out/app.schema.mjs";
 import { updater } from "../js-out/app.updater.mjs";
@@ -9,6 +10,7 @@ import { comp_editor } from "../js-out/app.comp.editor.mjs";
 import { comp_viewer, comp_time, format_duration, get_done_time, format_dayjs } from "../js-out/app.comp.viewer.mjs";
 import { make_string } from "../js-out/respo.render.html.mjs";
 import { component_$q_, component_tree } from "../js-out/respo.util.detect.mjs";
+import { begin_upload, upload_schedule_$x_ } from "../js-out/app.comp.nav.mjs";
 dayjs.extend(weekOfYear);
 const t = c.init_tags(["tasks", "archives", "id", "text", "created-time", "done-time", "archived-time", "content", "router", "name", "viewer", "states", "cursor", "data", "editor", "value", "event", "children", "input", "click", "node", "messages", "hydrate-storage"]);
 const map = c._$n__$M_;
@@ -87,4 +89,33 @@ test("nested editor state changes preserve content and routing", () => {
   assert.ok(c._$e_(field(next, t.content), field(original, t.content)));
   assert.ok(c._$e_(field(next, t.router), field(original, t.router)));
   assert.equal(field(field(field(field(next, t.states), t.editor), t.data), t.text), "draft");
+});
+
+test("upload bridge checks the Promise and preserves raw content and rejection", async () => {
+  const originalAdapter = axios.defaults.adapter;
+  const raw = c.assoc(content(), c.init_tags(["export-metadata"])["export-metadata"], "原始存档 031 🐈");
+  const calls = [];
+  try {
+    // Capture before Axios selects any network transport; no real request is sent.
+    axios.defaults.adapter = async config => {
+      calls.push(config);
+      return { data: {}, status: 200, statusText: "OK", headers: {}, config };
+    };
+    const pending = begin_upload(raw);
+    assert.equal(typeof pending.then, "function");
+    assert.equal(typeof pending.catch, "function");
+    await pending;
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].method, "post");
+    assert.equal(calls[0].url, "https://data-backs.chenyong.life/data/pudica-schedule-viewer");
+    const payload = JSON.parse(calls[0].data);
+    assert.equal(payload["export-metadata"], "原始存档 031 🐈");
+    assert.equal(payload.tasks.active.text, "active fixture");
+    assert.equal(payload.archives.archived.text, "archived fixture");
+    const failure = new Error("synthetic upload rejection");
+    axios.defaults.adapter = async () => { throw failure; };
+    await assert.rejects(upload_schedule_$x_(raw), error => error === failure);
+  } finally {
+    axios.defaults.adapter = originalAdapter;
+  }
 });
