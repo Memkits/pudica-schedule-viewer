@@ -1,0 +1,73 @@
+name: Protected Pudica Viewer method migration
+on:
+  push:
+    branches: [prepare/pudica-viewer-methods-0301]
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v6.5.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - uses: calcit-lang/setup-calcit@v1.5.0
+        with:
+          deps-file: deps.cirru
+          tools: calcit,caps
+          caps-version: "0.1.1"
+      - name: Original baseline and protected source transaction
+        env:
+          VITE_BASE_URL: ./
+        run: |
+          set -euo pipefail
+          corepack enable
+          corepack prepare yarn@4.18.0 --activate
+          caps --ci --strict
+          yarn install --immutable
+          caps verify --toolchain
+          yarn build
+          node tests/storage-read.mjs
+          node tests/canvas-context.mjs
+          node --test tests/*.test.mjs
+          node prepare-source.mjs apply
+      - name: Original strict and application gates
+        env:
+          VITE_BASE_URL: ./
+        run: |
+          set -euo pipefail
+          test ! -e compact.cirru
+          test ! -e package.cirru
+          before_blob="$(git hash-object calcit.cirru)"
+          calcit calcit.cirru edit format
+          test "$(git hash-object calcit.cirru)" = "$before_blob"
+          calcit calcit.cirru --check-only --all-defs
+          calcit calcit.cirru --check-only --ns app.schema --ns app.updater --summary-only
+          calcit calcit.cirru fix --workflow strict --verify --format json | tee acceptance/strict.json
+          jq -e '.data.workflow.status == "passed" and .diagnostics == []' acceptance/strict.json
+          calcit calcit.cirru analyze weak-types --only deprecated-call --summary-only --format json | jq -e '.data.summary.calls == 0'
+          yarn build
+          node tests/storage-read.mjs
+          node tests/canvas-context.mjs
+          node --test tests/*.test.mjs
+          node prepare-source.mjs verify
+      - uses: actions/upload-artifact@v7.0.2
+        if: success()
+        with:
+          name: pudica-viewer-accepted-source
+          path: calcit.cirru
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: pudica-viewer-diagnostics
+          path: acceptance
+          if-no-files-found: warn
+          retention-days: 30

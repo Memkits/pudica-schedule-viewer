@@ -1,0 +1,5999 @@
+{
+  "base": "80f846df699e2cbef2357ac27f46c97463f35472",
+  "blob": "6f4f3434b038ef73addc6a1e8a0a1a10b5e0e011",
+  "before": {
+    "config": {
+      "package": "app",
+      "version": "0.1.4",
+      "selected_entry": null,
+      "entries": [
+        {
+          "name": "default",
+          "mode": "js",
+          "target": "browser",
+          "init_fn": "app.main/main!",
+          "reload_fn": "app.main/reload!",
+          "description": "",
+          "modules": [
+            "respo.calcit/",
+            "respo-ui.calcit/",
+            "js-ffi/"
+          ],
+          "type_slots": {
+            "dispatch-op": "app.schema/Op"
+          },
+          "feature_policy": {}
+        }
+      ],
+      "verification_schema_version": 1,
+      "verification_profiles": []
+    },
+    "namespaces": [
+      {
+        "definition_count": 2,
+        "doc": "",
+        "namespace": "app.$meta",
+        "ns_code": [
+          "ns",
+          "app.$meta"
+        ]
+      },
+      {
+        "definition_count": 1,
+        "doc": "",
+        "namespace": "app.comp.container",
+        "ns_code": [
+          "ns",
+          "app.comp.container",
+          [
+            ":require",
+            [
+              "respo.util.format",
+              ":refer",
+              [
+                "hsl"
+              ]
+            ],
+            [
+              "respo-ui.core",
+              ":as",
+              "ui"
+            ],
+            [
+              "respo.core",
+              ":refer",
+              [
+                "defcomp",
+                ">>",
+                "<>",
+                "div",
+                "button",
+                "textarea",
+                "span"
+              ]
+            ],
+            [
+              "respo.comp.space",
+              ":refer",
+              [
+                "=<"
+              ]
+            ],
+            [
+              "respo.comp.inspect",
+              ":refer",
+              [
+                "comp-inspect"
+              ]
+            ],
+            [
+              "app.config",
+              ":refer",
+              [
+                "dev?"
+              ]
+            ],
+            [
+              "app.comp.nav",
+              ":refer",
+              [
+                "comp-nav",
+                "comp-upload"
+              ]
+            ],
+            [
+              "app.comp.editor",
+              ":refer",
+              [
+                "comp-editor"
+              ]
+            ],
+            [
+              "app.comp.viewer",
+              ":refer",
+              [
+                "comp-viewer"
+              ]
+            ],
+            [
+              "respo-ui.css",
+              ":as",
+              "css"
+            ]
+          ]
+        ]
+      },
+      {
+        "definition_count": 2,
+        "doc": "",
+        "namespace": "app.comp.editor",
+        "ns_code": [
+          "ns",
+          "app.comp.editor",
+          [
+            ":require",
+            [
+              "respo.util.format",
+              ":refer",
+              [
+                "hsl"
+              ]
+            ],
+            [
+              "respo-ui.core",
+              ":as",
+              "ui"
+            ],
+            [
+              "respo.core",
+              ":refer",
+              [
+                "defcomp",
+                "<>",
+                "div",
+                "button",
+                "textarea",
+                "span"
+              ]
+            ],
+            [
+              "respo.comp.space",
+              ":refer",
+              [
+                "=<"
+              ]
+            ],
+            [
+              "respo-ui.comp.icon",
+              ":refer",
+              [
+                "comp-icon"
+              ]
+            ],
+            [
+              "respo.css",
+              ":refer",
+              [
+                "defstyle"
+              ]
+            ],
+            [
+              "respo-ui.css",
+              ":as",
+              "css"
+            ],
+            [
+              "app.schema",
+              ":as",
+              "schema"
+            ]
+          ]
+        ]
+      },
+      {
+        "definition_count": 8,
+        "doc": "",
+        "namespace": "app.comp.nav",
+        "ns_code": [
+          "ns",
+          "app.comp.nav",
+          [
+            ":require",
+            [
+              "respo.util.format",
+              ":refer",
+              [
+                "hsl"
+              ]
+            ],
+            [
+              "respo-ui.core",
+              ":as",
+              "ui"
+            ],
+            [
+              "respo.core",
+              ":refer",
+              [
+                "defcomp",
+                ">>",
+                "<>",
+                "div",
+                "button",
+                "textarea",
+                "span"
+              ]
+            ],
+            [
+              "respo.comp.space",
+              ":refer",
+              [
+                "=<"
+              ]
+            ],
+            [
+              "respo.css",
+              ":refer",
+              [
+                "defstyle"
+              ]
+            ],
+            [
+              "|../upload.mjs",
+              ":refer",
+              [
+                "uploadSchedule"
+              ]
+            ],
+            [
+              "app.schema",
+              ":as",
+              "schema"
+            ]
+          ]
+        ]
+      },
+      {
+        "definition_count": 32,
+        "doc": "",
+        "namespace": "app.comp.viewer",
+        "ns_code": [
+          "ns",
+          "app.comp.viewer",
+          [
+            ":require",
+            [
+              "respo.util.format",
+              ":refer",
+              [
+                "hsl"
+              ]
+            ],
+            [
+              "respo-ui.core",
+              ":as",
+              "ui"
+            ],
+            [
+              "respo.core",
+              ":refer",
+              [
+                "defcomp",
+                ">>",
+                "list->",
+                "<>",
+                "div",
+                "button",
+                "textarea",
+                "span"
+              ]
+            ],
+            [
+              "respo.comp.space",
+              ":refer",
+              [
+                "=<"
+              ]
+            ],
+            [
+              "app.schema",
+              ":as",
+              "schema"
+            ],
+            [
+              "respo-ui.comp.icon",
+              ":refer",
+              [
+                "comp-icon"
+              ]
+            ],
+            [
+              "|dayjs",
+              ":default",
+              "dayjs"
+            ],
+            [
+              "app.style",
+              ":as",
+              "style"
+            ],
+            [
+              "respo.css",
+              ":refer",
+              [
+                "defstyle"
+              ]
+            ],
+            [
+              "respo-ui.css",
+              ":as",
+              "css"
+            ]
+          ]
+        ]
+      },
+      {
+        "definition_count": 1,
+        "doc": "",
+        "namespace": "app.config",
+        "ns_code": [
+          "ns",
+          "app.config"
+        ]
+      },
+      {
+        "definition_count": 8,
+        "doc": "",
+        "namespace": "app.main",
+        "ns_code": [
+          "ns",
+          "app.main",
+          [
+            ":require",
+            [
+              "respo.core",
+              ":refer",
+              [
+                "render!",
+                "clear-cache!",
+                "realize-ssr!"
+              ]
+            ],
+            [
+              "app.comp.container",
+              ":refer",
+              [
+                "comp-container"
+              ]
+            ],
+            [
+              "app.updater",
+              ":refer",
+              [
+                "updater"
+              ]
+            ],
+            [
+              "app.schema",
+              ":as",
+              "schema"
+            ],
+            [
+              "|dayjs",
+              ":default",
+              "dayjs"
+            ],
+            [
+              "|dayjs/plugin/weekOfYear",
+              ":default",
+              "week-of-year"
+            ],
+            [
+              "|./calcit.build-errors",
+              ":default",
+              "build-errors"
+            ],
+            [
+              "|bottom-tip",
+              ":default",
+              "hud!"
+            ],
+            [
+              "app.config",
+              ":as",
+              "config"
+            ],
+            [
+              "js-ffi.browser",
+              ":refer",
+              [
+                "storage-get",
+                "query-selector"
+              ]
+            ],
+            [
+              "js-ffi.shared",
+              ":refer",
+              [
+                "now-ms"
+              ]
+            ],
+            [
+              "respo.ffi.browser",
+              ":refer",
+              [
+                "narrow-element"
+              ]
+            ]
+          ]
+        ]
+      },
+      {
+        "definition_count": 13,
+        "doc": "",
+        "namespace": "app.schema",
+        "ns_code": [
+          "ns",
+          "app.schema"
+        ]
+      },
+      {
+        "definition_count": 1,
+        "doc": "",
+        "namespace": "app.style",
+        "ns_code": [
+          "ns",
+          "app.style",
+          [
+            ":require",
+            [
+              "respo-ui.core",
+              ":as",
+              "ui"
+            ],
+            [
+              "respo.css",
+              ":refer",
+              [
+                "defstyle"
+              ]
+            ]
+          ]
+        ]
+      },
+      {
+        "definition_count": 1,
+        "doc": "",
+        "namespace": "app.updater",
+        "ns_code": [
+          "ns",
+          "app.updater"
+        ]
+      }
+    ],
+    "defs": [
+      {
+        "code": [
+          "def",
+          "calcit-dirname",
+          "|"
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.$meta/calcit-dirname",
+        "js_ffi": null,
+        "schema": null,
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "def",
+          "calcit-filename",
+          "|calcit.cirru"
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.$meta/calcit-filename",
+        "js_ffi": null,
+        "schema": null,
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defcomp",
+          "comp-container",
+          [
+            "store-value"
+          ],
+          [
+            "let",
+            [
+              [
+                "store",
+                "store-value"
+              ],
+              [
+                "states",
+                [
+                  ":states",
+                  "store"
+                ]
+              ],
+              [
+                "router",
+                [
+                  ":router",
+                  "store"
+                ]
+              ],
+              [
+                "route-name",
+                [
+                  ":name",
+                  "router"
+                ]
+              ]
+            ],
+            [
+              "div",
+              [
+                "{}",
+                [
+                  ":class-name",
+                  [
+                    "str-spaced",
+                    "css/global",
+                    "css/fullscreen",
+                    "css/column"
+                  ]
+                ]
+              ],
+              [
+                "match",
+                "route-name",
+                [
+                  ":home",
+                  [
+                    "comp-editor",
+                    [
+                      ">>",
+                      "states",
+                      ":editor"
+                    ]
+                  ]
+                ],
+                [
+                  ":viewer",
+                  [
+                    "comp-viewer",
+                    [
+                      ":content",
+                      "store"
+                    ]
+                  ]
+                ],
+                [
+                  "_",
+                  [
+                    "<>",
+                    "|Unknown"
+                  ]
+                ]
+              ],
+              [
+                "comp-nav",
+                "route-name"
+              ],
+              [
+                "comp-upload",
+                [
+                  ":content",
+                  "store"
+                ]
+              ],
+              [
+                "when",
+                "dev?",
+                [
+                  "comp-inspect",
+                  "|Store",
+                  "store",
+                  [
+                    "{}"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.container/comp-container",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'app.schema/Store"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defcomp",
+          "comp-editor",
+          [
+            "states"
+          ],
+          [
+            "let",
+            [
+              [
+                "cursor",
+                [
+                  "decode-map-as",
+                  [
+                    ".unwrap",
+                    [
+                      "get",
+                      "states",
+                      ":cursor"
+                    ]
+                  ],
+                  [
+                    "::",
+                    "'List",
+                    "'Dynamic"
+                  ]
+                ]
+              ],
+              [
+                "state",
+                [
+                  "decode-map-as",
+                  [
+                    "or",
+                    [
+                      ".unwrap-or",
+                      [
+                        "get",
+                        "states",
+                        ":data"
+                      ],
+                      "nil"
+                    ],
+                    [
+                      "{}",
+                      [
+                        ":text",
+                        "|"
+                      ]
+                    ]
+                  ],
+                  [
+                    "::",
+                    "'Map",
+                    "'Tag",
+                    "'String"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "div",
+              [
+                "{}",
+                [
+                  ":class-name",
+                  [
+                    "str-spaced",
+                    "css/flex",
+                    "css/flex"
+                  ]
+                ],
+                [
+                  ":style",
+                  [
+                    "{}",
+                    [
+                      ":padding",
+                      "|16px"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "textarea",
+                [
+                  "{}",
+                  [
+                    ":value",
+                    [
+                      ".unwrap",
+                      [
+                        "get",
+                        "state",
+                        ":text"
+                      ]
+                    ]
+                  ],
+                  [
+                    ":placeholder",
+                    [
+                      ".unwrap",
+                      [
+                        "get",
+                        "state",
+                        ":text"
+                      ]
+                    ]
+                  ],
+                  [
+                    ":class-name",
+                    "css-textbox"
+                  ],
+                  [
+                    ":on-input",
+                    [
+                      "fn",
+                      [
+                        "e",
+                        "d!"
+                      ],
+                      [
+                        "d!",
+                        [
+                          "schema/Op",
+                          ":states",
+                          "cursor",
+                          [
+                            "assoc",
+                            "state",
+                            ":text",
+                            [
+                              "decode-map-as",
+                              [
+                                ".unwrap",
+                                [
+                                  "get",
+                                  "e",
+                                  ":value"
+                                ]
+                              ],
+                              "'String"
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "=<",
+                "0",
+                "16"
+              ],
+              [
+                "div",
+                [
+                  "{}"
+                ],
+                [
+                  "button",
+                  [
+                    "{}",
+                    [
+                      ":class-name",
+                      "css/button"
+                    ],
+                    [
+                      ":on-click",
+                      [
+                        "fn",
+                        [
+                          "e",
+                          "d!"
+                        ],
+                        [
+                          "d!",
+                          [
+                            "schema/Op",
+                            ":content",
+                            [
+                              "parse-cirru-edn",
+                              [
+                                ".unwrap",
+                                [
+                                  "get",
+                                  "state",
+                                  ":text"
+                                ]
+                              ]
+                            ]
+                          ]
+                        ],
+                        [
+                          "d!",
+                          [
+                            "schema/Op",
+                            ":router",
+                            [
+                              "schema/Router",
+                              ":name",
+                              ":viewer"
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "<>",
+                    "|Submit"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.editor/comp-editor",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              [
+                "::",
+                "'Map",
+                "'Dynamic",
+                "'Dynamic"
+              ]
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-textbox",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":outline",
+                  ":none"
+                ],
+                [
+                  ":border",
+                  [
+                    "str",
+                    "|1px solid ",
+                    [
+                      "hsl",
+                      "0",
+                      "0",
+                      "80"
+                    ]
+                  ]
+                ],
+                [
+                  ":font-size",
+                  "12"
+                ],
+                [
+                  ":font-family",
+                  "ui/font-code"
+                ],
+                [
+                  ":border-radius",
+                  "|4px"
+                ],
+                [
+                  ":padding",
+                  "8"
+                ],
+                [
+                  ":min-width",
+                  "240"
+                ],
+                [
+                  ":vertical-align",
+                  ":top"
+                ],
+                [
+                  ":width",
+                  "|100%"
+                ],
+                [
+                  ":height",
+                  "400"
+                ],
+                [
+                  ":line-height",
+                  "|1.6em"
+                ],
+                [
+                  ":white-space",
+                  ":nowrap"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.editor/css-textbox",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "begin-upload",
+          [
+            "content"
+          ],
+          [
+            "js-cast",
+            [
+              "uploadSchedule",
+              "content"
+            ],
+            "'js-ffi.shared/PromiseHost"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.nav/begin-upload",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'js-ffi.shared/PromiseHost"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Dynamic"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defcomp",
+          "comp-link",
+          [
+            "page",
+            "icon",
+            "active?"
+          ],
+          [
+            "div",
+            [
+              "{}",
+              [
+                ":class-name",
+                "css-icon"
+              ],
+              [
+                ":style",
+                [
+                  "if",
+                  "active?",
+                  [
+                    "{}",
+                    [
+                      ":color",
+                      ":black"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                ":on-click",
+                [
+                  "fn",
+                  [
+                    "e",
+                    "d!"
+                  ],
+                  [
+                    "d!",
+                    [
+                      "schema/Op",
+                      ":router",
+                      [
+                        "schema/Router",
+                        ":name",
+                        "page"
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              "<>",
+              [
+                "if",
+                [
+                  "=",
+                  "icon",
+                  ":code"
+                ],
+                "|Edit",
+                "|View"
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.nav/comp-link",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Tag",
+              "'Tag",
+              "'Bool"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defcomp",
+          "comp-nav",
+          [
+            "current-page"
+          ],
+          [
+            "div",
+            [
+              "{}",
+              [
+                ":class-name",
+                "css-nav"
+              ]
+            ],
+            [
+              "=<",
+              "8",
+              "0"
+            ],
+            [
+              "comp-link",
+              ":home",
+              ":code",
+              [
+                "=",
+                "current-page",
+                ":home"
+              ]
+            ],
+            [
+              "=<",
+              "8",
+              "0"
+            ],
+            [
+              "comp-link",
+              ":viewer",
+              ":monitor",
+              [
+                "=",
+                "current-page",
+                ":viewer"
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.nav/comp-nav",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Tag"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defcomp",
+          "comp-upload",
+          [
+            "content"
+          ],
+          [
+            "div",
+            [
+              "{}",
+              [
+                ":class-name",
+                [
+                  "str-spaced",
+                  "css-icon",
+                  "css-place-upload"
+                ]
+              ],
+              [
+                ":on-click",
+                [
+                  "fn",
+                  [
+                    "e",
+                    "d!"
+                  ],
+                  [
+                    "hint-fn",
+                    [
+                      "{}",
+                      [
+                        ":async",
+                        "true"
+                      ]
+                    ]
+                  ],
+                  [
+                    "js-await",
+                    [
+                      "upload-schedule!",
+                      "content"
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              "<>",
+              "|Upload"
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.nav/comp-upload",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'T"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ],
+          [
+            ":generics",
+            [
+              "[]",
+              "'T"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-icon",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":margin",
+                  "|8"
+                ],
+                [
+                  ":font-size",
+                  "16"
+                ],
+                [
+                  ":cursor",
+                  ":pointer"
+                ],
+                [
+                  ":color",
+                  [
+                    "hsl",
+                    "0",
+                    "0",
+                    "70"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.nav/css-icon",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-nav",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":display",
+                  "|flex"
+                ],
+                [
+                  ":align-items",
+                  "|stretch"
+                ],
+                [
+                  ":flex-direction",
+                  "|row"
+                ],
+                [
+                  ":position",
+                  ":absolute"
+                ],
+                [
+                  ":bottom",
+                  "0"
+                ],
+                [
+                  ":right",
+                  "0"
+                ],
+                [
+                  ":padding",
+                  "8"
+                ],
+                [
+                  ":justify-content",
+                  ":flex-end"
+                ],
+                [
+                  ":background-color",
+                  [
+                    "hsl",
+                    "0",
+                    "0",
+                    "96"
+                  ]
+                ],
+                [
+                  ":gap",
+                  "4"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.nav/css-nav",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-place-upload",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":position",
+                  ":absolute"
+                ],
+                [
+                  ":top",
+                  "8"
+                ],
+                [
+                  ":right",
+                  "8"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.nav/css-place-upload",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "upload-schedule!",
+          [
+            "content"
+          ],
+          [
+            "hint-fn",
+            [
+              "{}",
+              [
+                ":async",
+                "true"
+              ]
+            ]
+          ],
+          [
+            "js-await",
+            [
+              "begin-upload",
+              "content"
+            ]
+          ],
+          "&unit"
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.nav/upload-schedule!",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":async",
+            "true"
+          ],
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Unit"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Dynamic"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "deftrait",
+          "DayjsHost",
+          [
+            ".format",
+            [
+              "::",
+              "'Fn",
+              [
+                "{}",
+                [
+                  ":args",
+                  [
+                    "[]",
+                    "'app.comp.viewer/DayjsHost",
+                    "'String"
+                  ]
+                ],
+                [
+                  ":return",
+                  "'String"
+                ]
+              ]
+            ]
+          ],
+          [
+            ".year",
+            [
+              "::",
+              "'Fn",
+              [
+                "{}",
+                [
+                  ":args",
+                  [
+                    "[]",
+                    "'app.comp.viewer/DayjsHost"
+                  ]
+                ],
+                [
+                  ":return",
+                  "'Number"
+                ]
+              ]
+            ]
+          ],
+          [
+            ".week",
+            [
+              "::",
+              "'Fn",
+              [
+                "{}",
+                [
+                  ":args",
+                  [
+                    "[]",
+                    "'app.comp.viewer/DayjsHost"
+                  ]
+                ],
+                [
+                  ":return",
+                  "'Number"
+                ]
+              ]
+            ]
+          ],
+          [
+            ".day",
+            [
+              "::",
+              "'Fn",
+              [
+                "{}",
+                [
+                  ":args",
+                  [
+                    "[]",
+                    "'app.comp.viewer/DayjsHost"
+                  ]
+                ],
+                [
+                  ":return",
+                  "'Number"
+                ]
+              ]
+            ]
+          ],
+          [
+            ".startOf",
+            [
+              "::",
+              "'Fn",
+              [
+                "{}",
+                [
+                  ":args",
+                  [
+                    "[]",
+                    "'app.comp.viewer/DayjsHost",
+                    "'String"
+                  ]
+                ],
+                [
+                  ":return",
+                  "'app.comp.viewer/DayjsHost"
+                ]
+              ]
+            ]
+          ],
+          [
+            ".add",
+            [
+              "::",
+              "'Fn",
+              [
+                "{}",
+                [
+                  ":args",
+                  [
+                    "[]",
+                    "'app.comp.viewer/DayjsHost",
+                    "'Number",
+                    "'String"
+                  ]
+                ],
+                [
+                  ":return",
+                  "'app.comp.viewer/DayjsHost"
+                ]
+              ]
+            ]
+          ],
+          [
+            ".diff",
+            [
+              "::",
+              "'Fn",
+              [
+                "{}",
+                [
+                  ":args",
+                  [
+                    "[]",
+                    "'app.comp.viewer/DayjsHost",
+                    "'app.comp.viewer/DayjsHost",
+                    "'String"
+                  ]
+                ],
+                [
+                  ":return",
+                  "'Number"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "Typed Dayjs methods used by schedule rendering.",
+        "examples": [],
+        "ffi": {
+          ":backend": {
+            "__edn_tag": "js"
+          },
+          ":kind": {
+            "__edn_tag": "external-object"
+          },
+          ":names": {
+            ":add": "add",
+            ":day": "day",
+            ":diff": "diff",
+            ":format": "format",
+            ":startOf": "startOf",
+            ":week": "week",
+            ":year": "year"
+          },
+          ":target": {
+            "__edn_tag": "browser"
+          }
+        },
+        "ffi_edn": "{} (:backend :js) (:kind :external-object) (:target :browser)\n  :names $ {} (:add |add) (:day |day) (:diff |diff) (:format |format) (:startOf |startOf) (:week |week) (:year |year)",
+        "id": "app.comp.viewer/DayjsHost",
+        "js_ffi": null,
+        "schema": "'Trait",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "add-days",
+          [
+            "value",
+            "amount"
+          ],
+          [
+            "value",
+            ".add",
+            "amount",
+            "|day"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/add-days",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'app.comp.viewer/DayjsHost"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'app.comp.viewer/DayjsHost",
+              "'Number"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "by-larger",
+          [
+            "x",
+            "y"
+          ],
+          [
+            "&compare",
+            "y",
+            "x"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/by-larger",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Number"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Number",
+              "'Number"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "by-latest-task",
+          [
+            "task-a",
+            "task-b"
+          ],
+          [
+            "let",
+            [
+              [
+                "done-a",
+                [
+                  "option:unwrap-or",
+                  [
+                    ":done-time",
+                    "task-a"
+                  ],
+                  "0"
+                ]
+              ],
+              [
+                "done-b",
+                [
+                  "option:unwrap-or",
+                  [
+                    ":done-time",
+                    "task-b"
+                  ],
+                  "0"
+                ]
+              ],
+              [
+                "archived-a",
+                [
+                  "option:unwrap-or",
+                  [
+                    ":archived-time",
+                    "task-a"
+                  ],
+                  "0"
+                ]
+              ],
+              [
+                "archived-b",
+                [
+                  "option:unwrap-or",
+                  [
+                    ":archived-time",
+                    "task-b"
+                  ],
+                  "0"
+                ]
+              ],
+              [
+                "ret",
+                [
+                  "if",
+                  [
+                    "=",
+                    "done-b",
+                    "done-a"
+                  ],
+                  [
+                    "<",
+                    "archived-b",
+                    "archived-a"
+                  ],
+                  [
+                    "<",
+                    "done-b",
+                    "done-a"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "if",
+              "ret",
+              "-1",
+              "1"
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/by-latest-task",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Number"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'app.schema/Task",
+              "'app.schema/Task"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defcomp",
+          "comp-active-tasks",
+          [
+            "tasks"
+          ],
+          [
+            "list->",
+            [
+              "{}",
+              [
+                ":style",
+                [
+                  "{}",
+                  [
+                    ":padding",
+                    "|4px 8px"
+                  ],
+                  [
+                    ":background-color",
+                    [
+                      "hsl",
+                      "20",
+                      "80",
+                      "97"
+                    ]
+                  ],
+                  [
+                    ":border",
+                    [
+                      "str",
+                      "|1px solid ",
+                      [
+                        "hsl",
+                        "20",
+                        "80",
+                        "84"
+                      ]
+                    ]
+                  ],
+                  [
+                    ":border-radius",
+                    "|0px"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "->",
+              "tasks",
+              [
+                "distinct-values"
+              ],
+              [
+                "&set:to-list"
+              ],
+              [
+                "sort",
+                [
+                  "fn",
+                  [
+                    "task-a",
+                    "task-b"
+                  ],
+                  [
+                    "hint-fn",
+                    [
+                      "{}",
+                      [
+                        ":args",
+                        [
+                          "[]",
+                          "'app.schema/Task",
+                          "'app.schema/Task"
+                        ]
+                      ],
+                      [
+                        ":return",
+                        "'Number"
+                      ]
+                    ]
+                  ],
+                  [
+                    "&compare",
+                    [
+                      ":created-time",
+                      "task-a"
+                    ],
+                    [
+                      ":created-time",
+                      "task-b"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "map",
+                [
+                  "fn",
+                  [
+                    "task"
+                  ],
+                  [
+                    "hint-fn",
+                    [
+                      "{}",
+                      [
+                        ":args",
+                        [
+                          "[]",
+                          "'app.schema/Task"
+                        ]
+                      ],
+                      [
+                        ":return",
+                        [
+                          "::",
+                          "'List",
+                          "'Dynamic"
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "[]",
+                    [
+                      ":id",
+                      "task"
+                    ],
+                    [
+                      "div",
+                      [
+                        "{}"
+                      ],
+                      [
+                        "comp-time",
+                        [
+                          "Option",
+                          ":some",
+                          [
+                            ":created-time",
+                            "task"
+                          ]
+                        ]
+                      ],
+                      [
+                        "=<",
+                        "8",
+                        "0"
+                      ],
+                      [
+                        "<>",
+                        [
+                          ":text",
+                          "task"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/comp-active-tasks",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              [
+                "::",
+                "'Map",
+                "'String",
+                "'app.schema/Task"
+              ]
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defcomp",
+          "comp-day",
+          [
+            "day",
+            "month-date",
+            "amount"
+          ],
+          [
+            "div",
+            [
+              "{}",
+              [
+                ":class-name",
+                "css-day"
+              ]
+            ],
+            [
+              "<>",
+              [
+                "match",
+                "day",
+                [
+                  "0",
+                  "|Sun"
+                ],
+                [
+                  "1",
+                  "|Mon"
+                ],
+                [
+                  "2",
+                  "|Tue"
+                ],
+                [
+                  "3",
+                  "|Wed"
+                ],
+                [
+                  "4",
+                  "|Thu"
+                ],
+                [
+                  "5",
+                  "|Fri"
+                ],
+                [
+                  "6",
+                  "|Sat"
+                ],
+                [
+                  "_",
+                  [
+                    "str",
+                    "|Invalid:",
+                    "day"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "=<",
+              "8",
+              "0"
+            ],
+            [
+              "<>",
+              "month-date",
+              [
+                "{}",
+                [
+                  ":font-size",
+                  "12"
+                ],
+                [
+                  ":color",
+                  [
+                    "hsl",
+                    "0",
+                    "0",
+                    "0"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "=<",
+              "8",
+              "0"
+            ],
+            [
+              "<>",
+              [
+                "str",
+                "|(",
+                "amount",
+                "|)"
+              ],
+              [
+                "{}",
+                [
+                  ":font-size",
+                  "12"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/comp-day",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Number",
+              "'String",
+              "'Number"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defcomp",
+          "comp-day-card",
+          [
+            "day",
+            "tasks",
+            "week-start"
+          ],
+          [
+            "div",
+            [
+              "{}",
+              [
+                ":class-name",
+                [
+                  "str-spaced",
+                  "css/column",
+                  "css-day-card"
+                ]
+              ]
+            ],
+            [
+              "comp-day",
+              "day",
+              [
+                "if-let",
+                [
+                  "task",
+                  [
+                    "assert-type",
+                    [
+                      "first",
+                      "tasks"
+                    ],
+                    [
+                      "::",
+                      "'Option",
+                      "'app.schema/Task"
+                    ]
+                  ]
+                ],
+                [
+                  "format-dayjs",
+                  [
+                    "get-done-time",
+                    "task"
+                  ],
+                  "|MM-DD"
+                ],
+                [
+                  "format-dayjs",
+                  [
+                    "add-days",
+                    "week-start",
+                    "day"
+                  ],
+                  "|MM-DD"
+                ]
+              ],
+              [
+                "count",
+                "tasks"
+              ]
+            ],
+            [
+              "list->",
+              [
+                "{}",
+                [
+                  ":class-name",
+                  "css-tasks-container"
+                ]
+              ],
+              [
+                "->",
+                "tasks",
+                [
+                  "sort",
+                  "by-latest-task"
+                ],
+                [
+                  "map",
+                  [
+                    "fn",
+                    [
+                      "task"
+                    ],
+                    [
+                      "hint-fn",
+                      [
+                        "{}",
+                        [
+                          ":args",
+                          [
+                            "[]",
+                            "'app.schema/Task"
+                          ]
+                        ],
+                        [
+                          ":return",
+                          [
+                            "::",
+                            "'List",
+                            "'Dynamic"
+                          ]
+                        ]
+                      ]
+                    ],
+                    [
+                      "[]",
+                      [
+                        ":id",
+                        "task"
+                      ],
+                      [
+                        "div",
+                        [
+                          "{}",
+                          [
+                            ":class-name",
+                            "css-task-item"
+                          ]
+                        ],
+                        [
+                          "div",
+                          [
+                            "{}",
+                            [
+                              ":class-name",
+                              "css-task-text"
+                            ]
+                          ],
+                          [
+                            "<>",
+                            [
+                              ":text",
+                              "task"
+                            ]
+                          ]
+                        ],
+                        [
+                          "div",
+                          [
+                            "{}",
+                            [
+                              ":class-name",
+                              "css-task-top"
+                            ]
+                          ],
+                          [
+                            "comp-time",
+                            [
+                              ":done-time",
+                              "task"
+                            ]
+                          ],
+                          [
+                            "span",
+                            [
+                              "{}",
+                              [
+                                ":class-name",
+                                "css-task-duration"
+                              ]
+                            ],
+                            [
+                              "<>",
+                              [
+                                "format-duration",
+                                "task"
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/comp-day-card",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Number",
+              [
+                "::",
+                "'List",
+                "'app.schema/Task"
+              ],
+              "'app.comp.viewer/DayjsHost"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defcomp",
+          "comp-time",
+          [
+            "time"
+          ],
+          [
+            "span",
+            [
+              "{}",
+              [
+                ":class-name",
+                "css-time"
+              ]
+            ],
+            [
+              "match",
+              "time",
+              [
+                [
+                  ":some",
+                  "value"
+                ],
+                [
+                  "<>",
+                  [
+                    "format-dayjs",
+                    [
+                      "make-dayjs",
+                      "value"
+                    ],
+                    "|HH:mm"
+                  ]
+                ]
+              ],
+              [
+                [
+                  ":none"
+                ],
+                [
+                  "<>",
+                  "|??:??"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/comp-time",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              [
+                "::",
+                "'Option",
+                "'Number"
+              ]
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defcomp",
+          "comp-viewer",
+          [
+            "content"
+          ],
+          [
+            "let",
+            [
+              [
+                "content",
+                [
+                  "schema/decode-schedule",
+                  "content"
+                ]
+              ],
+              [
+                "tasks",
+                [
+                  "&set:to-list",
+                  [
+                    "distinct-values",
+                    [
+                      ":archives",
+                      "content"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "tasks-by-year",
+                [
+                  "assert-type",
+                  [
+                    "group-by",
+                    "tasks",
+                    [
+                      "fn",
+                      [
+                        "task"
+                      ],
+                      [
+                        "hint-fn",
+                        [
+                          "{}",
+                          [
+                            ":args",
+                            [
+                              "[]",
+                              "'app.schema/Task"
+                            ]
+                          ],
+                          [
+                            ":return",
+                            "'Number"
+                          ]
+                        ]
+                      ],
+                      [
+                        "dayjs-year",
+                        [
+                          "get-done-time",
+                          "task"
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "::",
+                    "'Map",
+                    "'Number",
+                    [
+                      "::",
+                      "'List",
+                      "'app.schema/Task"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "years",
+                [
+                  "sort",
+                  [
+                    "&set:to-list",
+                    [
+                      "keys",
+                      "tasks-by-year"
+                    ]
+                  ],
+                  "by-larger"
+                ]
+              ]
+            ],
+            [
+              "div",
+              [
+                "{}",
+                [
+                  ":style",
+                  [
+                    "{}",
+                    [
+                      ":flex",
+                      "1"
+                    ],
+                    [
+                      ":padding",
+                      "16"
+                    ],
+                    [
+                      ":overflow",
+                      ":auto"
+                    ],
+                    [
+                      ":padding-bottom",
+                      "200"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "div",
+                [
+                  "{}",
+                  [
+                    ":class-name",
+                    "style/css-title"
+                  ],
+                  [
+                    ":style",
+                    [
+                      "{}",
+                      [
+                        ":color",
+                        [
+                          "hsl",
+                          "0",
+                          "0",
+                          "70"
+                        ]
+                      ]
+                    ]
+                  ]
+                ],
+                [
+                  "<>",
+                  "|Tasks"
+                ]
+              ],
+              [
+                "comp-active-tasks",
+                [
+                  ":tasks",
+                  "content"
+                ]
+              ],
+              [
+                "=<",
+                "0",
+                "64"
+              ],
+              [
+                "div",
+                [
+                  "{}",
+                  [
+                    ":class-name",
+                    "style/css-title"
+                  ],
+                  [
+                    ":style",
+                    [
+                      "{}",
+                      [
+                        ":color",
+                        [
+                          "hsl",
+                          "0",
+                          "0",
+                          "80"
+                        ]
+                      ]
+                    ]
+                  ]
+                ],
+                [
+                  "<>",
+                  "|Archived"
+                ]
+              ],
+              [
+                "list->",
+                [
+                  "{}",
+                  [
+                    ":class-name",
+                    "css/column"
+                  ]
+                ],
+                [
+                  "map",
+                  "years",
+                  [
+                    "fn",
+                    [
+                      "year"
+                    ],
+                    [
+                      "hint-fn",
+                      [
+                        "{}",
+                        [
+                          ":args",
+                          [
+                            "[]",
+                            "'Number"
+                          ]
+                        ],
+                        [
+                          ":return",
+                          [
+                            "::",
+                            "'List",
+                            "'Dynamic"
+                          ]
+                        ]
+                      ]
+                    ],
+                    [
+                      "let",
+                      [
+                        [
+                          "tasks-in-year",
+                          [
+                            "assert-type",
+                            [
+                              ".unwrap-or",
+                              [
+                                "get",
+                                "tasks-by-year",
+                                "year"
+                              ],
+                              [
+                                "[]"
+                              ]
+                            ],
+                            [
+                              "::",
+                              "'List",
+                              "'app.schema/Task"
+                            ]
+                          ]
+                        ],
+                        [
+                          "tasks-by-week",
+                          [
+                            "assert-type",
+                            [
+                              "group-by",
+                              "tasks-in-year",
+                              [
+                                "fn",
+                                [
+                                  "task"
+                                ],
+                                [
+                                  "hint-fn",
+                                  [
+                                    "{}",
+                                    [
+                                      ":args",
+                                      [
+                                        "[]",
+                                        "'app.schema/Task"
+                                      ]
+                                    ],
+                                    [
+                                      ":return",
+                                      "'Number"
+                                    ]
+                                  ]
+                                ],
+                                [
+                                  "dayjs-week",
+                                  [
+                                    "get-done-time",
+                                    "task"
+                                  ]
+                                ]
+                              ]
+                            ],
+                            [
+                              "::",
+                              "'Map",
+                              "'Number",
+                              [
+                                "::",
+                                "'List",
+                                "'app.schema/Task"
+                              ]
+                            ]
+                          ]
+                        ],
+                        [
+                          "weeks",
+                          [
+                            "sort",
+                            [
+                              "&set:to-list",
+                              [
+                                "keys",
+                                "tasks-by-week"
+                              ]
+                            ],
+                            "by-larger"
+                          ]
+                        ]
+                      ],
+                      [
+                        "[]",
+                        "year",
+                        [
+                          "div",
+                          [
+                            "{}",
+                            [
+                              ":class-name",
+                              "css/column"
+                            ]
+                          ],
+                          [
+                            "comp-year",
+                            "year"
+                          ],
+                          [
+                            "=<",
+                            "8",
+                            "0"
+                          ],
+                          [
+                            "list->",
+                            [
+                              "{}",
+                              [
+                                ":class-name",
+                                "css/column"
+                              ]
+                            ],
+                            [
+                              "map",
+                              "weeks",
+                              [
+                                "fn",
+                                [
+                                  "week"
+                                ],
+                                [
+                                  "hint-fn",
+                                  [
+                                    "{}",
+                                    [
+                                      ":args",
+                                      [
+                                        "[]",
+                                        "'Number"
+                                      ]
+                                    ],
+                                    [
+                                      ":return",
+                                      [
+                                        "::",
+                                        "'List",
+                                        "'Dynamic"
+                                      ]
+                                    ]
+                                  ]
+                                ],
+                                [
+                                  "let",
+                                  [
+                                    [
+                                      "tasks-in-week",
+                                      [
+                                        "assert-type",
+                                        [
+                                          ".unwrap-or",
+                                          [
+                                            "get",
+                                            "tasks-by-week",
+                                            "week"
+                                          ],
+                                          [
+                                            "[]"
+                                          ]
+                                        ],
+                                        [
+                                          "::",
+                                          "'List",
+                                          "'app.schema/Task"
+                                        ]
+                                      ]
+                                    ],
+                                    [
+                                      "tasks-by-day",
+                                      [
+                                        "assert-type",
+                                        [
+                                          "group-by",
+                                          "tasks-in-week",
+                                          [
+                                            "fn",
+                                            [
+                                              "task"
+                                            ],
+                                            [
+                                              "hint-fn",
+                                              [
+                                                "{}",
+                                                [
+                                                  ":args",
+                                                  [
+                                                    "[]",
+                                                    "'app.schema/Task"
+                                                  ]
+                                                ],
+                                                [
+                                                  ":return",
+                                                  "'Number"
+                                                ]
+                                              ]
+                                            ],
+                                            [
+                                              "dayjs-day",
+                                              [
+                                                "get-done-time",
+                                                "task"
+                                              ]
+                                            ]
+                                          ]
+                                        ],
+                                        [
+                                          "::",
+                                          "'Map",
+                                          "'Number",
+                                          [
+                                            "::",
+                                            "'List",
+                                            "'app.schema/Task"
+                                          ]
+                                        ]
+                                      ]
+                                    ],
+                                    [
+                                      "days",
+                                      [
+                                        "->",
+                                        [
+                                          "range",
+                                          "1",
+                                          "6"
+                                        ],
+                                        [
+                                          "concat",
+                                          [
+                                            "&set:to-list",
+                                            [
+                                              "keys",
+                                              "tasks-by-day"
+                                            ]
+                                          ]
+                                        ],
+                                        [
+                                          "distinct"
+                                        ],
+                                        [
+                                          "sort",
+                                          "&compare"
+                                        ]
+                                      ]
+                                    ],
+                                    [
+                                      "week-start",
+                                      [
+                                        "match",
+                                        [
+                                          "first",
+                                          "tasks-in-week"
+                                        ],
+                                        [
+                                          [
+                                            ":some",
+                                            "task"
+                                          ],
+                                          [
+                                            "start-of-week",
+                                            [
+                                              "get-done-time",
+                                              "task"
+                                            ]
+                                          ]
+                                        ],
+                                        [
+                                          [
+                                            ":none"
+                                          ],
+                                          [
+                                            "current-dayjs"
+                                          ]
+                                        ]
+                                      ]
+                                    ],
+                                    [
+                                      "amount",
+                                      [
+                                        "->",
+                                        "days",
+                                        [
+                                          "map",
+                                          [
+                                            "fn",
+                                            [
+                                              "day"
+                                            ],
+                                            [
+                                              "hint-fn",
+                                              [
+                                                "{}",
+                                                [
+                                                  ":args",
+                                                  [
+                                                    "[]",
+                                                    "'Number"
+                                                  ]
+                                                ],
+                                                [
+                                                  ":return",
+                                                  "'Number"
+                                                ]
+                                              ]
+                                            ],
+                                            [
+                                              "count",
+                                              [
+                                                "assert-type",
+                                                [
+                                                  ".unwrap-or",
+                                                  [
+                                                    "get",
+                                                    "tasks-by-day",
+                                                    "day"
+                                                  ],
+                                                  [
+                                                    "[]"
+                                                  ]
+                                                ],
+                                                [
+                                                  "::",
+                                                  "'List",
+                                                  "'app.schema/Task"
+                                                ]
+                                              ]
+                                            ]
+                                          ]
+                                        ],
+                                        [
+                                          "reduce",
+                                          "0",
+                                          "&+"
+                                        ]
+                                      ]
+                                    ]
+                                  ],
+                                  [
+                                    "[]",
+                                    "week",
+                                    [
+                                      "div",
+                                      [
+                                        "{}",
+                                        [
+                                          ":class-name",
+                                          "css/column"
+                                        ],
+                                        [
+                                          ":style",
+                                          [
+                                            "{}",
+                                            [
+                                              ":padding-top",
+                                              "16"
+                                            ]
+                                          ]
+                                        ]
+                                      ],
+                                      [
+                                        "comp-week",
+                                        "week",
+                                        "amount",
+                                        "week-start"
+                                      ],
+                                      [
+                                        "list->",
+                                        [
+                                          "{}",
+                                          [
+                                            ":class-name",
+                                            "css-day-list"
+                                          ]
+                                        ],
+                                        [
+                                          "->",
+                                          "days",
+                                          [
+                                            "reverse"
+                                          ],
+                                          [
+                                            "map",
+                                            [
+                                              "fn",
+                                              [
+                                                "day"
+                                              ],
+                                              [
+                                                "hint-fn",
+                                                [
+                                                  "{}",
+                                                  [
+                                                    ":args",
+                                                    [
+                                                      "[]",
+                                                      "'Number"
+                                                    ]
+                                                  ],
+                                                  [
+                                                    ":return",
+                                                    [
+                                                      "::",
+                                                      "'List",
+                                                      "'Dynamic"
+                                                    ]
+                                                  ]
+                                                ]
+                                              ],
+                                              [
+                                                "[]",
+                                                "day",
+                                                [
+                                                  "comp-day-card",
+                                                  "day",
+                                                  [
+                                                    "assert-type",
+                                                    [
+                                                      ".unwrap-or",
+                                                      [
+                                                        "get",
+                                                        "tasks-by-day",
+                                                        "day"
+                                                      ],
+                                                      [
+                                                        "[]"
+                                                      ]
+                                                    ],
+                                                    [
+                                                      "::",
+                                                      "'List",
+                                                      "'app.schema/Task"
+                                                    ]
+                                                  ],
+                                                  "week-start"
+                                                ]
+                                              ]
+                                            ]
+                                          ]
+                                        ]
+                                      ]
+                                    ]
+                                  ]
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/comp-viewer",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Dynamic"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defcomp",
+          "comp-week",
+          [
+            "week",
+            "amount",
+            "week-start"
+          ],
+          [
+            "div",
+            [
+              "{}",
+              [
+                ":class-name",
+                "css-week"
+              ]
+            ],
+            [
+              "<>",
+              [
+                "str",
+                "week",
+                "|th week (",
+                "amount",
+                "|)"
+              ]
+            ],
+            [
+              "=<",
+              "8",
+              "0"
+            ],
+            [
+              "span",
+              [
+                "{}",
+                [
+                  ":style",
+                  [
+                    "{}",
+                    [
+                      ":font-size",
+                      "12"
+                    ],
+                    [
+                      ":color",
+                      [
+                        "hsl",
+                        "0",
+                        "0",
+                        "60"
+                      ]
+                    ],
+                    [
+                      ":font-family",
+                      "ui/font-normal"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "<>",
+                [
+                  "let",
+                  [
+                    [
+                      "end",
+                      [
+                        "add-days",
+                        "week-start",
+                        "4"
+                      ]
+                    ]
+                  ],
+                  [
+                    "str",
+                    [
+                      "format-dayjs",
+                      "week-start",
+                      "|YYYY-MM-DD"
+                    ],
+                    "| ~ ",
+                    [
+                      "format-dayjs",
+                      "end",
+                      "|YYYY-MM-DD"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/comp-week",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Number",
+              "'Number",
+              "'app.comp.viewer/DayjsHost"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defcomp",
+          "comp-year",
+          [
+            "year"
+          ],
+          [
+            "<>",
+            [
+              "str",
+              "year"
+            ],
+            [
+              "str-spaced",
+              "style/css-title",
+              "css-year"
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/comp-year",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Number"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-day",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":font-weight",
+                  "|300"
+                ],
+                [
+                  ":font-family",
+                  "ui/font-fancy"
+                ],
+                [
+                  ":font-size",
+                  "20"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/css-day",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-day-card",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":padding",
+                  "|4px 8px"
+                ],
+                [
+                  ":background-color",
+                  [
+                    "hsl",
+                    "0",
+                    "0",
+                    "100"
+                  ]
+                ],
+                [
+                  ":flex-shrink",
+                  "|0"
+                ],
+                [
+                  ":border",
+                  [
+                    "str",
+                    "|1px solid ",
+                    [
+                      "hsl",
+                      "0",
+                      "0",
+                      "92"
+                    ]
+                  ]
+                ],
+                [
+                  ":box-shadow",
+                  [
+                    "str",
+                    "|1px 1px 4px ",
+                    [
+                      "hsl",
+                      "0",
+                      "0",
+                      "0",
+                      "0.1"
+                    ]
+                  ]
+                ],
+                [
+                  ":border-radius",
+                  "|6px"
+                ],
+                [
+                  ":transition-duration",
+                  "|300ms"
+                ],
+                [
+                  ":width",
+                  "320"
+                ],
+                [
+                  ":min-height",
+                  "72"
+                ]
+              ]
+            ],
+            [
+              "|$0:hover",
+              [
+                "{}",
+                [
+                  ":box-shadow",
+                  [
+                    "str",
+                    "|1px 1px 6px ",
+                    [
+                      "hsl",
+                      "0",
+                      "0",
+                      "0",
+                      "0.2"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/css-day-card",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-day-list",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":display",
+                  "|flex"
+                ],
+                [
+                  ":align-items",
+                  ":stretch"
+                ],
+                [
+                  ":flex-direction",
+                  "|row"
+                ],
+                [
+                  ":flex-wrap",
+                  ":wrap"
+                ],
+                [
+                  ":border-top",
+                  "|1px solid #f8f8f8ca"
+                ],
+                [
+                  ":padding-top",
+                  "16"
+                ],
+                [
+                  ":padding-left",
+                  "16"
+                ],
+                [
+                  ":gap",
+                  "16"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/css-day-list",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-task-duration",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":font-size",
+                  "12"
+                ],
+                [
+                  ":color",
+                  [
+                    "hsl",
+                    "0",
+                    "0",
+                    "70"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/css-task-duration",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-task-item",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":display",
+                  ":flex"
+                ],
+                [
+                  ":flex-direction",
+                  ":column"
+                ],
+                [
+                  ":margin-bottom",
+                  "4"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/css-task-item",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-task-text",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":flex",
+                  "|1"
+                ],
+                [
+                  ":text-align",
+                  ":left"
+                ],
+                [
+                  ":line-height",
+                  "|1.4em"
+                ],
+                [
+                  ":padding-top",
+                  "2"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/css-task-text",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-task-top",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":display",
+                  ":flex"
+                ],
+                [
+                  ":align-items",
+                  ":center"
+                ],
+                [
+                  ":gap",
+                  "8"
+                ],
+                [
+                  ":line-height",
+                  "|14px"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/css-task-top",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-tasks-container",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":padding-left",
+                  "4"
+                ],
+                [
+                  ":min-width",
+                  "200"
+                ],
+                [
+                  ":display",
+                  ":flex"
+                ],
+                [
+                  ":flex-direction",
+                  ":column"
+                ],
+                [
+                  ":gap",
+                  "4"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/css-tasks-container",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-time",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":font-size",
+                  "10"
+                ],
+                [
+                  ":font-family",
+                  "ui/font-code"
+                ],
+                [
+                  ":vertical-align",
+                  ":top"
+                ],
+                [
+                  ":color",
+                  [
+                    "hsl",
+                    "0",
+                    "0",
+                    "70"
+                  ]
+                ],
+                [
+                  ":min-width",
+                  "40"
+                ],
+                [
+                  ":display",
+                  ":inline-block"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/css-time",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-week",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":font-weight",
+                  "|100"
+                ],
+                [
+                  ":font-family",
+                  "ui/font-fancy"
+                ],
+                [
+                  ":font-size",
+                  "16"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/css-week",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-year",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":border-bottom",
+                  [
+                    "str",
+                    "|1px solid ",
+                    [
+                      "hsl",
+                      "0",
+                      "0",
+                      "94"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/css-year",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "current-dayjs",
+          [],
+          [
+            "js-cast",
+            [
+              "dayjs"
+            ],
+            "'app.comp.viewer/DayjsHost"
+          ]
+        ],
+        "doc": "Create a typed Dayjs value for the current time.",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/current-dayjs",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'app.comp.viewer/DayjsHost"
+          ],
+          [
+            ":args",
+            [
+              "[]"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "dayjs-day",
+          [
+            "value"
+          ],
+          [
+            "value",
+            ".day"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/dayjs-day",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Number"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'app.comp.viewer/DayjsHost"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "dayjs-week",
+          [
+            "value"
+          ],
+          [
+            "value",
+            ".week"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/dayjs-week",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Number"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'app.comp.viewer/DayjsHost"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "dayjs-year",
+          [
+            "value"
+          ],
+          [
+            "value",
+            ".year"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/dayjs-year",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Number"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'app.comp.viewer/DayjsHost"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "diff-days",
+          [
+            "later",
+            "earlier"
+          ],
+          [
+            "later",
+            ".diff",
+            "earlier",
+            "|day"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/diff-days",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Number"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'app.comp.viewer/DayjsHost",
+              "'app.comp.viewer/DayjsHost"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "format-dayjs",
+          [
+            "value",
+            "pattern"
+          ],
+          [
+            "value",
+            ".format",
+            "pattern"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/format-dayjs",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'String"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'app.comp.viewer/DayjsHost",
+              "'String"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "format-duration",
+          [
+            "task"
+          ],
+          [
+            "let",
+            [
+              [
+                "done",
+                [
+                  "get-done-time",
+                  "task"
+                ]
+              ],
+              [
+                "created",
+                [
+                  "make-dayjs",
+                  [
+                    ":created-time",
+                    "task"
+                  ]
+                ]
+              ],
+              [
+                "days",
+                [
+                  "diff-days",
+                  "done",
+                  "created"
+                ]
+              ]
+            ],
+            [
+              "str",
+              [
+                "+",
+                "days",
+                "1"
+              ],
+              "|d"
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/format-duration",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'String"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'app.schema/Task"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "get-done-time",
+          [
+            "task"
+          ],
+          [
+            "match",
+            [
+              ":done-time",
+              "task"
+            ],
+            [
+              [
+                ":some",
+                "value"
+              ],
+              [
+                "make-dayjs",
+                "value"
+              ]
+            ],
+            [
+              [
+                ":none"
+              ],
+              [
+                "make-dayjs",
+                "|2021-01-01"
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/get-done-time",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'app.comp.viewer/DayjsHost"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'app.schema/Task"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "make-dayjs",
+          [
+            "value"
+          ],
+          [
+            "js-cast",
+            [
+              "dayjs",
+              "value"
+            ],
+            "'app.comp.viewer/DayjsHost"
+          ]
+        ],
+        "doc": "Narrow one Dayjs constructor result to the reviewed host trait.",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/make-dayjs",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'app.comp.viewer/DayjsHost"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Dynamic"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "start-of-week",
+          [
+            "value"
+          ],
+          [
+            "value",
+            ".startOf",
+            "|week"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.viewer/start-of-week",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'app.comp.viewer/DayjsHost"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'app.comp.viewer/DayjsHost"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "def",
+          "dev?",
+          [
+            "let",
+            [
+              [
+                "mode",
+                [
+                  "option:unwrap-or",
+                  [
+                    "get-env",
+                    "|mode"
+                  ],
+                  "|release"
+                ]
+              ]
+            ],
+            [
+              "=",
+              "mode",
+              "|dev"
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.config/dev?",
+        "js_ffi": null,
+        "schema": "'Bool",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defref",
+          "*reel",
+          "schema/store"
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.main/*reel",
+        "js_ffi": null,
+        "schema": [
+          "::",
+          "'Ref",
+          "'app.schema/Store"
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "deftrait",
+          "DayjsFactoryHost",
+          [
+            ".extend!",
+            [
+              "::",
+              "'Fn",
+              [
+                "{}",
+                [
+                  ":args",
+                  [
+                    "[]",
+                    "'app.main/DayjsFactoryHost",
+                    "'JsObject"
+                  ]
+                ],
+                [
+                  ":return",
+                  "'app.main/DayjsFactoryHost"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": {
+          ":backend": {
+            "__edn_tag": "js"
+          },
+          ":kind": {
+            "__edn_tag": "external-object"
+          },
+          ":names": {
+            ":extend!": "extend"
+          },
+          ":target": {
+            "__edn_tag": "browser"
+          }
+        },
+        "ffi_edn": "{} (:backend :js) (:kind :external-object) (:target :browser)\n  :names $ {} $ :extend! |extend",
+        "id": "app.main/DayjsFactoryHost",
+        "js_ffi": null,
+        "schema": "'Trait",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "dispatch!",
+          [
+            "op"
+          ],
+          [
+            "if",
+            [
+              "enum?",
+              "op"
+            ],
+            [
+              "do",
+              [
+                "when",
+                "config/dev?",
+                [
+                  "println",
+                  "|Dispatch:",
+                  "op"
+                ]
+              ],
+              [
+                "reset!",
+                "*reel",
+                [
+                  "updater",
+                  "@*reel",
+                  [
+                    "schema/decode-op",
+                    "op"
+                  ],
+                  [
+                    "generate-id!"
+                  ],
+                  [
+                    "now-ms"
+                  ]
+                ]
+              ],
+              "&unit"
+            ],
+            [
+              "raise",
+              "|Expected-Enum-operation"
+            ]
+          ],
+          "&unit"
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.main/dispatch!",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Unit"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Dynamic"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "main!",
+          [],
+          [
+            "if",
+            "config/dev?",
+            [
+              "load-console-formatter!"
+            ]
+          ],
+          [
+            "let",
+            [
+              [
+                "dayjs-host",
+                [
+                  "unsafe-coerce",
+                  "dayjs",
+                  "DayjsFactoryHost"
+                ]
+              ],
+              [
+                "plugin",
+                [
+                  "unsafe-coerce",
+                  "week-of-year",
+                  "JsObject"
+                ]
+              ]
+            ],
+            [
+              "dayjs-host",
+              ".extend!",
+              "plugin"
+            ]
+          ],
+          [
+            "render-app!"
+          ],
+          [
+            "add-watch!",
+            "*reel",
+            ":changes",
+            [
+              "fn",
+              [
+                "r",
+                "p"
+              ],
+              [
+                "render-app!"
+              ]
+            ]
+          ],
+          [
+            "match",
+            [
+              "storage-get",
+              [
+                ".unwrap-or",
+                [
+                  "get",
+                  "schema/config",
+                  ":storage"
+                ],
+                "|pudica-schedule-viewer"
+              ]
+            ],
+            [
+              [
+                ":some",
+                "raw"
+              ],
+              [
+                "do",
+                [
+                  "dispatch!",
+                  [
+                    "schema/Op",
+                    ":content",
+                    [
+                      "parse-cirru-edn",
+                      "raw"
+                    ]
+                  ]
+                ],
+                [
+                  "dispatch!",
+                  [
+                    "schema/Op",
+                    ":router",
+                    [
+                      "schema/Router",
+                      ":name",
+                      ":viewer"
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              [
+                ":none"
+              ],
+              "&unit"
+            ]
+          ],
+          [
+            "println",
+            "|App started."
+          ],
+          "&unit"
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.main/main!",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Unit"
+          ],
+          [
+            ":args",
+            [
+              "[]"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "def",
+          "mount-target",
+          [
+            "query-selector",
+            "|.app"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.main/mount-target",
+        "js_ffi": null,
+        "schema": [
+          "::",
+          "'calcit.core/Option",
+          "'js-ffi.browser/DomElementHost"
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "reload!",
+          [],
+          [
+            "if",
+            [
+              "nil?",
+              "build-errors"
+            ],
+            [
+              "do",
+              [
+                "remove-watch!",
+                "*reel",
+                ":changes"
+              ],
+              [
+                "clear-cache!"
+              ],
+              [
+                "add-watch!",
+                "*reel",
+                ":changes",
+                [
+                  "fn",
+                  [
+                    "store",
+                    "prev"
+                  ],
+                  [
+                    "render-app!"
+                  ]
+                ]
+              ],
+              [
+                "render-app!"
+              ],
+              [
+                "hud!",
+                "|ok~",
+                "|Ok"
+              ]
+            ],
+            [
+              "hud!",
+              "|error",
+              "build-errors"
+            ]
+          ],
+          "&unit"
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.main/reload!",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Unit"
+          ],
+          [
+            ":args",
+            [
+              "[]"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "render-app!",
+          [],
+          [
+            "if-let",
+            [
+              "target",
+              "mount-target"
+            ],
+            [
+              "render!",
+              [
+                "narrow-element",
+                "target"
+              ],
+              [
+                "comp-container",
+                "@*reel"
+              ],
+              "dispatch!"
+            ],
+            [
+              "do",
+              [
+                "eprintln",
+                "|Mount-target-not-found."
+              ],
+              "&unit"
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.main/render-app!",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Unit"
+          ],
+          [
+            ":args",
+            [
+              "[]"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "def",
+          "ssr?",
+          [
+            "option:some?",
+            [
+              "query-selector",
+              "|meta.respo-ssr"
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.main/ssr?",
+        "js_ffi": null,
+        "schema": "'Bool",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defenum",
+          "Op",
+          [
+            ":states",
+            [
+              "::",
+              "'List",
+              "'Dynamic"
+            ],
+            "'Dynamic"
+          ],
+          [
+            ":content",
+            "'Dynamic"
+          ],
+          [
+            ":router",
+            "'app.schema/Router"
+          ],
+          [
+            ":hydrate-storage",
+            "'app.schema/Store"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/Op",
+        "js_ffi": null,
+        "schema": "'EnumDef",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstruct",
+          "Router",
+          [
+            ":name",
+            "'Tag"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/Router",
+        "js_ffi": null,
+        "schema": "'StructDef",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstruct",
+          "Schedule",
+          [
+            ":tasks",
+            [
+              "::",
+              "'Map",
+              "'String",
+              "'app.schema/Task"
+            ]
+          ],
+          [
+            ":archives",
+            [
+              "::",
+              "'Map",
+              "'String",
+              "'app.schema/Task"
+            ]
+          ]
+        ],
+        "doc": "Decoded active and archived task collections.",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/Schedule",
+        "js_ffi": null,
+        "schema": "'StructDef",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstruct",
+          "Store",
+          [
+            ":states",
+            [
+              "::",
+              "'Map",
+              "'Tag",
+              "'Dynamic"
+            ]
+          ],
+          [
+            ":router",
+            "'app.schema/Router"
+          ],
+          [
+            ":content",
+            "'Dynamic"
+          ],
+          [
+            ":messages",
+            [
+              "::",
+              "'Map",
+              "'Tag",
+              "'Dynamic"
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/Store",
+        "js_ffi": null,
+        "schema": "'StructDef",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstruct",
+          "Task",
+          [
+            ":id",
+            "'String"
+          ],
+          [
+            ":text",
+            "'String"
+          ],
+          [
+            ":created-time",
+            "'Number"
+          ],
+          [
+            ":done-time",
+            [
+              "::",
+              "'Option",
+              "'Number"
+            ]
+          ],
+          [
+            ":archived-time",
+            [
+              "::",
+              "'Option",
+              "'Number"
+            ]
+          ]
+        ],
+        "doc": "Task fields used by the schedule viewer.",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/Task",
+        "js_ffi": null,
+        "schema": "'StructDef",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "def",
+          "config",
+          [
+            "{}",
+            [
+              ":storage",
+              "|pudica-schedule-viewer"
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/config",
+        "js_ffi": null,
+        "schema": [
+          "::",
+          "'Map",
+          "'Tag",
+          "'String"
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "decode-op",
+          [
+            "op"
+          ],
+          [
+            "match",
+            "op",
+            [
+              [
+                ":states",
+                "cursor",
+                "state"
+              ],
+              [
+                "if",
+                [
+                  "list?",
+                  "cursor"
+                ],
+                [
+                  "Op",
+                  ":states",
+                  "cursor",
+                  "state"
+                ],
+                [
+                  "raise",
+                  "|Invalid-state-cursor"
+                ]
+              ]
+            ],
+            [
+              [
+                ":content",
+                "content"
+              ],
+              [
+                "Op",
+                ":content",
+                "content"
+              ]
+            ],
+            [
+              [
+                ":router",
+                "router"
+              ],
+              [
+                "Op",
+                ":router",
+                [
+                  "decode-map-as",
+                  [
+                    "storage-map",
+                    "router"
+                  ],
+                  "'app.schema/Router"
+                ]
+              ]
+            ],
+            [
+              [
+                ":hydrate-storage",
+                "data"
+              ],
+              [
+                "let",
+                [
+                  [
+                    "fields",
+                    [
+                      "storage-map",
+                      "data"
+                    ]
+                  ]
+                ],
+                [
+                  "Op",
+                  ":hydrate-storage",
+                  [
+                    "decode-map-as",
+                    [
+                      "assoc",
+                      "fields",
+                      ":router",
+                      [
+                        "storage-map",
+                        [
+                          ".unwrap",
+                          [
+                            "get",
+                            "fields",
+                            ":router"
+                          ]
+                        ]
+                      ]
+                    ],
+                    "'app.schema/Store"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "_",
+              [
+                "raise",
+                "|Unknown-viewer-operation"
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/decode-op",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'app.schema/Op"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Enum"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "decode-schedule",
+          [
+            "raw"
+          ],
+          [
+            "let",
+            [
+              [
+                "content",
+                [
+                  "storage-map",
+                  "raw"
+                ]
+              ],
+              [
+                "tasks",
+                [
+                  "decode-map-as",
+                  [
+                    ".unwrap",
+                    [
+                      "get",
+                      "content",
+                      ":tasks"
+                    ]
+                  ],
+                  [
+                    "::",
+                    "'Map",
+                    "'String",
+                    "'Dynamic"
+                  ]
+                ]
+              ],
+              [
+                "archives",
+                [
+                  "decode-map-as",
+                  [
+                    ".unwrap",
+                    [
+                      "get",
+                      "content",
+                      ":archives"
+                    ]
+                  ],
+                  [
+                    "::",
+                    "'Map",
+                    "'String",
+                    "'Dynamic"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "Schedule",
+              ":tasks",
+              [
+                "decode-task-map",
+                "tasks"
+              ],
+              ":archives",
+              [
+                "decode-task-map",
+                "archives"
+              ]
+            ]
+          ]
+        ],
+        "doc": "Validate legacy parsed storage and construct a typed Schedule.",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/decode-schedule",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'app.schema/Schedule"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Dynamic"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "decode-task",
+          [
+            "raw"
+          ],
+          [
+            "decode-map-as",
+            [
+              "{}",
+              [
+                ":id",
+                [
+                  ".unwrap",
+                  [
+                    "get",
+                    "raw",
+                    ":id"
+                  ]
+                ]
+              ],
+              [
+                ":text",
+                [
+                  ".unwrap",
+                  [
+                    "get",
+                    "raw",
+                    ":text"
+                  ]
+                ]
+              ],
+              [
+                ":created-time",
+                [
+                  ".unwrap",
+                  [
+                    "get",
+                    "raw",
+                    ":created-time"
+                  ]
+                ]
+              ],
+              [
+                ":done-time",
+                [
+                  "to-number-option",
+                  [
+                    ".unwrap-or",
+                    [
+                      "get",
+                      "raw",
+                      ":done-time"
+                    ],
+                    "nil"
+                  ]
+                ]
+              ],
+              [
+                ":archived-time",
+                [
+                  "to-number-option",
+                  [
+                    ".unwrap-or",
+                    [
+                      "get",
+                      "raw",
+                      ":archived-time"
+                    ],
+                    "nil"
+                  ]
+                ]
+              ]
+            ],
+            "Task"
+          ]
+        ],
+        "doc": "Validate one legacy task map and construct a typed Task.",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/decode-task",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'app.schema/Task"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              [
+                "::",
+                "'Map",
+                "'Tag",
+                "'Dynamic"
+              ]
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "decode-task-map",
+          [
+            "raw"
+          ],
+          [
+            "filter-map-kv",
+            "raw",
+            [
+              "fn",
+              [
+                "task-id",
+                "task"
+              ],
+              [
+                "hint-fn",
+                [
+                  "{}",
+                  [
+                    ":args",
+                    [
+                      "[]",
+                      "'String",
+                      "'Dynamic"
+                    ]
+                  ],
+                  [
+                    ":return",
+                    [
+                      "::",
+                      "'calcit.core/MapEntryDecision",
+                      "'String",
+                      "'app.schema/Task"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "calcit.core/MapEntryDecision",
+                ":keep",
+                "task-id",
+                [
+                  "decode-task",
+                  [
+                    "storage-map",
+                    "task"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "Decode every task in a legacy task map.",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/decode-task-map",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              [
+                "::",
+                "'Map",
+                "'String",
+                "'Dynamic"
+              ]
+            ]
+          ],
+          [
+            ":return",
+            [
+              "::",
+              "'Map",
+              "'String",
+              "'app.schema/Task"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "storage-map",
+          [
+            "raw"
+          ],
+          [
+            "if",
+            [
+              "struct?",
+              "raw"
+            ],
+            [
+              "&struct:to-map",
+              "raw"
+            ],
+            [
+              "decode-map-as",
+              "raw",
+              [
+                "::",
+                "'Map",
+                "'Tag",
+                "'Dynamic"
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/storage-map",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Dynamic"
+            ]
+          ],
+          [
+            ":return",
+            [
+              "::",
+              "'Map",
+              "'Tag",
+              "'Dynamic"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "def",
+          "store",
+          [
+            "Store",
+            ":states",
+            [
+              "{}"
+            ],
+            ":router",
+            [
+              "Router",
+              ":name",
+              ":home"
+            ],
+            ":content",
+            [
+              "{}",
+              [
+                ":tasks",
+                [
+                  "{}"
+                ]
+              ],
+              [
+                ":archives",
+                [
+                  "{}"
+                ]
+              ]
+            ],
+            ":messages",
+            [
+              "{}"
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/store",
+        "js_ffi": null,
+        "schema": "'app.schema/Store",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "to-number-option",
+          [
+            "value"
+          ],
+          [
+            "if",
+            [
+              "nil?",
+              "value"
+            ],
+            [
+              "Option",
+              ":none"
+            ],
+            [
+              "if",
+              [
+                "enum?",
+                "value"
+              ],
+              [
+                "match",
+                "value",
+                [
+                  [
+                    ":none"
+                  ],
+                  [
+                    "Option",
+                    ":none"
+                  ]
+                ],
+                [
+                  [
+                    ":some",
+                    "timestamp"
+                  ],
+                  [
+                    "if",
+                    [
+                      "number?",
+                      "timestamp"
+                    ],
+                    [
+                      "Option",
+                      ":some",
+                      "timestamp"
+                    ],
+                    [
+                      "raise",
+                      "|Invalid stored timestamp"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "if",
+                [
+                  "number?",
+                  "value"
+                ],
+                [
+                  "Option",
+                  ":some",
+                  "value"
+                ],
+                [
+                  "raise",
+                  "|Invalid stored timestamp"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "Validate a legacy nil-or-number field and return Option<Number>.",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/to-number-option",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Dynamic"
+            ]
+          ],
+          [
+            ":return",
+            [
+              "::",
+              "'Option",
+              "'Number"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defstyle",
+          "css-title",
+          [
+            "{}",
+            [
+              "|$0",
+              [
+                "{}",
+                [
+                  ":font-weight",
+                  "|100"
+                ],
+                [
+                  ":font-family",
+                  "ui/font-fancy"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.style/css-title",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      {
+        "code": [
+          "defn",
+          "updater",
+          [
+            "store",
+            "op",
+            "op-id",
+            "op-time"
+          ],
+          [
+            "match",
+            "op",
+            [
+              [
+                ":states",
+                "cursor",
+                "state"
+              ],
+              [
+                "assoc",
+                "store",
+                ":states",
+                [
+                  "decode-map-as",
+                  [
+                    "assoc-in",
+                    [
+                      ":states",
+                      "store"
+                    ],
+                    [
+                      "conj",
+                      "cursor",
+                      ":data"
+                    ],
+                    "state"
+                  ],
+                  [
+                    "::",
+                    "'Map",
+                    "'Tag",
+                    "'Dynamic"
+                  ]
+                ]
+              ]
+            ],
+            [
+              [
+                ":content",
+                "content"
+              ],
+              [
+                "assoc",
+                "store",
+                ":content",
+                "content"
+              ]
+            ],
+            [
+              [
+                ":router",
+                "router"
+              ],
+              [
+                "assoc",
+                "store",
+                ":router",
+                "router"
+              ]
+            ],
+            [
+              [
+                ":hydrate-storage",
+                "data"
+              ],
+              "data"
+            ],
+            [
+              "_",
+              [
+                "do",
+                [
+                  "eprintln",
+                  "|Unknown op:",
+                  "op"
+                ],
+                "store"
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.updater/updater",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'app.schema/Store"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'app.schema/Store",
+              "'app.schema/Op",
+              "'String",
+              "'Number"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      }
+    ]
+  },
+  "manifests": {
+    "deps.cirru": "\n{} (:calcit-version |0.30.1)\n  :version |0.1.4\n  :dependencies $ {} (|Respo/respo-ui.calcit |0.8.0)\n    |Respo/respo.calcit |0.16.124\n    |calcit-lang/js-ffi |0.2.5\n",
+    "package.json": "{\n  \"packageManager\": \"yarn@4.18.0\",\n  \"name\": \"pudica-schedule-viewer\",\n  \"version\": \"0.1.4\",\n  \"description\": \"Data viewer for Pudica Schedule\",\n  \"main\": \"index.js\",\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git@github.com:Memkits/pudica-schedule-viewer.git\"\n  },\n  \"author\": \"jiyinyiyong\",\n  \"license\": \"MIT\",\n  \"scripts\": {\n    \"check\": \"calcit calcit.cirru --check-only\",\n    \"compile\": \"calcit calcit.cirru\",\n    \"dev\": \"yarn compile && vite\",\n    \"test:storage\": \"node tests/storage-read.mjs\",\n    \"test:canvas\": \"node tests/canvas-context.mjs\",\n    \"build\": \"yarn compile && vite build\",\n    \"release\": \"yarn build\"\n  },\n  \"devDependencies\": {\n    \"bottom-tip\": \"^0.1.5\",\n    \"vite\": \"8.3.3\"\n  },\n  \"dependencies\": {\n    \"@calcit/procs\": \"0.30.1\",\n    \"axios\": \"^1.18.0\",\n    \"dayjs\": \"^1.11.19\",\n    \"feather-icons\": \"^4.29.2\"\n  }\n}\n",
+    "yarn.lock": "# This file is generated by running \"yarn install\" inside your project.\n# Manual changes might be lost - proceed with caution!\n\n__metadata:\n  version: 10\n  cacheKey: 10c0\n\n\"@calcit/finger-vec@npm:0.1.1\":\n  version: 0.1.1\n  resolution: \"@calcit/finger-vec@npm:0.1.1\"\n  checksum: 10c0/c75e7f58924a7bb226ca4a47f6b0702021796b096c04d7fb7e9a92cb49b11ca64d654ea10d78bde29a8ac2d2d05ef9e7865efd2b358af2ca989d950b04d529a8\n  languageName: node\n  linkType: hard\n\n\"@calcit/procs@npm:0.30.1\":\n  version: 0.30.1\n  resolution: \"@calcit/procs@npm:0.30.1\"\n  dependencies:\n    \"@calcit/finger-vec\": \"npm:0.1.1\"\n    \"@calcit/ternary-tree\": \"npm:0.0.26\"\n    \"@cirru/parser.ts\": \"npm:0.0.10\"\n    \"@cirru/writer.ts\": \"npm:^0.1.9\"\n  checksum: 10c0/a0f00e3c0c9b3a5a2aea8b97e09f2692aa25039a48a2f7ccb345801fdbc546cbf3bb34ee268a58526baba9fb697781bb7929a5d1f6622816c9422c6c3ba8537b\n  languageName: node\n  linkType: hard\n\n\"@calcit/ternary-tree@npm:0.0.26\":\n  version: 0.0.26\n  resolution: \"@calcit/ternary-tree@npm:0.0.26\"\n  checksum: 10c0/53fee664f72e25f3512f3a61c917fe7926e2620caab1fed68e030ee4ddf905be68b4249c2e644a4db7cadb96b23594059f73fa9c475af8a79526e8d145736563\n  languageName: node\n  linkType: hard\n\n\"@cirru/parser.ts@npm:0.0.10\":\n  version: 0.0.10\n  resolution: \"@cirru/parser.ts@npm:0.0.10\"\n  checksum: 10c0/d66a16bcf49c60865fb8e733a5c219289a7c755c6400dea7e7a8d3166ee7841a623030f35f8ee96e232bc40f974f1b79a0ccdf089947fc5779699485102b5995\n  languageName: node\n  linkType: hard\n\n\"@cirru/writer.ts@npm:^0.1.9\":\n  version: 0.1.9\n  resolution: \"@cirru/writer.ts@npm:0.1.9\"\n  checksum: 10c0/df2672837d1bf61ee1a83b8b77ea17b9c241cb8135323567992749ee26daf3abccf43ab75d8698d67c36c8b8469f9a66c235a809a60484d71133592a9161a054\n  languageName: node\n  linkType: hard\n\n\"@isaacs/fs-minipass@npm:^4.0.0\":\n  version: 4.0.1\n  resolution: \"@isaacs/fs-minipass@npm:4.0.1\"\n  dependencies:\n    minipass: \"npm:^7.0.4\"\n  checksum: 10c0/c25b6dc1598790d5b55c0947a9b7d111cfa92594db5296c3b907e2f533c033666f692a3939eadac17b1c7c40d362d0b0635dc874cbfe3e70db7c2b07cc97a5d2\n  languageName: node\n  linkType: hard\n\n\"@oxc-project/types@npm:=0.154.0\":\n  version: 0.154.0\n  resolution: \"@oxc-project/types@npm:0.154.0\"\n  checksum: 10c0/fa91599d087ea4d37c5a3b40dd8e2cb431a7d37730116069f2577dee0b104dc5abb06c96b931c517c8b86f618df1e0c7a37d24086f3cfe39d81eb6db59e70add\n  languageName: node\n  linkType: hard\n\n\"@rolldown/binding-android-arm-eabi@npm:1.2.14\":\n  version: 1.2.14\n  resolution: \"@rolldown/binding-android-arm-eabi@npm:1.2.14\"\n  conditions: os=android & cpu=arm\n  languageName: node\n  linkType: hard\n\n\"@rolldown/binding-android-arm64@npm:1.2.14\":\n  version: 1.2.14\n  resolution: \"@rolldown/binding-android-arm64@npm:1.2.14\"\n  conditions: os=android & cpu=arm64\n  languageName: node\n  linkType: hard\n\n\"@rolldown/binding-darwin-arm64@npm:1.2.14\":\n  version: 1.2.14\n  resolution: \"@rolldown/binding-darwin-arm64@npm:1.2.14\"\n  conditions: os=darwin & cpu=arm64\n  languageName: node\n  linkType: hard\n\n\"@rolldown/binding-darwin-x64@npm:1.2.14\":\n  version: 1.2.14\n  resolution: \"@rolldown/binding-darwin-x64@npm:1.2.14\"\n  conditions: os=darwin & cpu=x64\n  languageName: node\n  linkType: hard\n\n\"@rolldown/binding-freebsd-x64@npm:1.2.14\":\n  version: 1.2.14\n  resolution: \"@rolldown/binding-freebsd-x64@npm:1.2.14\"\n  conditions: os=freebsd & cpu=x64\n  languageName: node\n  linkType: hard\n\n\"@rolldown/binding-linux-arm-gnueabihf@npm:1.2.14\":\n  version: 1.2.14\n  resolution: \"@rolldown/binding-linux-arm-gnueabihf@npm:1.2.14\"\n  conditions: os=linux & cpu=arm\n  languageName: node\n  linkType: hard\n\n\"@rolldown/binding-linux-arm64-gnu@npm:1.2.14\":\n  version: 1.2.14\n  resolution: \"@rolldown/binding-linux-arm64-gnu@npm:1.2.14\"\n  conditions: os=linux & cpu=arm64 & libc=glibc\n  languageName: node\n  linkType: hard\n\n\"@rolldown/binding-linux-arm64-musl@npm:1.2.14\":\n  version: 1.2.14\n  resolution: \"@rolldown/binding-linux-arm64-musl@npm:1.2.14\"\n  conditions: os=linux & cpu=arm64 & libc=musl\n  languageName: node\n  linkType: hard\n\n\"@rolldown/binding-linux-ppc64-gnu@npm:1.2.14\":\n  version: 1.2.14\n  resolution: \"@rolldown/binding-linux-ppc64-gnu@npm:1.2.14\"\n  conditions: os=linux & cpu=ppc64 & libc=glibc\n  languageName: node\n  linkType: hard\n\n\"@rolldown/binding-linux-s390x-gnu@npm:1.2.14\":\n  version: 1.2.14\n  resolution: \"@rolldown/binding-linux-s390x-gnu@npm:1.2.14\"\n  conditions: os=linux & cpu=s390x & libc=glibc\n  languageName: node\n  linkType: hard\n\n\"@rolldown/binding-linux-x64-gnu@npm:1.2.14\":\n  version: 1.2.14\n  resolution: \"@rolldown/binding-linux-x64-gnu@npm:1.2.14\"\n  conditions: os=linux & cpu=x64 & libc=glibc\n  languageName: node\n  linkType: hard\n\n\"@rolldown/binding-linux-x64-musl@npm:1.2.14\":\n  version: 1.2.14\n  resolution: \"@rolldown/binding-linux-x64-musl@npm:1.2.14\"\n  conditions: os=linux & cpu=x64 & libc=musl\n  languageName: node\n  linkType: hard\n\n\"@rolldown/binding-openharmony-arm64@npm:1.2.14\":\n  version: 1.2.14\n  resolution: \"@rolldown/binding-openharmony-arm64@npm:1.2.14\"\n  conditions: os=openharmony & cpu=arm64\n  languageName: node\n  linkType: hard\n\n\"@rolldown/binding-win32-arm64-msvc@npm:1.2.14\":\n  version: 1.2.14\n  resolution: \"@rolldown/binding-win32-arm64-msvc@npm:1.2.14\"\n  conditions: os=win32 & cpu=arm64\n  languageName: node\n  linkType: hard\n\n\"@rolldown/binding-win32-x64-msvc@npm:1.2.14\":\n  version: 1.2.14\n  resolution: \"@rolldown/binding-win32-x64-msvc@npm:1.2.14\"\n  conditions: os=win32 & cpu=x64\n  languageName: node\n  linkType: hard\n\n\"@rolldown/pluginutils@npm:^1.0.0\":\n  version: 1.0.1\n  resolution: \"@rolldown/pluginutils@npm:1.0.1\"\n  checksum: 10c0/99d9b06d90196823e4d8c841f258db7a16e5dbba5824a2962b05d907b79f1ba929d56f22dd744fd530936e568c865ee56a719dc31e57e13bc0a8eb4764a8d8dd\n  languageName: node\n  linkType: hard\n\n\"abbrev@npm:^5.0.0\":\n  version: 5.0.0\n  resolution: \"abbrev@npm:5.0.0\"\n  checksum: 10c0/8e88f5c798ea4562d28c5a3e9ad69e3879890bc5d695d8f2dffb8609be4c890aacc8f80ef4553fdd2c6a62d70c2ce8bc57b38074e383beb7487bdafa9ed42ea5\n  languageName: node\n  linkType: hard\n\n\"agent-base@npm:6\":\n  version: 6.0.2\n  resolution: \"agent-base@npm:6.0.2\"\n  dependencies:\n    debug: \"npm:4\"\n  checksum: 10c0/dc4f757e40b5f3e3d674bc9beb4f1048f4ee83af189bae39be99f57bf1f48dde166a8b0a5342a84b5944ee8e6ed1e5a9d801858f4ad44764e84957122fe46261\n  languageName: node\n  linkType: hard\n\n\"asynckit@npm:^0.4.0\":\n  version: 0.4.0\n  resolution: \"asynckit@npm:0.4.0\"\n  checksum: 10c0/d73e2ddf20c4eb9337e1b3df1a0f6159481050a5de457c55b14ea2e5cb6d90bb69e004c9af54737a5ee0917fcf2c9e25de67777bbe58261847846066ba75bc9d\n  languageName: node\n  linkType: hard\n\n\"axios@npm:^1.18.0\":\n  version: 1.20.0\n  resolution: \"axios@npm:1.20.0\"\n  dependencies:\n    follow-redirects: \"npm:^1.16.0\"\n    form-data: \"npm:^4.0.6\"\n    https-proxy-agent: \"npm:^5.0.1\"\n    proxy-from-env: \"npm:^2.1.0\"\n  checksum: 10c0/976088acf532286356f4c2e65df1ef47ba7da3936d83e928d0d64357bbf5370456abd3eb5826c15df322335fcb1fe200d4a84b4fcf20ffccdd63b40d80fa495c\n  languageName: node\n  linkType: hard\n\n\"bottom-tip@npm:^0.1.5\":\n  version: 0.1.5\n  resolution: \"bottom-tip@npm:0.1.5\"\n  dependencies:\n    nanoid: \"npm:^4.0.1\"\n    virtual-dom: \"npm:^2.1.1\"\n  checksum: 10c0/6d67176db5e2e66c3566351fe418451a2665f2935f8621a61135fb493bcb2adbf5b6763a584a9935997efb0a89ee1022b60994fd90ef3ef1d8f2e08abe5b34e3\n  languageName: node\n  linkType: hard\n\n\"browser-split@npm:0.0.1\":\n  version: 0.0.1\n  resolution: \"browser-split@npm:0.0.1\"\n  checksum: 10c0/c0ed77e8bf3494e6803681c578f5c0c0d050fbd041f608f0fe7ec23bdb98483ba6905dfa785786963b9b555aab04f95d6e15f8b4ecdd53a40215134a66ec3f39\n  languageName: node\n  linkType: hard\n\n\"call-bind-apply-helpers@npm:^1.0.1, call-bind-apply-helpers@npm:^1.0.2\":\n  version: 1.0.2\n  resolution: \"call-bind-apply-helpers@npm:1.0.2\"\n  dependencies:\n    es-errors: \"npm:^1.3.0\"\n    function-bind: \"npm:^1.1.2\"\n  checksum: 10c0/47bd9901d57b857590431243fea704ff18078b16890a6b3e021e12d279bbf211d039155e27d7566b374d49ee1f8189344bac9833dec7a20cdec370506361c938\n  languageName: node\n  linkType: hard\n\n\"camelize@npm:^1.0.0\":\n  version: 1.0.1\n  resolution: \"camelize@npm:1.0.1\"\n  checksum: 10c0/4c9ac55efd356d37ac483bad3093758236ab686192751d1c9daa43188cc5a07b09bd431eb7458a4efd9ca22424bba23253e7b353feb35d7c749ba040de2385fb\n  languageName: node\n  linkType: hard\n\n\"chownr@npm:^3.0.0\":\n  version: 3.0.0\n  resolution: \"chownr@npm:3.0.0\"\n  checksum: 10c0/43925b87700f7e3893296c8e9c56cc58f926411cce3a6e5898136daaf08f08b9a8eb76d37d3267e707d0dcc17aed2e2ebdf5848c0c3ce95cf910a919935c1b10\n  languageName: node\n  linkType: hard\n\n\"classnames@npm:^2.2.5\":\n  version: 2.5.1\n  resolution: \"classnames@npm:2.5.1\"\n  checksum: 10c0/afff4f77e62cea2d79c39962980bf316bacb0d7c49e13a21adaadb9221e1c6b9d3cdb829d8bb1b23c406f4e740507f37e1dcf506f7e3b7113d17c5bab787aa69\n  languageName: node\n  linkType: hard\n\n\"combined-stream@npm:^1.0.8\":\n  version: 1.0.8\n  resolution: \"combined-stream@npm:1.0.8\"\n  dependencies:\n    delayed-stream: \"npm:~1.0.0\"\n  checksum: 10c0/0dbb829577e1b1e839fa82b40c07ffaf7de8a09b935cadd355a73652ae70a88b4320db322f6634a4ad93424292fa80973ac6480986247f1734a1137debf271d5\n  languageName: node\n  linkType: hard\n\n\"core-js@npm:^3.1.3\":\n  version: 3.48.0\n  resolution: \"core-js@npm:3.48.0\"\n  checksum: 10c0/6c3115900dd7cce9fab74c07cb262b3517fc250d02e8fd2ff34f80bda5f43a28482a909dbc4491dc6e1ddd9807f57a7df4c3eeecd1f202b7d9c8bfe25f9d680c\n  languageName: node\n  linkType: hard\n\n\"dayjs@npm:^1.11.19\":\n  version: 1.11.19\n  resolution: \"dayjs@npm:1.11.19\"\n  checksum: 10c0/7d8a6074a343f821f81ea284d700bd34ea6c7abbe8d93bce7aba818948957c1b7f56131702e5e890a5622cdfc05dcebe8aed0b8313bdc6838a594d7846b0b000\n  languageName: node\n  linkType: hard\n\n\"debug@npm:4\":\n  version: 4.4.3\n  resolution: \"debug@npm:4.4.3\"\n  dependencies:\n    ms: \"npm:^2.1.3\"\n  peerDependenciesMeta:\n    supports-color:\n      optional: true\n  checksum: 10c0/d79136ec6c83ecbefd0f6a5593da6a9c91ec4d7ddc4b54c883d6e71ec9accb5f67a1a5e96d00a328196b5b5c86d365e98d8a3a70856aaf16b4e7b1985e67f5a6\n  languageName: node\n  linkType: hard\n\n\"delayed-stream@npm:~1.0.0\":\n  version: 1.0.0\n  resolution: \"delayed-stream@npm:1.0.0\"\n  checksum: 10c0/d758899da03392e6712f042bec80aa293bbe9e9ff1b2634baae6a360113e708b91326594c8a486d475c69d6259afb7efacdc3537bfcda1c6c648e390ce601b19\n  languageName: node\n  linkType: hard\n\n\"detect-libc@npm:^2.0.3\":\n  version: 2.1.2\n  resolution: \"detect-libc@npm:2.1.2\"\n  checksum: 10c0/acc675c29a5649fa1fb6e255f993b8ee829e510b6b56b0910666949c80c364738833417d0edb5f90e4e46be17228b0f2b66a010513984e18b15deeeac49369c4\n  languageName: node\n  linkType: hard\n\n\"dom-walk@npm:^0.1.0\":\n  version: 0.1.2\n  resolution: \"dom-walk@npm:0.1.2\"\n  checksum: 10c0/4d2ad9062a9423d890f8577aa202b597a6b85f9489bdde656b9443901b8b322b289655c3affefc58ec2e41931e0828dfee0a1d2db6829a607d76def5901fc5a9\n  languageName: node\n  linkType: hard\n\n\"dunder-proto@npm:^1.0.1\":\n  version: 1.0.1\n  resolution: \"dunder-proto@npm:1.0.1\"\n  dependencies:\n    call-bind-apply-helpers: \"npm:^1.0.1\"\n    es-errors: \"npm:^1.3.0\"\n    gopd: \"npm:^1.2.0\"\n  checksum: 10c0/199f2a0c1c16593ca0a145dbf76a962f8033ce3129f01284d48c45ed4e14fea9bbacd7b3610b6cdc33486cef20385ac054948fefc6272fcce645c09468f93031\n  languageName: node\n  linkType: hard\n\n\"env-paths@npm:^2.2.0\":\n  version: 2.2.1\n  resolution: \"env-paths@npm:2.2.1\"\n  checksum: 10c0/285325677bf00e30845e330eec32894f5105529db97496ee3f598478e50f008c5352a41a30e5e72ec9de8a542b5a570b85699cd63bd2bc646dbcb9f311d83bc4\n  languageName: node\n  linkType: hard\n\n\"error@npm:^4.3.0\":\n  version: 4.4.0\n  resolution: \"error@npm:4.4.0\"\n  dependencies:\n    camelize: \"npm:^1.0.0\"\n    string-template: \"npm:~0.2.0\"\n    xtend: \"npm:~4.0.0\"\n  checksum: 10c0/6aecddafbc14db142a47df295b2d832630dd4af6ec62a52dbf00eefa7adea249a3182a6c920c5e24974204f7234d02ed2b073f6f8eb164ba2e620d93218e2e66\n  languageName: node\n  linkType: hard\n\n\"es-define-property@npm:^1.0.1\":\n  version: 1.0.1\n  resolution: \"es-define-property@npm:1.0.1\"\n  checksum: 10c0/3f54eb49c16c18707949ff25a1456728c883e81259f045003499efba399c08bad00deebf65cccde8c0e07908c1a225c9d472b7107e558f2a48e28d530e34527c\n  languageName: node\n  linkType: hard\n\n\"es-errors@npm:^1.3.0\":\n  version: 1.3.0\n  resolution: \"es-errors@npm:1.3.0\"\n  checksum: 10c0/0a61325670072f98d8ae3b914edab3559b6caa980f08054a3b872052640d91da01d38df55df797fcc916389d77fc92b8d5906cf028f4db46d7e3003abecbca85\n  languageName: node\n  linkType: hard\n\n\"es-object-atoms@npm:^1.0.0, es-object-atoms@npm:^1.1.1\":\n  version: 1.1.1\n  resolution: \"es-object-atoms@npm:1.1.1\"\n  dependencies:\n    es-errors: \"npm:^1.3.0\"\n  checksum: 10c0/65364812ca4daf48eb76e2a3b7a89b3f6a2e62a1c420766ce9f692665a29d94fe41fe88b65f24106f449859549711e4b40d9fb8002d862dfd7eb1c512d10be0c\n  languageName: node\n  linkType: hard\n\n\"es-set-tostringtag@npm:^2.1.0\":\n  version: 2.1.0\n  resolution: \"es-set-tostringtag@npm:2.1.0\"\n  dependencies:\n    es-errors: \"npm:^1.3.0\"\n    get-intrinsic: \"npm:^1.2.6\"\n    has-tostringtag: \"npm:^1.0.2\"\n    hasown: \"npm:^2.0.2\"\n  checksum: 10c0/ef2ca9ce49afe3931cb32e35da4dcb6d86ab02592cfc2ce3e49ced199d9d0bb5085fc7e73e06312213765f5efa47cc1df553a6a5154584b21448e9fb8355b1af\n  languageName: node\n  linkType: hard\n\n\"ev-store@npm:^7.0.0\":\n  version: 7.0.0\n  resolution: \"ev-store@npm:7.0.0\"\n  dependencies:\n    individual: \"npm:^3.0.0\"\n  checksum: 10c0/a470c07142a34ebc1aff20291fafe56675f4231ac5077de2dd6df6134e257a603b45efd4865c2f368084e40b1ac8efcec1459a182ce4bcd52256ae70e1b3dd5d\n  languageName: node\n  linkType: hard\n\n\"exponential-backoff@npm:^3.1.1\":\n  version: 3.1.3\n  resolution: \"exponential-backoff@npm:3.1.3\"\n  checksum: 10c0/77e3ae682b7b1f4972f563c6dbcd2b0d54ac679e62d5d32f3e5085feba20483cf28bd505543f520e287a56d4d55a28d7874299941faf637e779a1aa5994d1267\n  languageName: node\n  linkType: hard\n\n\"fdir@npm:^6.5.0\":\n  version: 6.5.0\n  resolution: \"fdir@npm:6.5.0\"\n  peerDependencies:\n    picomatch: ^3 || ^4\n  peerDependenciesMeta:\n    picomatch:\n      optional: true\n  checksum: 10c0/e345083c4306b3aed6cb8ec551e26c36bab5c511e99ea4576a16750ddc8d3240e63826cc624f5ae17ad4dc82e68a253213b60d556c11bfad064b7607847ed07f\n  languageName: node\n  linkType: hard\n\n\"feather-icons@npm:^4.29.2\":\n  version: 4.29.2\n  resolution: \"feather-icons@npm:4.29.2\"\n  dependencies:\n    classnames: \"npm:^2.2.5\"\n    core-js: \"npm:^3.1.3\"\n  checksum: 10c0/a23f8fbb6e96c901290308bb96267660ddd32c367074411e6a641c030448eff8041072c46e82cbf3bb3c4b2440df107e8defed09ff068e55117db6b867ca7b32\n  languageName: node\n  linkType: hard\n\n\"follow-redirects@npm:^1.16.0\":\n  version: 1.16.1\n  resolution: \"follow-redirects@npm:1.16.1\"\n  peerDependenciesMeta:\n    debug:\n      optional: true\n  checksum: 10c0/544e24ccb93b7afb5dd5a2199bd556e167b84de2af7c13b2ced08494239677359d7883bae56ae43a9ca98ac5451e75cf4834a5fadd6fa79053b9248fac5447a4\n  languageName: node\n  linkType: hard\n\n\"form-data@npm:^4.0.6\":\n  version: 4.0.6\n  resolution: \"form-data@npm:4.0.6\"\n  dependencies:\n    asynckit: \"npm:^0.4.0\"\n    combined-stream: \"npm:^1.0.8\"\n    es-set-tostringtag: \"npm:^2.1.0\"\n    hasown: \"npm:^2.0.4\"\n    mime-types: \"npm:^2.1.35\"\n  checksum: 10c0/43947a77bf0ff45c6ceed789778982d47a3f3e720a74b71721174ebf3310a5f1a8be1d6b38a3ee3688e8a18a2c4273073ec0844cd37efda3eaf46d41c9c318ff\n  languageName: node\n  linkType: hard\n\n\"fsevents@npm:~2.3.3\":\n  version: 2.3.3\n  resolution: \"fsevents@npm:2.3.3\"\n  dependencies:\n    node-gyp: \"npm:latest\"\n  checksum: 10c0/a1f0c44595123ed717febbc478aa952e47adfc28e2092be66b8ab1635147254ca6cfe1df792a8997f22716d4cbafc73309899ff7bfac2ac3ad8cf2e4ecc3ec60\n  conditions: os=darwin\n  languageName: node\n  linkType: hard\n\n\"fsevents@patch:fsevents@npm%3A~2.3.3#optional!builtin<compat/fsevents>\":\n  version: 2.3.3\n  resolution: \"fsevents@patch:fsevents@npm%3A2.3.3#optional!builtin<compat/fsevents>::version=2.3.3&hash=df0bf1\"\n  dependencies:\n    node-gyp: \"npm:latest\"\n  conditions: os=darwin\n  languageName: node\n  linkType: hard\n\n\"function-bind@npm:^1.1.2\":\n  version: 1.1.2\n  resolution: \"function-bind@npm:1.1.2\"\n  checksum: 10c0/d8680ee1e5fcd4c197e4ac33b2b4dce03c71f4d91717292785703db200f5c21f977c568d28061226f9b5900cbcd2c84463646134fd5337e7925e0942bc3f46d5\n  languageName: node\n  linkType: hard\n\n\"get-intrinsic@npm:^1.2.6\":\n  version: 1.3.0\n  resolution: \"get-intrinsic@npm:1.3.0\"\n  dependencies:\n    call-bind-apply-helpers: \"npm:^1.0.2\"\n    es-define-property: \"npm:^1.0.1\"\n    es-errors: \"npm:^1.3.0\"\n    es-object-atoms: \"npm:^1.1.1\"\n    function-bind: \"npm:^1.1.2\"\n    get-proto: \"npm:^1.0.1\"\n    gopd: \"npm:^1.2.0\"\n    has-symbols: \"npm:^1.1.0\"\n    hasown: \"npm:^2.0.2\"\n    math-intrinsics: \"npm:^1.1.0\"\n  checksum: 10c0/52c81808af9a8130f581e6a6a83e1ba4a9f703359e7a438d1369a5267a25412322f03dcbd7c549edaef0b6214a0630a28511d7df0130c93cfd380f4fa0b5b66a\n  languageName: node\n  linkType: hard\n\n\"get-proto@npm:^1.0.1\":\n  version: 1.0.1\n  resolution: \"get-proto@npm:1.0.1\"\n  dependencies:\n    dunder-proto: \"npm:^1.0.1\"\n    es-object-atoms: \"npm:^1.0.0\"\n  checksum: 10c0/9224acb44603c5526955e83510b9da41baf6ae73f7398875fba50edc5e944223a89c4a72b070fcd78beb5f7bdda58ecb6294adc28f7acfc0da05f76a2399643c\n  languageName: node\n  linkType: hard\n\n\"global@npm:^4.3.0\":\n  version: 4.4.0\n  resolution: \"global@npm:4.4.0\"\n  dependencies:\n    min-document: \"npm:^2.19.0\"\n    process: \"npm:^0.11.10\"\n  checksum: 10c0/4a467aec6602c00a7c5685f310574ab04e289ad7f894f0f01c9c5763562b82f4b92d1e381ce6c5bbb12173e2a9f759c1b63dda6370cfb199970267e14d90aa91\n  languageName: node\n  linkType: hard\n\n\"gopd@npm:^1.2.0\":\n  version: 1.2.0\n  resolution: \"gopd@npm:1.2.0\"\n  checksum: 10c0/50fff1e04ba2b7737c097358534eacadad1e68d24cccee3272e04e007bed008e68d2614f3987788428fd192a5ae3889d08fb2331417e4fc4a9ab366b2043cead\n  languageName: node\n  linkType: hard\n\n\"graceful-fs@npm:^4.2.6\":\n  version: 4.2.11\n  resolution: \"graceful-fs@npm:4.2.11\"\n  checksum: 10c0/386d011a553e02bc594ac2ca0bd6d9e4c22d7fa8cfbfc448a6d148c59ea881b092db9dbe3547ae4b88e55f1b01f7c4a2ecc53b310c042793e63aa44cf6c257f2\n  languageName: node\n  linkType: hard\n\n\"has-symbols@npm:^1.0.3, has-symbols@npm:^1.1.0\":\n  version: 1.1.0\n  resolution: \"has-symbols@npm:1.1.0\"\n  checksum: 10c0/dde0a734b17ae51e84b10986e651c664379018d10b91b6b0e9b293eddb32f0f069688c841fb40f19e9611546130153e0a2a48fd7f512891fb000ddfa36f5a20e\n  languageName: node\n  linkType: hard\n\n\"has-tostringtag@npm:^1.0.2\":\n  version: 1.0.2\n  resolution: \"has-tostringtag@npm:1.0.2\"\n  dependencies:\n    has-symbols: \"npm:^1.0.3\"\n  checksum: 10c0/a8b166462192bafe3d9b6e420a1d581d93dd867adb61be223a17a8d6dad147aa77a8be32c961bb2f27b3ef893cae8d36f564ab651f5e9b7938ae86f74027c48c\n  languageName: node\n  linkType: hard\n\n\"hasown@npm:^2.0.2\":\n  version: 2.0.2\n  resolution: \"hasown@npm:2.0.2\"\n  dependencies:\n    function-bind: \"npm:^1.1.2\"\n  checksum: 10c0/3769d434703b8ac66b209a4cca0737519925bbdb61dd887f93a16372b14694c63ff4e797686d87c90f08168e81082248b9b028bad60d4da9e0d1148766f56eb9\n  languageName: node\n  linkType: hard\n\n\"hasown@npm:^2.0.4\":\n  version: 2.0.4\n  resolution: \"hasown@npm:2.0.4\"\n  dependencies:\n    function-bind: \"npm:^1.1.2\"\n  checksum: 10c0/2d8de939e270b70618f8cebb69746620db10617dbb495bc66ddad326955ea24d3ca4af133aff3eb7c1853e0218f867bc2b050ec26fe02e3aea58f880ffc5e506\n  languageName: node\n  linkType: hard\n\n\"https-proxy-agent@npm:^5.0.1\":\n  version: 5.0.1\n  resolution: \"https-proxy-agent@npm:5.0.1\"\n  dependencies:\n    agent-base: \"npm:6\"\n    debug: \"npm:4\"\n  checksum: 10c0/6dd639f03434003577c62b27cafdb864784ef19b2de430d8ae2a1d45e31c4fd60719e5637b44db1a88a046934307da7089e03d6089ec3ddacc1189d8de8897d1\n  languageName: node\n  linkType: hard\n\n\"individual@npm:^3.0.0\":\n  version: 3.0.0\n  resolution: \"individual@npm:3.0.0\"\n  checksum: 10c0/1d5b7af8833a4af77755a98abc0f69e0f54396ca379a5b2287f0b4dafbbbd9ac896e413e780ce18e61476b9bbfe4144b8a36d218770a7a707d490c09d428ea1b\n  languageName: node\n  linkType: hard\n\n\"is-object@npm:^1.0.1\":\n  version: 1.0.2\n  resolution: \"is-object@npm:1.0.2\"\n  checksum: 10c0/9cfb80c3a850f453d4a77297e0556bc2040ac6bea5b6e418aee208654938b36bab768169bef3945ccfac7a9bb460edd8034e7c6d8973bcf147d7571e1b53e764\n  languageName: node\n  linkType: hard\n\n\"isexe@npm:^4.0.0\":\n  version: 4.0.0\n  resolution: \"isexe@npm:4.0.0\"\n  checksum: 10c0/5884815115bceac452877659a9c7726382531592f43dc29e5d48b7c4100661aed54018cb90bd36cb2eaeba521092570769167acbb95c18d39afdccbcca06c5ce\n  languageName: node\n  linkType: hard\n\n\"lightningcss-android-arm64@npm:1.33.0\":\n  version: 1.33.0\n  resolution: \"lightningcss-android-arm64@npm:1.33.0\"\n  conditions: os=android & cpu=arm64\n  languageName: node\n  linkType: hard\n\n\"lightningcss-darwin-arm64@npm:1.33.0\":\n  version: 1.33.0\n  resolution: \"lightningcss-darwin-arm64@npm:1.33.0\"\n  conditions: os=darwin & cpu=arm64\n  languageName: node\n  linkType: hard\n\n\"lightningcss-darwin-x64@npm:1.33.0\":\n  version: 1.33.0\n  resolution: \"lightningcss-darwin-x64@npm:1.33.0\"\n  conditions: os=darwin & cpu=x64\n  languageName: node\n  linkType: hard\n\n\"lightningcss-freebsd-x64@npm:1.33.0\":\n  version: 1.33.0\n  resolution: \"lightningcss-freebsd-x64@npm:1.33.0\"\n  conditions: os=freebsd & cpu=x64\n  languageName: node\n  linkType: hard\n\n\"lightningcss-linux-arm-gnueabihf@npm:1.33.0\":\n  version: 1.33.0\n  resolution: \"lightningcss-linux-arm-gnueabihf@npm:1.33.0\"\n  conditions: os=linux & cpu=arm\n  languageName: node\n  linkType: hard\n\n\"lightningcss-linux-arm64-gnu@npm:1.33.0\":\n  version: 1.33.0\n  resolution: \"lightningcss-linux-arm64-gnu@npm:1.33.0\"\n  conditions: os=linux & cpu=arm64 & libc=glibc\n  languageName: node\n  linkType: hard\n\n\"lightningcss-linux-arm64-musl@npm:1.33.0\":\n  version: 1.33.0\n  resolution: \"lightningcss-linux-arm64-musl@npm:1.33.0\"\n  conditions: os=linux & cpu=arm64 & libc=musl\n  languageName: node\n  linkType: hard\n\n\"lightningcss-linux-x64-gnu@npm:1.33.0\":\n  version: 1.33.0\n  resolution: \"lightningcss-linux-x64-gnu@npm:1.33.0\"\n  conditions: os=linux & cpu=x64 & libc=glibc\n  languageName: node\n  linkType: hard\n\n\"lightningcss-linux-x64-musl@npm:1.33.0\":\n  version: 1.33.0\n  resolution: \"lightningcss-linux-x64-musl@npm:1.33.0\"\n  conditions: os=linux & cpu=x64 & libc=musl\n  languageName: node\n  linkType: hard\n\n\"lightningcss-win32-arm64-msvc@npm:1.33.0\":\n  version: 1.33.0\n  resolution: \"lightningcss-win32-arm64-msvc@npm:1.33.0\"\n  conditions: os=win32 & cpu=arm64\n  languageName: node\n  linkType: hard\n\n\"lightningcss-win32-x64-msvc@npm:1.33.0\":\n  version: 1.33.0\n  resolution: \"lightningcss-win32-x64-msvc@npm:1.33.0\"\n  conditions: os=win32 & cpu=x64\n  languageName: node\n  linkType: hard\n\n\"lightningcss@npm:^1.33.0\":\n  version: 1.33.0\n  resolution: \"lightningcss@npm:1.33.0\"\n  dependencies:\n    detect-libc: \"npm:^2.0.3\"\n    lightningcss-android-arm64: \"npm:1.33.0\"\n    lightningcss-darwin-arm64: \"npm:1.33.0\"\n    lightningcss-darwin-x64: \"npm:1.33.0\"\n    lightningcss-freebsd-x64: \"npm:1.33.0\"\n    lightningcss-linux-arm-gnueabihf: \"npm:1.33.0\"\n    lightningcss-linux-arm64-gnu: \"npm:1.33.0\"\n    lightningcss-linux-arm64-musl: \"npm:1.33.0\"\n    lightningcss-linux-x64-gnu: \"npm:1.33.0\"\n    lightningcss-linux-x64-musl: \"npm:1.33.0\"\n    lightningcss-win32-arm64-msvc: \"npm:1.33.0\"\n    lightningcss-win32-x64-msvc: \"npm:1.33.0\"\n  dependenciesMeta:\n    lightningcss-android-arm64:\n      optional: true\n    lightningcss-darwin-arm64:\n      optional: true\n    lightningcss-darwin-x64:\n      optional: true\n    lightningcss-freebsd-x64:\n      optional: true\n    lightningcss-linux-arm-gnueabihf:\n      optional: true\n    lightningcss-linux-arm64-gnu:\n      optional: true\n    lightningcss-linux-arm64-musl:\n      optional: true\n    lightningcss-linux-x64-gnu:\n      optional: true\n    lightningcss-linux-x64-musl:\n      optional: true\n    lightningcss-win32-arm64-msvc:\n      optional: true\n    lightningcss-win32-x64-msvc:\n      optional: true\n  checksum: 10c0/ce1f8279fbae636dbf37fa6e7385d5f98ed881d72af3362f24afbd4685e19c1fcdfecf17e5dd77f2ebee3d0c23ade276230d85842d07292229a2cffba8ff20a3\n  languageName: node\n  linkType: hard\n\n\"math-intrinsics@npm:^1.1.0\":\n  version: 1.1.0\n  resolution: \"math-intrinsics@npm:1.1.0\"\n  checksum: 10c0/7579ff94e899e2f76ab64491d76cf606274c874d8f2af4a442c016bd85688927fcfca157ba6bf74b08e9439dc010b248ce05b96cc7c126a354c3bae7fcb48b7f\n  languageName: node\n  linkType: hard\n\n\"mime-db@npm:1.52.0\":\n  version: 1.52.0\n  resolution: \"mime-db@npm:1.52.0\"\n  checksum: 10c0/0557a01deebf45ac5f5777fe7740b2a5c309c6d62d40ceab4e23da9f821899ce7a900b7ac8157d4548ddbb7beffe9abc621250e6d182b0397ec7f10c7b91a5aa\n  languageName: node\n  linkType: hard\n\n\"mime-types@npm:^2.1.35\":\n  version: 2.1.35\n  resolution: \"mime-types@npm:2.1.35\"\n  dependencies:\n    mime-db: \"npm:1.52.0\"\n  checksum: 10c0/82fb07ec56d8ff1fc999a84f2f217aa46cb6ed1033fefaabd5785b9a974ed225c90dc72fff460259e66b95b73648596dbcc50d51ed69cdf464af2d237d3149b2\n  languageName: node\n  linkType: hard\n\n\"min-document@npm:^2.19.0\":\n  version: 2.19.2\n  resolution: \"min-document@npm:2.19.2\"\n  dependencies:\n    dom-walk: \"npm:^0.1.0\"\n  checksum: 10c0/f6cd59ae07758583bda19cf86ffa8e072cc6e1d72d4e2a62fbf72af3ca630f66ac6a0b3e0ca2b83d5939886da2d006c309fbd0e94f17931ad117860c3fb51bf7\n  languageName: node\n  linkType: hard\n\n\"minipass@npm:^7.0.4, minipass@npm:^7.1.2\":\n  version: 7.1.3\n  resolution: \"minipass@npm:7.1.3\"\n  checksum: 10c0/539da88daca16533211ea5a9ee98dc62ff5742f531f54640dd34429e621955e91cc280a91a776026264b7f9f6735947629f920944e9c1558369e8bf22eb33fbb\n  languageName: node\n  linkType: hard\n\n\"minizlib@npm:^3.1.0\":\n  version: 3.1.0\n  resolution: \"minizlib@npm:3.1.0\"\n  dependencies:\n    minipass: \"npm:^7.1.2\"\n  checksum: 10c0/5aad75ab0090b8266069c9aabe582c021ae53eb33c6c691054a13a45db3b4f91a7fb1bd79151e6b4e9e9a86727b522527c0a06ec7d45206b745d54cd3097bcec\n  languageName: node\n  linkType: hard\n\n\"ms@npm:^2.1.3\":\n  version: 2.1.3\n  resolution: \"ms@npm:2.1.3\"\n  checksum: 10c0/d924b57e7312b3b63ad21fc5b3dc0af5e78d61a1fc7cfb5457edaf26326bf62be5307cc87ffb6862ef1c2b33b0233cdb5d4f01c4c958cc0d660948b65a287a48\n  languageName: node\n  linkType: hard\n\n\"nanoid@npm:^3.3.18\":\n  version: 3.3.19\n  resolution: \"nanoid@npm:3.3.19\"\n  bin:\n    nanoid: bin/nanoid.cjs\n  checksum: 10c0/ce7afa6258bfaa00bdc8de291cfe9913280eaa403b7d9cff3db4e4200c1913e7163577df74897958da144db473a96c67f74f57db0f542fbfe409df677bae3255\n  languageName: node\n  linkType: hard\n\n\"nanoid@npm:^4.0.1\":\n  version: 4.0.2\n  resolution: \"nanoid@npm:4.0.2\"\n  bin:\n    nanoid: bin/nanoid.js\n  checksum: 10c0/3fec62f422bc4727918eda0e7aa43e9cbb2e759be72813a0587b9dac99727d3c7ad972efce7f4f1d4cb5c7c554136a1ec3b1043d1d91d28d818d6acbe98200e5\n  languageName: node\n  linkType: hard\n\n\"next-tick@npm:^0.2.2\":\n  version: 0.2.2\n  resolution: \"next-tick@npm:0.2.2\"\n  checksum: 10c0/ccecbe773004af4ef06870dec192b5c8ad8cfe42425306bff1a90738339c6e6e3a520e65536f8a46a76b45ebf82a7049c8252b3518ec7bac9900859b786aed5b\n  languageName: node\n  linkType: hard\n\n\"node-gyp@npm:latest\":\n  version: 13.0.1\n  resolution: \"node-gyp@npm:13.0.1\"\n  dependencies:\n    env-paths: \"npm:^2.2.0\"\n    exponential-backoff: \"npm:^3.1.1\"\n    graceful-fs: \"npm:^4.2.6\"\n    nopt: \"npm:^10.0.0\"\n    proc-log: \"npm:^7.0.0\"\n    semver: \"npm:^7.3.5\"\n    tar: \"npm:^7.5.4\"\n    tinyglobby: \"npm:^0.2.12\"\n    undici: \"npm:^8.4.1\"\n    which: \"npm:^7.0.0\"\n  bin:\n    node-gyp: bin/node-gyp.js\n  checksum: 10c0/424077bc9e9bbe953a8e86db473ba818cbc6a121714008c977fd589e21e5f0c811fbf22faac730dc7182450b5e52df301811d01ae3373898658d999b7710f4e6\n  languageName: node\n  linkType: hard\n\n\"nopt@npm:^10.0.0\":\n  version: 10.0.1\n  resolution: \"nopt@npm:10.0.1\"\n  dependencies:\n    abbrev: \"npm:^5.0.0\"\n  bin:\n    nopt: bin/nopt.js\n  checksum: 10c0/980d89257f9587f3e1f77877ddbf905d6aa3b738ec33e49a4fa1a059a0dd82eb28063982b150654a7ae9de386f2ead60e56172db7d37cf56de545f7392a2a26a\n  languageName: node\n  linkType: hard\n\n\"picocolors@npm:^1.1.1\":\n  version: 1.1.1\n  resolution: \"picocolors@npm:1.1.1\"\n  checksum: 10c0/e2e3e8170ab9d7c7421969adaa7e1b31434f789afb9b3f115f6b96d91945041ac3ceb02e9ec6fe6510ff036bcc0bf91e69a1772edc0b707e12b19c0f2d6bcf58\n  languageName: node\n  linkType: hard\n\n\"picomatch@npm:^4.0.4\":\n  version: 4.0.5\n  resolution: \"picomatch@npm:4.0.5\"\n  checksum: 10c0/947bc6b6e1ff1e6c5aaf95b107a0839d12802f4f7b867663f67d47accba939ca1cb582cf99dfc30438efa1c4648ac5990967e783e8929c36b03e8440704ef1bd\n  languageName: node\n  linkType: hard\n\n\"picomatch@npm:^4.0.7\":\n  version: 4.0.7\n  resolution: \"picomatch@npm:4.0.7\"\n  checksum: 10c0/beb6ae02c43ae44e84883b90830196d9046b1726ead292adcf7f57945e0bb0d992d68563d87e03b484b6f3c9a5c6defda7523477f047d7f0e663f126cc01787f\n  languageName: node\n  linkType: hard\n\n\"postcss@npm:^8.5.28\":\n  version: 8.5.28\n  resolution: \"postcss@npm:8.5.28\"\n  dependencies:\n    nanoid: \"npm:^3.3.18\"\n    picocolors: \"npm:^1.1.1\"\n    source-map-js: \"npm:^1.2.1\"\n  checksum: 10c0/9fe44215a6628d89c8a75184b92f5b2f77e16f9e5b13b39b9009bb7e8e6eccddf82c8854bae922db1f17ace6ef3445073fe38abff513caeb03e5285b1b55620a\n  languageName: node\n  linkType: hard\n\n\"proc-log@npm:^7.0.0\":\n  version: 7.0.0\n  resolution: \"proc-log@npm:7.0.0\"\n  checksum: 10c0/b89c2d862604f35fec795477b0c7e376feab3ba0d4f4d291c4e959567442697cf451ac557d0623c1cc38af45a78128b983410f397a10c5d3a67f76c33de4754b\n  languageName: node\n  linkType: hard\n\n\"process@npm:^0.11.10\":\n  version: 0.11.10\n  resolution: \"process@npm:0.11.10\"\n  checksum: 10c0/40c3ce4b7e6d4b8c3355479df77aeed46f81b279818ccdc500124e6a5ab882c0cc81ff7ea16384873a95a74c4570b01b120f287abbdd4c877931460eca6084b3\n  languageName: node\n  linkType: hard\n\n\"proxy-from-env@npm:^2.1.0\":\n  version: 2.1.0\n  resolution: \"proxy-from-env@npm:2.1.0\"\n  checksum: 10c0/ed01729fd4d094eab619cd7e17ce3698b3413b31eb102c4904f9875e677cd207392795d5b4adee9cec359dfd31c44d5ad7595a3a3ad51c40250e141512281c58\n  languageName: node\n  linkType: hard\n\n\"pudica-schedule-viewer@workspace:.\":\n  version: 0.0.0-use.local\n  resolution: \"pudica-schedule-viewer@workspace:.\"\n  dependencies:\n    \"@calcit/procs\": \"npm:0.30.1\"\n    axios: \"npm:^1.18.0\"\n    bottom-tip: \"npm:^0.1.5\"\n    dayjs: \"npm:^1.11.19\"\n    feather-icons: \"npm:^4.29.2\"\n    vite: \"npm:8.3.3\"\n  languageName: unknown\n  linkType: soft\n\n\"rolldown@npm:~1.2.11\":\n  version: 1.2.14\n  resolution: \"rolldown@npm:1.2.14\"\n  dependencies:\n    \"@oxc-project/types\": \"npm:=0.154.0\"\n    \"@rolldown/binding-android-arm-eabi\": \"npm:1.2.14\"\n    \"@rolldown/binding-android-arm64\": \"npm:1.2.14\"\n    \"@rolldown/binding-darwin-arm64\": \"npm:1.2.14\"\n    \"@rolldown/binding-darwin-x64\": \"npm:1.2.14\"\n    \"@rolldown/binding-freebsd-x64\": \"npm:1.2.14\"\n    \"@rolldown/binding-linux-arm-gnueabihf\": \"npm:1.2.14\"\n    \"@rolldown/binding-linux-arm64-gnu\": \"npm:1.2.14\"\n    \"@rolldown/binding-linux-arm64-musl\": \"npm:1.2.14\"\n    \"@rolldown/binding-linux-ppc64-gnu\": \"npm:1.2.14\"\n    \"@rolldown/binding-linux-s390x-gnu\": \"npm:1.2.14\"\n    \"@rolldown/binding-linux-x64-gnu\": \"npm:1.2.14\"\n    \"@rolldown/binding-linux-x64-musl\": \"npm:1.2.14\"\n    \"@rolldown/binding-openharmony-arm64\": \"npm:1.2.14\"\n    \"@rolldown/binding-win32-arm64-msvc\": \"npm:1.2.14\"\n    \"@rolldown/binding-win32-x64-msvc\": \"npm:1.2.14\"\n    \"@rolldown/pluginutils\": \"npm:^1.0.0\"\n  dependenciesMeta:\n    \"@rolldown/binding-android-arm-eabi\":\n      optional: true\n    \"@rolldown/binding-android-arm64\":\n      optional: true\n    \"@rolldown/binding-darwin-arm64\":\n      optional: true\n    \"@rolldown/binding-darwin-x64\":\n      optional: true\n    \"@rolldown/binding-freebsd-x64\":\n      optional: true\n    \"@rolldown/binding-linux-arm-gnueabihf\":\n      optional: true\n    \"@rolldown/binding-linux-arm64-gnu\":\n      optional: true\n    \"@rolldown/binding-linux-arm64-musl\":\n      optional: true\n    \"@rolldown/binding-linux-ppc64-gnu\":\n      optional: true\n    \"@rolldown/binding-linux-s390x-gnu\":\n      optional: true\n    \"@rolldown/binding-linux-x64-gnu\":\n      optional: true\n    \"@rolldown/binding-linux-x64-musl\":\n      optional: true\n    \"@rolldown/binding-openharmony-arm64\":\n      optional: true\n    \"@rolldown/binding-win32-arm64-msvc\":\n      optional: true\n    \"@rolldown/binding-win32-x64-msvc\":\n      optional: true\n  bin:\n    rolldown: ./bin/cli.mjs\n  checksum: 10c0/61782e6764bb05e525517dc8b2d69b465033a48a6998b1fb21de01e787938f3f7a2aa1e8eee5d83c924d131cc629eeaea9fa56b69dd469f97b3c6bb7fb6ddcb2\n  languageName: node\n  linkType: hard\n\n\"semver@npm:^7.3.5\":\n  version: 7.8.5\n  resolution: \"semver@npm:7.8.5\"\n  bin:\n    semver: bin/semver.js\n  checksum: 10c0/b1f3127a5be8125a94f37188b361c212466c292c6910adce3ec106cff5dc211ccaedc4739c11bb70fda59d6fc1f040a9bca289f4e093451521a2372e5231fe0c\n  languageName: node\n  linkType: hard\n\n\"source-map-js@npm:^1.2.1\":\n  version: 1.2.2\n  resolution: \"source-map-js@npm:1.2.2\"\n  checksum: 10c0/d5d6dec62266834f83dd4f8a2606a196fb1a006ca5d53b0ef80ee513b7eba2f4e2ae241f4bc129ae7e9b80dea24f6e3d92b446b7e6e96be7653cab8888168a94\n  languageName: node\n  linkType: hard\n\n\"string-template@npm:~0.2.0\":\n  version: 0.2.1\n  resolution: \"string-template@npm:0.2.1\"\n  checksum: 10c0/5dc9bd8741e50aaf1ebb616c64fdada32301dc52718692a7a13088285b96fecd1010ab612b348ef29c08dff4df4f96c8e80689ca855a578d01cc182e48199182\n  languageName: node\n  linkType: hard\n\n\"tar@npm:^7.5.4\":\n  version: 7.5.22\n  resolution: \"tar@npm:7.5.22\"\n  dependencies:\n    \"@isaacs/fs-minipass\": \"npm:^4.0.0\"\n    chownr: \"npm:^3.0.0\"\n    minipass: \"npm:^7.1.2\"\n    minizlib: \"npm:^3.1.0\"\n    yallist: \"npm:^5.0.0\"\n  checksum: 10c0/1311f6be85a8157ac4c9147bae43e13923d2a1aae15e4aa1bd5239e4e03d2cf53cfe103dde7f35832fbb4c938b042856bc8e9a0afd29abd05e2d1608788c4fea\n  languageName: node\n  linkType: hard\n\n\"tinyglobby@npm:^0.2.12, tinyglobby@npm:^0.2.17\":\n  version: 0.2.17\n  resolution: \"tinyglobby@npm:0.2.17\"\n  dependencies:\n    fdir: \"npm:^6.5.0\"\n    picomatch: \"npm:^4.0.4\"\n  checksum: 10c0/7f7bb0f197c88bc4b20c231e0deca4240ca3bf313a88f5a7fee93a872b84966a4d50220947c0455ad07a60b3b360961c5b7fd979222aeb716a9f99b412002e4c\n  languageName: node\n  linkType: hard\n\n\"undici@npm:^8.4.1\":\n  version: 8.11.2\n  resolution: \"undici@npm:8.11.2\"\n  checksum: 10c0/106f6991178fb7562fd90cdec7993c5f807a9428682306091f0c4b27fc474ec291f868e29972c6252988bf061ad193df943b3b99e775be157a28d92bbb95699d\n  languageName: node\n  linkType: hard\n\n\"virtual-dom@npm:^2.1.1\":\n  version: 2.1.1\n  resolution: \"virtual-dom@npm:2.1.1\"\n  dependencies:\n    browser-split: \"npm:0.0.1\"\n    error: \"npm:^4.3.0\"\n    ev-store: \"npm:^7.0.0\"\n    global: \"npm:^4.3.0\"\n    is-object: \"npm:^1.0.1\"\n    next-tick: \"npm:^0.2.2\"\n    x-is-array: \"npm:0.1.0\"\n    x-is-string: \"npm:0.1.0\"\n  checksum: 10c0/15b89e0ae3d259a190c0489c74b3119f10e93fe55d108f394749a1a324e413e22fbc98710538b31cfaafbedd2ab0ff5379c61790e20778b923e33375f47d3cfb\n  languageName: node\n  linkType: hard\n\n\"vite@npm:8.3.3\":\n  version: 8.3.3\n  resolution: \"vite@npm:8.3.3\"\n  dependencies:\n    fsevents: \"npm:~2.3.3\"\n    lightningcss: \"npm:^1.33.0\"\n    picomatch: \"npm:^4.0.7\"\n    postcss: \"npm:^8.5.28\"\n    rolldown: \"npm:~1.2.11\"\n    tinyglobby: \"npm:^0.2.17\"\n  peerDependencies:\n    \"@types/node\": ^20.19.0 || >=22.12.0\n    \"@vitejs/devtools\": ^0.7.1\n    esbuild: ^0.27.0 || ^0.28.0\n    jiti: \">=1.21.0\"\n    less: ^4.0.0\n    sass: ^1.70.0\n    sass-embedded: ^1.70.0\n    stylus: \">=0.54.8\"\n    sugarss: ^5.0.0\n    terser: ^5.16.0\n    tsx: ^4.8.1\n    yaml: ^2.4.2\n  dependenciesMeta:\n    fsevents:\n      optional: true\n  peerDependenciesMeta:\n    \"@types/node\":\n      optional: true\n    \"@vitejs/devtools\":\n      optional: true\n    esbuild:\n      optional: true\n    jiti:\n      optional: true\n    less:\n      optional: true\n    sass:\n      optional: true\n    sass-embedded:\n      optional: true\n    stylus:\n      optional: true\n    sugarss:\n      optional: true\n    terser:\n      optional: true\n    tsx:\n      optional: true\n    yaml:\n      optional: true\n  bin:\n    vite: bin/vite.js\n  checksum: 10c0/a1fa945ad1dd98d43e45d491eee11505083b19e00f8c5549cd0771273717f7bdb431eef71ef3568d1effa6ba63719811e5151f3fbec84be5a017d4975470a0d9\n  languageName: node\n  linkType: hard\n\n\"which@npm:^7.0.0\":\n  version: 7.0.0\n  resolution: \"which@npm:7.0.0\"\n  dependencies:\n    isexe: \"npm:^4.0.0\"\n  bin:\n    node-which: bin/which.js\n  checksum: 10c0/ca0b54f198f78bbc4b7c02e34bda8d335cb352e0adb4cbca1c37b1a957af3a879a82c4c27ca6525bc942f548d8b64f816ef6528360af9f3de55ffb9b979b620d\n  languageName: node\n  linkType: hard\n\n\"x-is-array@npm:0.1.0\":\n  version: 0.1.0\n  resolution: \"x-is-array@npm:0.1.0\"\n  checksum: 10c0/b559d9acfdffb3ea6c31e07b152439df2e85d98cc674846ccb785a003ff597bd3e31475d50eda62296c1503284c69c00bbb1f1dd5b3958b32aa72ea26099c42c\n  languageName: node\n  linkType: hard\n\n\"x-is-string@npm:0.1.0\":\n  version: 0.1.0\n  resolution: \"x-is-string@npm:0.1.0\"\n  checksum: 10c0/1ec001229eb17ac5c08c5bfb03c6d6e415306a6e923c0dbcadc5cb655b6008f61d50f29fcf610c9527bcbb9df40db82fb3cc9aefcb575898fba2affa17864f1c\n  languageName: node\n  linkType: hard\n\n\"xtend@npm:~4.0.0\":\n  version: 4.0.2\n  resolution: \"xtend@npm:4.0.2\"\n  checksum: 10c0/366ae4783eec6100f8a02dff02ac907bf29f9a00b82ac0264b4d8b832ead18306797e283cf19de776538babfdcb2101375ec5646b59f08c52128ac4ab812ed0e\n  languageName: node\n  linkType: hard\n\n\"yallist@npm:^5.0.0\":\n  version: 5.0.0\n  resolution: \"yallist@npm:5.0.0\"\n  checksum: 10c0/a499c81ce6d4a1d260d4ea0f6d49ab4da09681e32c3f0472dee16667ed69d01dae63a3b81745a24bd78476ec4fcf856114cb4896ace738e01da34b2c42235416\n  languageName: node\n  linkType: hard\n",
+    ".yarnrc.yml": "approvedGitRepositories:\n  - \"**\"\n\nenableScripts: true\n\nnodeLinker: node-modules\n\nnpmMinimalAgeGate: 0\n\nnpmPreapprovedPackages:\n  - \"@calcit/procs@0.30.1\"\n"
+  }
+}
