@@ -6,6 +6,18 @@ Pudica Schedule Viewer
 
 Site http://r.tiye.me/Memkits/pudica-schedule-viewer/
 
+### 本轮方法写法迁移：使用者影响
+
+在既有正式 0.30.1 依赖图上，将五处 `option:unwrap-or` 和一处 `option:some?`
+改为同名方法，并将两处已确认的 `List<Task>` 计数改为 `.len`。
+只修改八个调用头；时间缺失时的默认值、排序判断、周任务合计与 SSR 判定不变。
+存档格式、原始上传内容、接口地址、依赖及 HUD 均不变，合法的泛型 `reduce` 保留。
+
+受保护 Linux CI 在迁移前后运行原存储/Canvas 适配与六项业务测试，
+迁移后完整 strict、全定义/公开定义检查、弃用零门禁与构建通过。
+原归档样例不覆盖全部排序分支，开发环境和 SSR 分支也未做实际浏览器验收；
+不据此宣称真实存档、上传服务或完整交互已验收。不新增验证脚本，不合并、部署或发版。
+
 ### Workflow
 
 Workflow https://github.com/calcit-lang/respo-calcit-workflow
