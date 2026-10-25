@@ -232,10 +232,10 @@
         'by-latest-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn by-latest-task (task-a task-b)
             let
-                done-a $ option:unwrap-or (:done-time task-a) 0
-                done-b $ option:unwrap-or (:done-time task-b) 0
-                archived-a $ option:unwrap-or (:archived-time task-a) 0
-                archived-b $ option:unwrap-or (:archived-time task-b) 0
+                done-a $ .unwrap-or (:done-time task-a) 0
+                done-b $ .unwrap-or (:done-time task-b) 0
+                archived-a $ .unwrap-or (:archived-time task-a) 0
+                archived-b $ .unwrap-or (:archived-time task-b) 0
                 ret $ if (= done-b done-a) (< archived-b archived-a) (< done-b done-a)
               if ret -1 1
           :examples $ []
@@ -290,7 +290,7 @@
                   task $ assert-type (first tasks) (:: 'Option 'app.schema/Task)
                   format-dayjs (get-done-time task) |MM-DD
                   format-dayjs (add-days week-start day) |MM-DD
-                count tasks
+                .len tasks
               list->
                 {} $ :class-name css-tasks-container
                 -> tasks (sort by-latest-task)
@@ -405,7 +405,7 @@
                                     hint-fn $ {}
                                       :args $ [] 'Number
                                       :return 'Number
-                                    count $ assert-type
+                                    .len $ assert-type
                                       .unwrap-or (get tasks-by-day day) ([])
                                       :: 'List 'app.schema/Task
                                   reduce 0 &+
@@ -609,7 +609,7 @@
         %{} 'CodeEntry (:doc |)
           :code $ quote $ def dev?
             let
-                mode $ option:unwrap-or (get-env |mode) |release
+                mode $ .unwrap-or (get-env |mode) |release
               = mode |dev
           :examples $ []
           :schema $ :: 'Bool
@@ -692,7 +692,7 @@
             :args $ []
         'ssr? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def ssr?
-            option:some? $ query-selector |meta.respo-ssr
+            .some? $ query-selector |meta.respo-ssr
           :examples $ []
           :schema $ :: 'Bool
       :ns $ %{} 'NsEntry (:doc |)
