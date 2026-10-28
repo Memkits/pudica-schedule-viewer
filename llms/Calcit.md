@@ -1,6 +1,6 @@
 # Calcit 项目操作入口
 
-本项目固定正式 Calcit/procs 0.30.1；以 deps.cirru 和 package.json 为准。
+本项目固定正式 Calcit/procs 0.31.0；以 deps.cirru 和 package.json 为准。
 不再复制历史 `cr` 参数、Tuple/Record 或旧类型断言教程，当前权威帮助由 CLI 提供：
 
 ```sh

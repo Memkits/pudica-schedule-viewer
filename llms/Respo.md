@@ -1,7 +1,7 @@
 # 本项目的 Respo 边界
 
 先遵守 [Agents.md](../Agents.md)，语言操作参照 [Calcit.md](./Calcit.md)。
-框架用法按固定正式模块查询，不再复制旧 Respo、Tuple 或 `cr` 示例：
+框架用法按 deps.cirru 固定版本模块查询，不再复制旧 Respo、Tuple 或 `cr` 示例：
 
 ```sh
 calcit query ns app.comp.container

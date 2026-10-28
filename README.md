@@ -6,24 +6,24 @@ Pudica Schedule Viewer
 
 Site http://r.tiye.me/Memkits/pudica-schedule-viewer/
 
-### 本轮方法写法迁移：使用者影响
+### Calcit 0.31.0：使用者影响
 
-在既有正式 0.30.1 依赖图上，将五处 `option:unwrap-or` 和一处 `option:some?`
-改为同名方法，并将两处已确认的 `List<Task>` 计数改为 `.len`。
-只修改八个调用头；时间缺失时的默认值、排序判断、周任务合计与 SSR 判定不变。
-存档格式、原始上传内容、接口地址、依赖及 HUD 均不变，合法的泛型 `reduce` 保留。
+日程存档格式、时间缺失时的默认值、任务排序与原始上传内容保持不变。
+升级配对的 Calcit/procs 到正式 0.31.0；Respo/UI 使用与该工具链匹配的精确 alpha 标签，
+JS-FFI 使用正式 0.2.7，不使用 Git hash 依赖。
 
-受保护 Linux CI 在迁移前后运行原存储/Canvas 适配与六项业务测试，
-迁移后完整 strict、全定义/公开定义检查、弃用零门禁与构建通过。
-原归档样例不覆盖全部排序分支，开发环境和 SSR 分支也未做实际浏览器验收；
-不据此宣称真实存档、上传服务或完整交互已验收。不新增验证脚本，不合并、部署或发版。
+未激活的导航项现在明确提供空样式 Map，激活项使用 CSS 字符串 `black`。
+`dispatch!` 从 Dynamic 收紧为既有的名义 `Op`；保留封闭 dispatch 类型槽、
+操作解码、Store/Router/Schedule/Task 合同和 HUD。未放宽类型门禁，未增加验证脚本。
+原存储/Canvas 适配及六项业务测试继续保留；上传回归只拦截 Axios adapter，
+不向真实服务发送请求。DayJS 两处原有 unsafe 边界仍保留。
 
 ### Workflow
 
 Workflow https://github.com/calcit-lang/respo-calcit-workflow
 
-The project pairs stable Calcit/procs `0.30.1`, with formal
-Respo 0.16.124, UI 0.8.0 and JS-FFI 0.2.5 modules. Legacy Pudica
+The project pairs stable Calcit/procs `0.31.0`, with pinned
+Respo 0.17.0-alpha.4, UI 0.9.0-alpha.4 and JS-FFI 0.2.7 modules. Legacy Pudica
 storage maps and current Schedule Struct/Option exports are validated and converted to typed schedule/task structs;
 the remaining `Dynamic` positions are limited to storage, Respo state, and
 host boundaries:
@@ -53,7 +53,7 @@ browser data.
 `yarn compile` directly generates JavaScript without editing generated output.
 `yarn test:canvas` verifies startup calls `canvas.getContext("2d")`.
 
-正式 Respo、UI 与 js-ffi 标签替换旧 alpha；DOM 类型衔接复用 Respo 的 `narrow-element`。测试夹具按 Storage 接口和 Respo 的 ChildPair/RenderNode 更新，原业务断言保留。存档解码仍校验任务字段及时间值，旧 nil/数字与新 Option 均转换为规范 Option；不直接信任解析后的 Struct/Enum。上传函数明确声明 async，返回值用已有 `PromiseHost` 检查 then/catch 能力，不再强转为 `JsObject`；只等待完成，不据此证明响应 payload 类型。原始 content、接口地址和拒绝传播保持不变。DayJS 两处 callable 边界仍显式 unsafe，不宣称全部消除。
+依赖按 `deps.cirru` 的精确版本安装；DOM 类型衔接复用 Respo 的 `narrow-element`。测试夹具按 Storage 接口和 Respo 的 ChildPair/RenderNode 更新，原业务断言保留。存档解码仍校验任务字段及时间值，旧 nil/数字与新 Option 均转换为规范 Option；不直接信任解析后的 Struct/Enum。上传函数明确声明 async，返回值用已有 `PromiseHost` 检查 then/catch 能力，不再强转为 `JsObject`；只等待完成，不据此证明响应 payload 类型。原始 content、接口地址和拒绝传播保持不变。DayJS 两处 callable 边界仍显式 unsafe，不宣称全部消除。
 
 Use `caps --ci --strict` and `yarn install --immutable`. The canonical files are
 `calcit.cirru` and `deps.cirru`; retired `compact.cirru` / `package.cirru`

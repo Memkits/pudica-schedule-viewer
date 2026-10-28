@@ -120,7 +120,9 @@
           :code $ quote $ defcomp comp-link (page icon active?)
             div
               {} (:class-name css-icon)
-                :style $ if active? $ {} (:color :black)
+                :style $ if active?
+                  {} $ :color |black
+                  {}
                 :on-click $ fn (e d!)
                   d! $ schema/Op :router $ schema/Router :name page
               <> $ if (= icon :code) |Edit |View
@@ -641,7 +643,7 @@
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic
+            :args $ [] 'app.schema/Op
             :features $ #{} :js-ffi
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
