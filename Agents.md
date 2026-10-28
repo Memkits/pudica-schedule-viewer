@@ -1,4 +1,4 @@
-This repository uses paired stable Calcit/procs 0.30.1. `calcit.cirru` and `deps.cirru` are canonical; do not recreate `compact.cirru` or `package.cirru`. Use the pinned `calcit` CLI and its live help for structured edits and code generation.
+This repository uses paired stable Calcit/procs 0.31.0. `calcit.cirru` and `deps.cirru` are canonical; do not recreate `compact.cirru` or `package.cirru`. Use the pinned `calcit` CLI and its live help for structured edits and code generation.
 
 - read `llms/Calcit.md` for the current Calcit tool entry points.
 - read `llms/Respo.md` for UI library usages.
