@@ -11,7 +11,7 @@ calcit docs read type-slots.md --full --module respo.calcit
 ```
 
 - 应用 Store、Router、Schedule、Task 使用真实 Struct，业务操作使用 nominal Op。
-- DOM 事件是 event->edn 产生的 Map，不得伪造 RespoEvent Struct；在真实字段边界解码。
+- DOM 测试事件通过 Respo 的 event->edn 适配；组件在实际事件字段边界解码。
 - Respo 子状态可以混合 key，保留正确 Map 合同；不要用 assert-type 把开放数据当已验证。
 - Map 查询处理 Option；本项目旧 nil 时间和新 Option 时间在存档边界规范化，不能一律 unwrap。
 - Store.content 保留原始存档供现有上传接口使用；Schedule/Task 是渲染投影，不能拿投影替换上传内容。
