@@ -6,7 +6,7 @@ import axios from "axios";
 import * as c from "../js-out/calcit.core.mjs";
 import { decode_op, decode_schedule, decode_task, store } from "../js-out/app.schema.mjs";
 import { updater } from "../js-out/app.updater.mjs";
-import { comp_editor } from "../js-out/app.comp.editor.mjs";
+import { comp_container } from "../js-out/app.comp.container.mjs";
 import { comp_viewer, comp_time, format_duration, get_done_time, format_dayjs } from "../js-out/app.comp.viewer.mjs";
 import { event__GT_edn } from "../js-out/respo.util.format.mjs";
 import { make_string } from "../js-out/respo.render.html.mjs";
@@ -65,17 +65,15 @@ test("optional times preserve placeholder and inclusive duration semantics", () 
 });
 test("editor input and submit dispatch Enum content and router updates", () => {
   const text = c.format_cirru_edn(content());
-  const states = map(t.cursor, c._$L_(t.editor));
   let db = store;
   const dispatch = (...args) => {
     assert.equal(args.length, 1);
     db = updater(db, decode_op(args[0]), "fixture", 0);
   };
-  const input = handler(comp_editor(states), t.input);
+  const input = handler(comp_container(db), t.input);
   assert.equal(typeof input, "function");
   input(event__GT_edn({ type: "input", target: { value: text } }), dispatch);
-  const updatedStates = c.assoc(field(field(db, t.states), t.editor), t.cursor, c._$L_(t.editor));
-  const submit = handler(comp_editor(updatedStates), t.click);
+  const submit = handler(comp_container(db), t.click);
   assert.equal(typeof submit, "function");
   submit(null, dispatch);
   assert.equal(field(field(db, t.router), t.name), t.viewer);

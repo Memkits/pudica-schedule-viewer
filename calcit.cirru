@@ -20,7 +20,19 @@
               div
                 {} $ :class-name $ str-spaced css/global css/fullscreen css/column
                 match route-name
-                  :home $ comp-editor $ >> states :editor
+                  :home $ let
+                      editor-states $ >> states :editor
+                      cursor $ decode-map-as
+                        .unwrap $ get editor-states :cursor
+                        List respo.schema/CoordKey
+                      state $ decode-map-as
+                        match (get editor-states :data)
+                          (:some value)
+                            if value value $ {} $ :text |
+                          (:none)
+                            {} $ :text |
+                        Map Tag String
+                    comp-editor cursor state
                   :viewer $ comp-viewer $ app.schema/decode-schedule (:content store)
                   _ $ <> |Unknown
                 comp-nav route-name
@@ -46,44 +58,33 @@
     'app.comp.editor $ %{} 'FileEntry
       :defs $ {}
         'comp-editor $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defcomp comp-editor (states)
-            let
-                cursor $ decode-map-as
-                  .unwrap $ get states :cursor
-                  List respo.schema/CoordKey
-                state $ decode-map-as
-                  match (get states :data)
-                    (:some value)
-                      if value value $ {} $ :text |
-                    (:none)
-                      {} $ :text |
-                  Map Tag String
-              div
-                {}
-                  :class-name $ str-spaced css/flex css/flex
-                  :style $ {} $ :padding |16px
-                textarea $ {}
-                  :value $ .unwrap $ get state :text
-                  :placeholder $ .unwrap $ get state :text
-                  :class-name css-textbox
-                  :on-input $ fn (e d!)
-                    hint-fn $ Fn respo.schema/RespoEvent
-                      Fn app.schema/Op $ -> Unit
-                      -> Unit
-                    d! $ schema/Op :states cursor $ assoc state :text
-                      decode-map-as (:value e) 'String
-                    , &unit
-                space-x 0
-                div ({})
-                  button
-                    {} (:class-name css/button)
-                      :on-click $ fn (e d!)
-                        d! $ schema/Op :content $ parse-cirru-edn
-                          .unwrap $ get state :text
-                        d! $ schema/Op :router $ schema/Router :name :viewer
-                    <> |Submit
+          :code $ quote $ defcomp comp-editor (cursor state)
+            div
+              {}
+                :class-name $ str-spaced css/flex css/flex
+                :style $ {} $ :padding |16px
+              textarea $ {}
+                :value $ .unwrap $ get state :text
+                :placeholder $ .unwrap $ get state :text
+                :class-name css-textbox
+                :on-input $ fn (e d!)
+                  hint-fn $ Fn respo.schema/RespoEvent
+                    Fn app.schema/Op $ -> Unit
+                    -> Unit
+                  d! $ schema/Op :states cursor $ assoc state :text
+                    decode-map-as (:value e) 'String
+                  , &unit
+              space-x 0
+              div ({})
+                button
+                  {} (:class-name css/button)
+                    :on-click $ fn (e d!)
+                      d! $ schema/Op :content $ parse-cirru-edn
+                        .unwrap $ get state :text
+                      d! $ schema/Op :router $ schema/Router :name :viewer
+                  <> |Submit
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> respo.schema/Component)
+          :schema $ quote $ Fn (List respo.schema/CoordKey) (Map Tag String) (-> respo.schema/Component)
         'css-textbox $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-textbox
             {} $ |$0 $ {} (:outline :none)
