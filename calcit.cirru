@@ -6,7 +6,7 @@
     {} (:description |) (:init-fn 'app.main/main!) (:mode :js) (:reload-fn 'app.main/reload!) (:target :browser)
       :feature-policy $ {}
       :modules $ [] |respo.calcit/ |respo-ui.calcit/ |js-ffi/
-      :type-slots $ {} $ :dispatch-op |app.schema/Op
+      :type-slots $ {} $ :dispatch-op 'app.schema/Op
   :files $ {}
     'app.comp.container $ %{} 'FileEntry
       :defs $ {} $ 'comp-container
@@ -21,7 +21,7 @@
                 {} $ :class-name $ str-spaced css/global css/fullscreen css/column
                 match route-name
                   :home $ comp-editor $ >> states :editor
-                  :viewer $ comp-viewer $ :content store
+                  :viewer $ comp-viewer $ app.schema/decode-schedule (:content store)
                   _ $ <> |Unknown
                 comp-nav route-name
                 comp-upload $ :content store
@@ -52,9 +52,11 @@
                   .unwrap $ get states :cursor
                   List respo.schema/CoordKey
                 state $ decode-map-as
-                  or
-                    .unwrap-or (get states :data) nil
-                    {} $ :text |
+                  match (get states :data)
+                    (:some value)
+                      if value value $ {} $ :text |
+                    (:none)
+                      {} $ :text |
                   Map Tag String
               div
                 {}
@@ -65,10 +67,12 @@
                   :placeholder $ .unwrap $ get state :text
                   :class-name css-textbox
                   :on-input $ fn (e d!)
+                    hint-fn $ Fn respo.schema/RespoEvent
+                      Fn app.schema/Op $ -> Unit
+                      -> Unit
                     d! $ schema/Op :states cursor $ assoc state :text
-                      decode-map-as
-                        .unwrap $ get e :value
-                        , 'String
+                      decode-map-as (:value e) 'String
+                    , &unit
                 space-x 0
                 div ({})
                   button
@@ -195,6 +199,14 @@
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
             :names $ {} (:add |add) (:day |day) (:diff |diff) (:format |format) (:startOf |startOf) (:week |week) (:year |year)
           :schema $ quote Trait
+        'DayjsInput $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion DayjsInput Number String
+          :examples $ []
+          :schema $ quote UnionDef
+        'ScheduleRowItem $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion ScheduleRowItem String Number respo.schema/Element respo.schema/Component
+          :examples $ []
+          :schema $ quote UnionDef
         'add-days $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn add-days (value amount) (value .add amount |day)
           :examples $ []
@@ -226,7 +238,7 @@
                   hint-fn $ Fn app.schema/Task app.schema/Task $ -> Number
                   &compare (:created-time task-a) (:created-time task-b)
                 map $ fn (task)
-                  hint-fn $ Fn app.schema/Task $ -> (List Dynamic)
+                  hint-fn $ Fn app.schema/Task $ -> (List app.comp.viewer/ScheduleRowItem)
                   [] (:id task)
                     div ({})
                       comp-time $ Option :some $ :created-time task
@@ -262,7 +274,7 @@
                 {} $ :class-name css-tasks-container
                 -> tasks (sort by-latest-task)
                   map $ fn (task)
-                    hint-fn $ Fn app.schema/Task $ -> (List Dynamic)
+                    hint-fn $ Fn app.schema/Task $ -> (List app.comp.viewer/ScheduleRowItem)
                     [] (:id task)
                       div
                         {} $ :class-name css-task-item
@@ -290,7 +302,6 @@
         'comp-viewer $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-viewer (content)
             let
-                content $ schema/decode-schedule content
                 tasks $ &set:to-list $ distinct-values (:archives content)
                 tasks-by-year $ assert-type
                   group-by tasks $ fn (task)
@@ -315,7 +326,7 @@
                 list->
                   {} $ :class-name css/column
                   map years $ fn (year)
-                    hint-fn $ Fn Number $ -> (List Dynamic)
+                    hint-fn $ Fn Number $ -> (List app.comp.viewer/ScheduleRowItem)
                     let
                         tasks-in-year $ assert-type
                           .unwrap-or (get tasks-by-year year) ([])
@@ -335,7 +346,7 @@
                         list->
                           {} $ :class-name css/column
                           map weeks $ fn (week)
-                            hint-fn $ Fn Number $ -> (List Dynamic)
+                            hint-fn $ Fn Number $ -> (List app.comp.viewer/ScheduleRowItem)
                             let
                                 tasks-in-week $ assert-type
                                   .unwrap-or (get tasks-by-week week) ([])
@@ -368,14 +379,14 @@
                                   {} $ :class-name css-day-list
                                   -> days (reverse)
                                     map $ fn (day)
-                                      hint-fn $ Fn Number $ -> (List Dynamic)
+                                      hint-fn $ Fn Number $ -> (List app.comp.viewer/ScheduleRowItem)
                                       [] day $ comp-day-card day
                                         assert-type
                                           .unwrap-or (get tasks-by-day day) ([])
                                           List app.schema/Task
                                         , week-start
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> respo.schema/Component)
+          :schema $ quote $ Fn app.schema/Schedule (-> respo.schema/Component)
         'comp-week $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-week (week amount week-start)
             div
@@ -514,7 +525,7 @@
           :code $ quote $ defn make-dayjs (value)
             js-cast (dayjs value) 'app.comp.viewer/DayjsHost
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.comp.viewer/DayjsHost) (:features :js-ffi)
+          :schema $ quote $ Fn app.comp.viewer/DayjsInput (-> app.comp.viewer/DayjsHost) (:features :js-ffi)
         'start-of-week $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn start-of-week (value) (value .startOf |week)
           :examples $ []
@@ -559,7 +570,13 @@
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             when config/dev? $ println |Dispatch: op
-            reset! *reel $ updater @*reel (schema/decode-op op) (generate-id!) (now-ms)
+            reset! *reel $ updater @*reel
+              if
+                = (enum-definition op) (Option :some schema/Op)
+                decode-map-as op 'app.schema/Op
+                schema/decode-op op
+              generate-id!
+              now-ms
             , &unit
           :examples $ []
           :schema $ quote $ Fn AnyEnum (-> Unit) (:features :js-ffi)
@@ -707,8 +724,12 @@
                 :id $ .unwrap $ get raw :id
                 :text $ .unwrap $ get raw :text
                 :created-time $ .unwrap $ get raw :created-time
-                :done-time $ to-number-option $ .unwrap-or (get raw :done-time) nil
-                :archived-time $ to-number-option $ .unwrap-or (get raw :archived-time) nil
+                :done-time $ match (get raw :done-time)
+                  (:some time) (to-number-option time)
+                  (:none) (Option :none)
+                :archived-time $ match (get raw :archived-time)
+                  (:some time) (to-number-option time)
+                  (:none) (Option :none)
               , Task
           :examples $ []
           :schema $ quote $ Fn (Map Tag Dynamic) (-> app.schema/Task)
@@ -774,7 +795,6 @@
               (:content content) (assoc store :content content)
               (:router router) (assoc store :router router)
               (:hydrate-storage data) data
-              _ $ do (eprintln "|Unknown op:" op) store
           :examples $ []
           :schema $ quote $ Fn app.schema/Store app.schema/Op String Number (-> app.schema/Store)
       :ns $ %{} 'NsEntry (:doc |)

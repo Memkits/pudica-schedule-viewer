@@ -8,6 +8,7 @@ import { decode_op, decode_schedule, decode_task, store } from "../js-out/app.sc
 import { updater } from "../js-out/app.updater.mjs";
 import { comp_editor } from "../js-out/app.comp.editor.mjs";
 import { comp_viewer, comp_time, format_duration, get_done_time, format_dayjs } from "../js-out/app.comp.viewer.mjs";
+import { event__GT_edn } from "../js-out/respo.util.format.mjs";
 import { make_string } from "../js-out/respo.render.html.mjs";
 import { component_$q_, component_tree } from "../js-out/respo.util.detect.mjs";
 import { begin_upload, upload_schedule_$x_ } from "../js-out/app.comp.nav.mjs";
@@ -52,9 +53,9 @@ test("decode validates all task fields and rejects malformed storage", () => {
   assert.throws(() => decode_schedule(c.parse_cirru_edn(currentStorage.replace(":done-time $ %:: 'Option 'none", ":done-time $ %:: 'Option 'some |invalid"))));
 });
 test("active and archived tasks render with year grouping", () => {
-  const html = make_string(comp_viewer(content()));
+  const html = make_string(comp_viewer(decode_schedule(content())));
   for (const text of ["active fixture", "archived fixture", "2024", "week"]) assert.ok(html.includes(text), text);
-  assert.match(make_string(comp_viewer(map(t.tasks, map(), t.archives, map()))), /Tasks/);
+  assert.match(make_string(comp_viewer(decode_schedule(map(t.tasks, map(), t.archives, map())))), /Tasks/);
 });
 test("optional times preserve placeholder and inclusive duration semantics", () => {
   assert.match(make_string(comp_time(field(decode_task(task("none", "fallback")), t["done-time"]))), /\?\?:\?\?/);
@@ -72,7 +73,7 @@ test("editor input and submit dispatch Enum content and router updates", () => {
   };
   const input = handler(comp_editor(states), t.input);
   assert.equal(typeof input, "function");
-  input(map(t.value, text), dispatch);
+  input(event__GT_edn({ type: "input", target: { value: text } }), dispatch);
   const updatedStates = c.assoc(field(field(db, t.states), t.editor), t.cursor, c._$L_(t.editor));
   const submit = handler(comp_editor(updatedStates), t.click);
   assert.equal(typeof submit, "function");
