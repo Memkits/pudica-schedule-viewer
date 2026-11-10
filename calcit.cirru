@@ -571,16 +571,10 @@
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             when config/dev? $ println |Dispatch: op
-            reset! *reel $ updater @*reel
-              if
-                = (enum-definition op) (Option :some schema/Op)
-                decode-map-as op 'app.schema/Op
-                schema/decode-op op
-              generate-id!
-              now-ms
+            reset! *reel $ updater @*reel op (generate-id!) (now-ms)
             , &unit
           :examples $ []
-          :schema $ quote $ Fn AnyEnum (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn app.schema/Op (-> Unit) (:features :js-ffi)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             if config/dev? $ load-console-formatter!
@@ -619,7 +613,10 @@
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             if-let (target mount-target)
-              render! (narrow-element target) (comp-container @*reel) dispatch!
+              render! (narrow-element target) (comp-container @*reel)
+                fn (raw-op)
+                  hint-fn $ Fn app.schema/Op $ -> Unit
+                  dispatch! $ schema/decode-op raw-op
               do (eprintln |Mount-target-not-found.) &unit
           :examples $ []
           :schema $ quote $ Fn (-> Unit)
@@ -684,25 +681,29 @@
           :schema $ quote $ Map Tag String
         'decode-op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-op (op)
-            match op
-              (:states cursor state)
-                if (list? cursor)
-                  Op :states
-                    decode-map-as cursor $ List respo.schema/CoordKey
-                    , state
-                  raise |Invalid-state-cursor
-              (:content content) (Op :content content)
-              (:router router)
-                Op :router $ decode-map-as (storage-map router) 'app.schema/Router
-              (:hydrate-storage data)
-                let
-                    fields $ storage-map data
-                  Op :hydrate-storage $ decode-map-as
-                    assoc fields :router $ storage-map $ .unwrap (get fields :router)
-                    , 'app.schema/Store
-              _ $ raise |Unknown-viewer-operation
+            if-not (enum? op) (raise |Unknown-viewer-operation)
+              if
+                = (enum-definition op) (Option :some Op)
+                decode-map-as op 'app.schema/Op
+                match op
+                  (:states cursor state)
+                    if (list? cursor)
+                      Op :states
+                        decode-map-as cursor $ List respo.schema/CoordKey
+                        , state
+                      raise |Invalid-state-cursor
+                  (:content content) (Op :content content)
+                  (:router router)
+                    Op :router $ decode-map-as (storage-map router) 'app.schema/Router
+                  (:hydrate-storage data)
+                    let
+                        fields $ storage-map data
+                      Op :hydrate-storage $ decode-map-as
+                        assoc fields :router $ storage-map $ .unwrap (get fields :router)
+                        , 'app.schema/Store
+                  _ $ raise |Unknown-viewer-operation
           :examples $ []
-          :schema $ quote $ Fn AnyEnum (-> app.schema/Op)
+          :schema $ quote $ Fn Dynamic (-> app.schema/Op)
         'decode-schedule $ %{} 'CodeEntry
           :doc "|Validate legacy parsed storage and construct a typed Schedule."
           :code $ quote $ defn decode-schedule (raw)
