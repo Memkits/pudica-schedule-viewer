@@ -21,7 +21,7 @@
                 {} $ :class-name $ str-spaced css/global css/fullscreen css/column
                 match route-name
                   :home $ let
-                      editor-states $ >> states :editor
+                      editor-states $ decode-map-as (>> states :editor) (Map respo.schema/CoordKey Dynamic)
                       cursor $ decode-map-as
                         .unwrap $ get editor-states :cursor
                         List respo.schema/CoordKey
@@ -69,7 +69,7 @@
                 :class-name css-textbox
                 :on-input $ fn (e d!)
                   hint-fn $ Fn respo.schema/RespoEvent
-                    Fn app.schema/Op $ -> Unit
+                    Fn schema/Op $ -> Unit
                     -> Unit
                   d! $ schema/Op :states cursor $ assoc state :text
                     decode-map-as (:value e) 'String
@@ -236,10 +236,10 @@
                 :border-radius |0px
               -> tasks (distinct-values) (&set:to-list)
                 sort $ fn (task-a task-b)
-                  hint-fn $ Fn app.schema/Task app.schema/Task $ -> Number
+                  hint-fn $ Fn schema/Task schema/Task $ -> Number
                   &compare (:created-time task-a) (:created-time task-b)
                 map $ fn (task)
-                  hint-fn $ Fn app.schema/Task $ -> (List app.comp.viewer/ScheduleRowItem)
+                  hint-fn $ Fn schema/Task $ -> (List ScheduleRowItem)
                   [] (:id task)
                     div ({})
                       comp-time $ Some $ :created-time task
@@ -267,7 +267,7 @@
               {} $ :class-name $ str-spaced css/column css-day-card
               comp-day day
                 if-let
-                  task $ assert-type (first tasks) (Option app.schema/Task)
+                  task $ assert-type (first tasks) (Option schema/Task)
                   format-dayjs (get-done-time task) |MM-DD
                   format-dayjs (add-days week-start day) |MM-DD
                 .len tasks
@@ -275,7 +275,7 @@
                 {} $ :class-name css-tasks-container
                 -> tasks (sort by-latest-task)
                   map $ fn (task)
-                    hint-fn $ Fn app.schema/Task $ -> (List app.comp.viewer/ScheduleRowItem)
+                    hint-fn $ Fn schema/Task $ -> (List ScheduleRowItem)
                     [] (:id task)
                       div
                         {} $ :class-name css-task-item
@@ -306,9 +306,9 @@
                 tasks $ &set:to-list $ distinct-values (:archives content)
                 tasks-by-year $ assert-type
                   group-by tasks $ fn (task)
-                    hint-fn $ Fn app.schema/Task $ -> Number
+                    hint-fn $ Fn schema/Task $ -> Number
                     dayjs-year $ get-done-time task
-                  Map Number $ List app.schema/Task
+                  Map Number $ List schema/Task
                 years $ sort
                   &set:to-list $ keys tasks-by-year
                   , by-larger
@@ -327,16 +327,16 @@
                 list->
                   {} $ :class-name css/column
                   map years $ fn (year)
-                    hint-fn $ Fn Number $ -> (List app.comp.viewer/ScheduleRowItem)
+                    hint-fn $ Fn Number $ -> (List ScheduleRowItem)
                     let
                         tasks-in-year $ assert-type
                           .unwrap-or (get tasks-by-year year) ([])
-                          List app.schema/Task
+                          List schema/Task
                         tasks-by-week $ assert-type
                           group-by tasks-in-year $ fn (task)
-                            hint-fn $ Fn app.schema/Task $ -> Number
+                            hint-fn $ Fn schema/Task $ -> Number
                             dayjs-week $ get-done-time task
-                          Map Number $ List app.schema/Task
+                          Map Number $ List schema/Task
                         weeks $ sort
                           &set:to-list $ keys tasks-by-week
                           , by-larger
@@ -347,16 +347,16 @@
                         list->
                           {} $ :class-name css/column
                           map weeks $ fn (week)
-                            hint-fn $ Fn Number $ -> (List app.comp.viewer/ScheduleRowItem)
+                            hint-fn $ Fn Number $ -> (List ScheduleRowItem)
                             let
                                 tasks-in-week $ assert-type
                                   .unwrap-or (get tasks-by-week week) ([])
-                                  List app.schema/Task
+                                  List schema/Task
                                 tasks-by-day $ assert-type
                                   group-by tasks-in-week $ fn (task)
-                                    hint-fn $ Fn app.schema/Task $ -> Number
+                                    hint-fn $ Fn schema/Task $ -> Number
                                     dayjs-day $ get-done-time task
-                                  Map Number $ List app.schema/Task
+                                  Map Number $ List schema/Task
                                 days $ -> (range 1 6)
                                   concat $ &set:to-list $ keys tasks-by-day
                                   distinct
@@ -370,7 +370,7 @@
                                     hint-fn $ Fn Number $ -> Number
                                     .len $ assert-type
                                       .unwrap-or (get tasks-by-day day) ([])
-                                      List app.schema/Task
+                                      List schema/Task
                                   reduce 0 &+
                               [] week $ div
                                 {} (:class-name css/column)
@@ -380,11 +380,11 @@
                                   {} $ :class-name css-day-list
                                   -> days (reverse)
                                     map $ fn (day)
-                                      hint-fn $ Fn Number $ -> (List app.comp.viewer/ScheduleRowItem)
+                                      hint-fn $ Fn Number $ -> (List ScheduleRowItem)
                                       [] day $ comp-day-card day
                                         assert-type
                                           .unwrap-or (get tasks-by-day day) ([])
-                                          List app.schema/Task
+                                          List schema/Task
                                         , week-start
           :examples $ []
           :schema $ quote $ Fn schema/Schedule (-> respo.schema/Component)
@@ -615,7 +615,7 @@
             if-let (target mount-target)
               render! (narrow-element target) (comp-container @*reel)
                 fn (raw-op)
-                  hint-fn $ Fn app.schema/Op $ -> Unit
+                  hint-fn $ Fn schema/Op $ -> Unit
                   dispatch! $ schema/decode-op raw-op
               do (eprintln |Mount-target-not-found.) &unit
           :examples $ []
@@ -644,7 +644,7 @@
       :defs $ {}
         'Op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum Op
-            :states (List respo.schema/CoordKey) Dynamic
+            :states (List respo.schema/CoordKey) (Map Tag String)
             :content Dynamic
             :router app.schema/Router
             :hydrate-storage app.schema/Store
@@ -690,7 +690,7 @@
                     if (list? cursor)
                       Op :states
                         decode-map-as cursor $ List respo.schema/CoordKey
-                        , state
+                        decode-map-as state $ Map Tag String
                       raise |Invalid-state-cursor
                   (:content content) (Op :content content)
                   (:router router)
@@ -703,7 +703,7 @@
                         , 'app.schema/Store
                   _ $ raise |Unknown-viewer-operation
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Op)
+          :schema $ quote $ Fn Input (-> Op) (:generics Input)
         'decode-schedule $ %{} 'CodeEntry
           :doc "|Validate legacy parsed storage and construct a typed Schedule."
           :code $ quote $ defn decode-schedule (raw)
@@ -738,7 +738,7 @@
         'decode-task-map $ %{} 'CodeEntry (:doc "|Decode every task in a legacy task map.")
           :code $ quote $ defn decode-task-map (raw)
             filter-map-kv raw $ fn (task-id task)
-              hint-fn $ Fn String V $ -> (calcit.core/MapEntryDecision String app.schema/Task)
+              hint-fn $ Fn String V $ -> (MapEntryDecision String Task)
               calcit.core/MapEntryDecision :keep task-id $ decode-task $ storage-map task
           :examples $ []
           :schema $ quote $ Fn (Map String V)

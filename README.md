@@ -6,10 +6,10 @@ Pudica Schedule Viewer
 
 Site http://r.tiye.me/Memkits/pudica-schedule-viewer/
 
-### Calcit 0.41.0
+### Calcit 0.41.1
 
 日程存档格式、时间缺失时的默认值、任务排序与原始上传内容保持不变。
-重新安装正式 Calcit/procs 0.41.0 和依赖后构建。正式模块为 Respo 0.19.5、UI 0.15.2、JS FFI 0.2.13 和 Router 0.12.2。
+重新安装正式 Calcit/procs 0.41.1 和依赖后构建。正式模块为 Respo 0.19.5、UI 0.15.2、JS FFI 0.2.13 和 Router 0.12.2。
 
 渲染使用已校验的 `Schedule`，列表行使用具名 union。Dayjs 接收时间戳或日期字符串，可选任务时间兼容旧 nil 和新 Option。编辑器接收已校验的 `CoordKey` 路径和字符串字段，事件仍使用 RespoEvent。渲染入口将旧操作解码为具名 Op，内部派发只接收 Op。上传继续使用原始存档。
 
