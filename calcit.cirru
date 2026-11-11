@@ -38,8 +38,8 @@
                 comp-nav route-name
                 comp-upload $ :content store
                 if dev?
-                  Option :some $ comp-inspect |Store store $ {}
-                  Option :none
+                  Some $ comp-inspect |Store store $ {}
+                  , None
           :examples $ []
           :schema $ quote $ Fn app.schema/Store (-> respo.schema/Component)
       :ns $ %{} 'NsEntry (:doc |)
@@ -211,7 +211,7 @@
         'add-days $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn add-days (value amount) (value .add amount |day)
           :examples $ []
-          :schema $ quote $ Fn app.comp.viewer/DayjsHost Number (-> app.comp.viewer/DayjsHost) (:features :js-ffi)
+          :schema $ quote $ Fn DayjsHost Number (-> DayjsHost) (:features :js-ffi)
         'by-larger $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn by-larger (x y) (&compare y x)
           :examples $ []
@@ -226,7 +226,7 @@
                 ret $ if (= done-b done-a) (< archived-b archived-a) (< done-b done-a)
               if ret -1 1
           :examples $ []
-          :schema $ quote $ Fn app.schema/Task app.schema/Task (-> Number)
+          :schema $ quote $ Fn schema/Task schema/Task (-> Number)
         'comp-active-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-active-tasks (tasks)
             list->
@@ -242,11 +242,11 @@
                   hint-fn $ Fn app.schema/Task $ -> (List app.comp.viewer/ScheduleRowItem)
                   [] (:id task)
                     div ({})
-                      comp-time $ Option :some $ :created-time task
+                      comp-time $ Some $ :created-time task
                       space-x 8
                       <> $ :text task
           :examples $ []
-          :schema $ quote $ Fn (Map String app.schema/Task) (-> respo.schema/Component)
+          :schema $ quote $ Fn (Map String schema/Task) (-> respo.schema/Component)
         'comp-day $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-day (day month-date amount)
             div
@@ -289,7 +289,7 @@
                             {} $ :class-name css-task-duration
                             <> $ format-duration task
           :examples $ []
-          :schema $ quote $ Fn Number (List app.schema/Task) app.comp.viewer/DayjsHost (-> respo.schema/Component)
+          :schema $ quote $ Fn Number (List schema/Task) DayjsHost (-> respo.schema/Component)
         'comp-time $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-time (time)
             span
@@ -387,7 +387,7 @@
                                           List app.schema/Task
                                         , week-start
           :examples $ []
-          :schema $ quote $ Fn app.schema/Schedule (-> respo.schema/Component)
+          :schema $ quote $ Fn schema/Schedule (-> respo.schema/Component)
         'comp-week $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-week (week amount week-start)
             div
@@ -402,7 +402,7 @@
                     end $ add-days week-start 4
                   str (format-dayjs week-start |YYYY-MM-DD) "| ~ " $ format-dayjs end |YYYY-MM-DD
           :examples $ []
-          :schema $ quote $ Fn Number Number app.comp.viewer/DayjsHost (-> respo.schema/Component)
+          :schema $ quote $ Fn Number Number DayjsHost (-> respo.schema/Component)
         'comp-year $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-year (year)
             <> (str year) (str-spaced style/css-title css-year)
@@ -484,27 +484,27 @@
           :code $ quote $ defn current-dayjs ()
             js-cast (dayjs) 'app.comp.viewer/DayjsHost
           :examples $ []
-          :schema $ quote $ Fn (-> app.comp.viewer/DayjsHost) (:features :js-ffi)
+          :schema $ quote $ Fn (-> DayjsHost) (:features :js-ffi)
         'dayjs-day $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dayjs-day (value) (value .day)
           :examples $ []
-          :schema $ quote $ Fn app.comp.viewer/DayjsHost (-> Number) (:features :js-ffi)
+          :schema $ quote $ Fn DayjsHost (-> Number) (:features :js-ffi)
         'dayjs-week $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dayjs-week (value) (value .week)
           :examples $ []
-          :schema $ quote $ Fn app.comp.viewer/DayjsHost (-> Number) (:features :js-ffi)
+          :schema $ quote $ Fn DayjsHost (-> Number) (:features :js-ffi)
         'dayjs-year $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dayjs-year (value) (value .year)
           :examples $ []
-          :schema $ quote $ Fn app.comp.viewer/DayjsHost (-> Number) (:features :js-ffi)
+          :schema $ quote $ Fn DayjsHost (-> Number) (:features :js-ffi)
         'diff-days $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn diff-days (later earlier) (later .diff earlier |day)
           :examples $ []
-          :schema $ quote $ Fn app.comp.viewer/DayjsHost app.comp.viewer/DayjsHost (-> Number) (:features :js-ffi)
+          :schema $ quote $ Fn DayjsHost DayjsHost (-> Number) (:features :js-ffi)
         'format-dayjs $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn format-dayjs (value pattern) (value .format pattern)
           :examples $ []
-          :schema $ quote $ Fn app.comp.viewer/DayjsHost String (-> String) (:features :js-ffi)
+          :schema $ quote $ Fn DayjsHost String (-> String) (:features :js-ffi)
         'format-duration $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn format-duration (task)
             let
@@ -513,24 +513,24 @@
                 days $ diff-days done created
               str (+ days 1) |d
           :examples $ []
-          :schema $ quote $ Fn app.schema/Task (-> String)
+          :schema $ quote $ Fn schema/Task (-> String)
         'get-done-time $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn get-done-time (task)
             match (:done-time task)
               (:some value) (make-dayjs value)
               (:none) (make-dayjs |2021-01-01)
           :examples $ []
-          :schema $ quote $ Fn app.schema/Task (-> app.comp.viewer/DayjsHost)
+          :schema $ quote $ Fn schema/Task (-> DayjsHost)
         'make-dayjs $ %{} 'CodeEntry
           :doc "|Narrow one Dayjs constructor result to the reviewed host trait."
           :code $ quote $ defn make-dayjs (value)
             js-cast (dayjs value) 'app.comp.viewer/DayjsHost
           :examples $ []
-          :schema $ quote $ Fn app.comp.viewer/DayjsInput (-> app.comp.viewer/DayjsHost) (:features :js-ffi)
+          :schema $ quote $ Fn DayjsInput (-> DayjsHost) (:features :js-ffi)
         'start-of-week $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn start-of-week (value) (value .startOf |week)
           :examples $ []
-          :schema $ quote $ Fn app.comp.viewer/DayjsHost (-> app.comp.viewer/DayjsHost) (:features :js-ffi)
+          :schema $ quote $ Fn DayjsHost (-> DayjsHost) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.viewer
           :require
@@ -560,7 +560,7 @@
         '*reel $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *reel schema/store
           :examples $ []
-          :schema $ quote $ Ref app.schema/Store
+          :schema $ quote $ Ref schema/Store
         'DayjsFactoryHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait DayjsFactoryHost
             .extend! $ Fn app.main/DayjsFactoryHost JsObject $ -> app.main/DayjsFactoryHost
@@ -574,7 +574,7 @@
             reset! *reel $ updater @*reel op (generate-id!) (now-ms)
             , &unit
           :examples $ []
-          :schema $ quote $ Fn app.schema/Op (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn schema/Op (-> Unit) (:features :js-ffi)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             if config/dev? $ load-console-formatter!
@@ -598,7 +598,7 @@
         'mount-target $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def mount-target (query-selector |.app)
           :examples $ []
-          :schema $ quote $ calcit.core/Option js-ffi.browser/DomElementHost
+          :schema $ quote $ Option js-ffi.browser/DomElementHost
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if (nil? build-errors)
@@ -683,7 +683,7 @@
           :code $ quote $ defn decode-op (op)
             if-not (enum? op) (raise |Unknown-viewer-operation)
               if
-                = (enum-definition op) (Option :some Op)
+                = (enum-definition op) (Some Op)
                 decode-map-as op 'app.schema/Op
                 match op
                   (:states cursor state)
@@ -703,7 +703,7 @@
                         , 'app.schema/Store
                   _ $ raise |Unknown-viewer-operation
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/Op)
+          :schema $ quote $ Fn Dynamic (-> Op)
         'decode-schedule $ %{} 'CodeEntry
           :doc "|Validate legacy parsed storage and construct a typed Schedule."
           :code $ quote $ defn decode-schedule (raw)
@@ -717,7 +717,7 @@
                   Map String Dynamic
               Schedule :tasks (decode-task-map tasks) :archives $ decode-task-map archives
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/Schedule)
+          :schema $ quote $ Fn Input (-> Schedule) (:generics Input)
         'decode-task $ %{} 'CodeEntry
           :doc "|Validate one legacy task map and construct a typed Task."
           :code $ quote $ defn decode-task (raw)
@@ -728,28 +728,30 @@
                 :created-time $ .unwrap $ get raw :created-time
                 :done-time $ match (get raw :done-time)
                   (:some time) (to-number-option time)
-                  (:none) (Option :none)
+                  (:none) None
                 :archived-time $ match (get raw :archived-time)
                   (:some time) (to-number-option time)
-                  (:none) (Option :none)
+                  (:none) None
               , Task
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (-> app.schema/Task)
+          :schema $ quote $ Fn (Map Tag V) (-> Task) (:generics V)
         'decode-task-map $ %{} 'CodeEntry (:doc "|Decode every task in a legacy task map.")
           :code $ quote $ defn decode-task-map (raw)
             filter-map-kv raw $ fn (task-id task)
-              hint-fn $ Fn String Dynamic $ -> (calcit.core/MapEntryDecision String app.schema/Task)
+              hint-fn $ Fn String V $ -> (calcit.core/MapEntryDecision String app.schema/Task)
               calcit.core/MapEntryDecision :keep task-id $ decode-task $ storage-map task
           :examples $ []
-          :schema $ quote $ Fn (Map String Dynamic)
-            -> $ Map String app.schema/Task
+          :schema $ quote $ Fn (Map String V)
+            -> $ Map String Task
+            :generics V
         'storage-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn storage-map (raw)
             if (struct? raw) (&struct:to-map raw)
               decode-map-as raw $ Map Tag Dynamic
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn Input
             -> $ Map Tag Dynamic
+            :generics Input
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             Store :states ({}) :router (Router :name :home) :content
@@ -758,20 +760,20 @@
                 :archives $ {}
               , :messages $ {}
           :examples $ []
-          :schema $ quote app.schema/Store
+          :schema $ quote Store
         'to-number-option $ %{} 'CodeEntry
           :doc "|Validate a legacy nil-or-number field and return Option<Number>."
           :code $ quote $ defn to-number-option (value)
-            if (nil? value) (Option :none)
-              if (enum? value)
-                match value
-                  (:none) (Option :none)
-                  (:some timestamp)
-                    if (number? timestamp) (Option :some timestamp) (raise "|Invalid stored timestamp")
-                if (number? value) (Option :some value) (raise "|Invalid stored timestamp")
+            if (nil? value) None $ if (enum? value)
+              match value
+                (:none) None
+                (:some timestamp)
+                  if (number? timestamp) (Some timestamp) (raise "|Invalid stored timestamp")
+              if (number? value) (Some value) (raise "|Invalid stored timestamp")
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn Input
             -> $ Option Number
+            :generics Input
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.schema
     'app.style $ %{} 'FileEntry
