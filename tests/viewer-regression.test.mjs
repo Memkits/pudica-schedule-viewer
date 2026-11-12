@@ -93,6 +93,11 @@ test("nested editor state changes preserve content and routing", () => {
   const original = c.assoc(store, t.content, read_schedule_document(content()));
   const legacyStore = map(t.states, field(original, t.states), t.router, map(t.name, field(field(original, t.router), t.name)), t.content, content(), t.messages, field(original, t.messages));
   assert.ok(c._$e_(updater(store, decode_op(c._$o__$o_(t["hydrate-storage"], legacyStore)), "fixture", 0), original));
+  const hydrate = (states) => updater(store,
+    decode_op(c._$o__$o_(t["hydrate-storage"], c.assoc(legacyStore, t.states, states))), "fixture", 0);
+  const restored = hydrate(map(t.cursor, null, t.editor, map(t.data, null)));
+  assert.equal(typeof handler(comp_container(restored), t.input), "function");
+  assert.throws(() => hydrate(map(t.editor, map(t.data, c._SHA__$M_()))));
   assert.throws(() => decode_op(c._$o__$o_(t.router, map(t.name, "not a route tag"))));
   const draftOp = (text) => c._$o__$o_(t.states, c._$L_(t.editor), map(t.text, text));
   assert.throws(() => decode_op(draftOp(123)));

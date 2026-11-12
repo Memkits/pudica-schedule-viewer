@@ -21,7 +21,7 @@
                 {} $ :class-name $ str-spaced css/global css/fullscreen css/column
                 match route-name
                   :home $ let
-                      editor-states $ decode-map-as (>> states :editor) (Map respo.schema/CoordKey Dynamic)
+                      editor-states $ decode-map-as (>> states :editor) (Map respo.schema/CoordKey app.schema/DraftStateValue)
                       cursor $ decode-map-as
                         .unwrap $ get editor-states :cursor
                         List respo.schema/CoordKey
@@ -644,6 +644,10 @@
             respo.ffi.browser :refer $ narrow-element
     'app.schema $ %{} 'FileEntry
       :defs $ {}
+        'DraftStateValue $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion DraftStateValue String Bool (List respo.schema/CoordKey) (Map respo.schema/CoordKey app.schema/DraftStateValue)
+          :examples $ []
+          :schema $ quote UnionDef
         'Op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum Op
             :states (List respo.schema/CoordKey) (Map Tag String)
@@ -668,7 +672,7 @@
           :schema $ quote StructDef
         'Store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct Store
-            :states $ Map Tag Dynamic
+            :states $ Map respo.schema/CoordKey app.schema/DraftStateValue
             :router app.schema/Router
             :content ScheduleDocument
             :messages $ Map Tag Dynamic
@@ -707,8 +711,10 @@
                         fields $ storage-map data
                       Op :hydrate-storage $ decode-map-as
                         assoc
-                          assoc fields :router $ storage-map $ .unwrap (get fields :router)
-                          , :content $ restore-schedule-document $ .unwrap (get fields :content)
+                          assoc
+                            assoc fields :router $ storage-map $ .unwrap (get fields :router)
+                            , :content $ restore-schedule-document $ .unwrap (get fields :content)
+                          , :states $ read-draft-states $ .unwrap (get fields :states)
                         , 'app.schema/Store
                   _ $ raise |Unknown-viewer-operation
           :examples $ []
@@ -753,6 +759,36 @@
           :schema $ quote $ Fn (Map String V)
             -> $ Map String Task
             :generics V
+        'read-draft-states $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn read-draft-states (raw)
+            let
+                source $ if (nil? raw) ({})
+                  decode-map-as raw $ Map respo.schema/CoordKey Dynamic
+                states $ match (get source :cursor)
+                  (:some cursor)
+                    if (nil? cursor) (.dissoc source :cursor) source
+                  (:none) source
+                normalized $ match (get states :editor)
+                  (:some editor)
+                    cond
+                        nil? editor
+                        .dissoc states :editor
+                      (map? editor)
+                        let
+                            branch $ decode-map-as editor $ Map respo.schema/CoordKey Dynamic
+                          match (get branch :data)
+                            (:some data)
+                              if (nil? data)
+                                .assoc states :editor $ .dissoc branch :data
+                                , states
+                            (:none) states
+                      true states
+                  (:none) states
+              decode-map-as normalized $ Map respo.schema/CoordKey DraftStateValue
+          :examples $ []
+          :schema $ quote $ Fn Input
+            -> $ Map respo.schema/CoordKey DraftStateValue
+            :generics Input
         'read-schedule-document $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-schedule-document (raw)
             ScheduleDocument :schedule (decode-schedule raw) :original raw
@@ -817,7 +853,7 @@
               (:states cursor state)
                 assoc store :states $ decode-map-as
                   assoc-in (:states store) (conj cursor :data) state
-                  Map Tag Dynamic
+                  Map respo.schema/CoordKey app.schema/DraftStateValue
               (:content content) (assoc store :content content)
               (:router router) (assoc store :router router)
               (:hydrate-storage data) data
