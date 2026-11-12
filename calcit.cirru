@@ -33,7 +33,7 @@
                             {} $ :text |
                         Map Tag String
                     comp-editor cursor state
-                  :viewer $ comp-viewer $ app.schema/decode-schedule (:content store)
+                  :viewer $ comp-viewer $ :schedule (:content store)
                   _ $ <> |Unknown
                 comp-nav route-name
                 comp-upload $ :content store
@@ -79,8 +79,8 @@
                 button
                   {} (:class-name css/button)
                     :on-click $ fn (e d!)
-                      d! $ schema/Op :content $ parse-cirru-edn
-                        .unwrap $ get state :text
+                      d! $ schema/Op :content $ schema/read-schedule-document
+                        parse-cirru-edn $ .unwrap $ get state :text
                       d! $ schema/Op :router $ schema/Router :name :viewer
                   <> |Submit
           :examples $ []
@@ -116,9 +116,11 @@
       :defs $ {}
         'begin-upload $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn begin-upload (content)
-            js-cast (uploadSchedule content) 'js-ffi.shared/PromiseHost
+            js-cast
+              uploadSchedule $ :original content
+              , 'js-ffi.shared/PromiseHost
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> js-ffi.shared/PromiseHost) (:features :js-ffi)
+          :schema $ quote $ Fn schema/ScheduleDocument (-> js-ffi.shared/PromiseHost) (:features :js-ffi)
         'comp-link $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-link (page icon active?)
             div
@@ -150,7 +152,7 @@
                   js-await $ upload-schedule! content
               <> |Upload
           :examples $ []
-          :schema $ quote $ Fn T (-> respo.schema/Component) (:generics T) (:features :js-ffi)
+          :schema $ quote $ Fn schema/ScheduleDocument (-> respo.schema/Component) (:features :js-ffi)
         'css-icon $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-icon
             {} $ |$0 $ {} (:margin |8) (:font-size 16) (:cursor :pointer)
@@ -174,7 +176,7 @@
             js-await $ begin-upload content
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi) (:async)
+          :schema $ quote $ Fn schema/ScheduleDocument (-> Unit) (:features :js-ffi) (:async)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.nav
           :require
@@ -588,7 +590,7 @@
               storage-get $ .unwrap-or (get schema/config :storage) |pudica-schedule-viewer
               (:some raw)
                 do
-                  dispatch! $ schema/Op :content $ parse-cirru-edn raw
+                  dispatch! $ schema/Op :content $ schema/read-schedule-document (parse-cirru-edn raw)
                   dispatch! $ schema/Op :router $ schema/Router :name :viewer
               (:none) &unit
             println "|App started."
@@ -645,7 +647,7 @@
         'Op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum Op
             :states (List respo.schema/CoordKey) (Map Tag String)
-            :content Dynamic
+            :content ScheduleDocument
             :router app.schema/Router
             :hydrate-storage app.schema/Store
           :examples $ []
@@ -660,11 +662,15 @@
             :archives $ Map String app.schema/Task
           :examples $ []
           :schema $ quote StructDef
+        'ScheduleDocument $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct ScheduleDocument (:schedule Schedule) (:original Dynamic)
+          :examples $ []
+          :schema $ quote StructDef
         'Store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct Store
             :states $ Map Tag Dynamic
             :router app.schema/Router
-            :content Dynamic
+            :content ScheduleDocument
             :messages $ Map Tag Dynamic
           :examples $ []
           :schema $ quote StructDef
@@ -692,14 +698,17 @@
                         decode-map-as cursor $ List respo.schema/CoordKey
                         decode-map-as state $ Map Tag String
                       raise |Invalid-state-cursor
-                  (:content content) (Op :content content)
+                  (:content content)
+                    Op :content $ read-schedule-document content
                   (:router router)
                     Op :router $ decode-map-as (storage-map router) 'app.schema/Router
                   (:hydrate-storage data)
                     let
                         fields $ storage-map data
                       Op :hydrate-storage $ decode-map-as
-                        assoc fields :router $ storage-map $ .unwrap (get fields :router)
+                        assoc
+                          assoc fields :router $ storage-map $ .unwrap (get fields :router)
+                          , :content $ restore-schedule-document $ .unwrap (get fields :content)
                         , 'app.schema/Store
                   _ $ raise |Unknown-viewer-operation
           :examples $ []
@@ -744,6 +753,19 @@
           :schema $ quote $ Fn (Map String V)
             -> $ Map String Task
             :generics V
+        'read-schedule-document $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn read-schedule-document (raw)
+            ScheduleDocument :schedule (decode-schedule raw) :original raw
+          :examples $ []
+          :schema $ quote $ Fn Input (-> ScheduleDocument) (:generics Input)
+        'restore-schedule-document $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn restore-schedule-document (raw)
+            match (try-decode-map-as raw ScheduleDocument)
+              (:ok document)
+                read-schedule-document $ :original document
+              (:err _) (read-schedule-document raw)
+          :examples $ []
+          :schema $ quote $ Fn Input (-> ScheduleDocument) (:generics Input)
         'storage-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn storage-map (raw)
             if (struct? raw) (&struct:to-map raw)
@@ -755,7 +777,7 @@
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             Store :states ({}) :router (Router :name :home) :content
-              {}
+              read-schedule-document $ {}
                 :tasks $ {}
                 :archives $ {}
               , :messages $ {}
