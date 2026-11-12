@@ -21,7 +21,7 @@
                 {} $ :class-name $ str-spaced css/global css/fullscreen css/column
                 match route-name
                   :home $ let
-                      editor-states $ >> states :editor
+                      editor-states $ decode-map-as (>> states :editor) (Map respo.schema/CoordKey app.schema/DraftStateValue)
                       cursor $ decode-map-as
                         .unwrap $ get editor-states :cursor
                         List respo.schema/CoordKey
@@ -33,7 +33,7 @@
                             {} $ :text |
                         Map Tag String
                     comp-editor cursor state
-                  :viewer $ comp-viewer $ app.schema/decode-schedule (:content store)
+                  :viewer $ comp-viewer $ :schedule (:content store)
                   _ $ <> |Unknown
                 comp-nav route-name
                 comp-upload $ :content store
@@ -69,7 +69,7 @@
                 :class-name css-textbox
                 :on-input $ fn (e d!)
                   hint-fn $ Fn respo.schema/RespoEvent
-                    Fn app.schema/Op $ -> Unit
+                    Fn schema/Op $ -> Unit
                     -> Unit
                   d! $ schema/Op :states cursor $ assoc state :text
                     decode-map-as (:value e) 'String
@@ -79,8 +79,8 @@
                 button
                   {} (:class-name css/button)
                     :on-click $ fn (e d!)
-                      d! $ schema/Op :content $ parse-cirru-edn
-                        .unwrap $ get state :text
+                      d! $ schema/Op :content $ schema/read-schedule-document
+                        parse-cirru-edn $ .unwrap $ get state :text
                       d! $ schema/Op :router $ schema/Router :name :viewer
                   <> |Submit
           :examples $ []
@@ -116,9 +116,11 @@
       :defs $ {}
         'begin-upload $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn begin-upload (content)
-            js-cast (uploadSchedule content) 'js-ffi.shared/PromiseHost
+            js-cast
+              uploadSchedule $ :original content
+              , 'js-ffi.shared/PromiseHost
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> js-ffi.shared/PromiseHost) (:features :js-ffi)
+          :schema $ quote $ Fn schema/ScheduleDocument (-> js-ffi.shared/PromiseHost) (:features :js-ffi)
         'comp-link $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-link (page icon active?)
             div
@@ -150,7 +152,7 @@
                   js-await $ upload-schedule! content
               <> |Upload
           :examples $ []
-          :schema $ quote $ Fn T (-> respo.schema/Component) (:generics T) (:features :js-ffi)
+          :schema $ quote $ Fn schema/ScheduleDocument (-> respo.schema/Component) (:features :js-ffi)
         'css-icon $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-icon
             {} $ |$0 $ {} (:margin |8) (:font-size 16) (:cursor :pointer)
@@ -174,7 +176,7 @@
             js-await $ begin-upload content
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi) (:async)
+          :schema $ quote $ Fn schema/ScheduleDocument (-> Unit) (:features :js-ffi) (:async)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.nav
           :require
@@ -236,10 +238,10 @@
                 :border-radius |0px
               -> tasks (distinct-values) (&set:to-list)
                 sort $ fn (task-a task-b)
-                  hint-fn $ Fn app.schema/Task app.schema/Task $ -> Number
+                  hint-fn $ Fn schema/Task schema/Task $ -> Number
                   &compare (:created-time task-a) (:created-time task-b)
                 map $ fn (task)
-                  hint-fn $ Fn app.schema/Task $ -> (List app.comp.viewer/ScheduleRowItem)
+                  hint-fn $ Fn schema/Task $ -> (List ScheduleRowItem)
                   [] (:id task)
                     div ({})
                       comp-time $ Some $ :created-time task
@@ -267,7 +269,7 @@
               {} $ :class-name $ str-spaced css/column css-day-card
               comp-day day
                 if-let
-                  task $ assert-type (first tasks) (Option app.schema/Task)
+                  task $ assert-type (first tasks) (Option schema/Task)
                   format-dayjs (get-done-time task) |MM-DD
                   format-dayjs (add-days week-start day) |MM-DD
                 .len tasks
@@ -275,7 +277,7 @@
                 {} $ :class-name css-tasks-container
                 -> tasks (sort by-latest-task)
                   map $ fn (task)
-                    hint-fn $ Fn app.schema/Task $ -> (List app.comp.viewer/ScheduleRowItem)
+                    hint-fn $ Fn schema/Task $ -> (List ScheduleRowItem)
                     [] (:id task)
                       div
                         {} $ :class-name css-task-item
@@ -306,9 +308,9 @@
                 tasks $ &set:to-list $ distinct-values (:archives content)
                 tasks-by-year $ assert-type
                   group-by tasks $ fn (task)
-                    hint-fn $ Fn app.schema/Task $ -> Number
+                    hint-fn $ Fn schema/Task $ -> Number
                     dayjs-year $ get-done-time task
-                  Map Number $ List app.schema/Task
+                  Map Number $ List schema/Task
                 years $ sort
                   &set:to-list $ keys tasks-by-year
                   , by-larger
@@ -327,16 +329,16 @@
                 list->
                   {} $ :class-name css/column
                   map years $ fn (year)
-                    hint-fn $ Fn Number $ -> (List app.comp.viewer/ScheduleRowItem)
+                    hint-fn $ Fn Number $ -> (List ScheduleRowItem)
                     let
                         tasks-in-year $ assert-type
                           .unwrap-or (get tasks-by-year year) ([])
-                          List app.schema/Task
+                          List schema/Task
                         tasks-by-week $ assert-type
                           group-by tasks-in-year $ fn (task)
-                            hint-fn $ Fn app.schema/Task $ -> Number
+                            hint-fn $ Fn schema/Task $ -> Number
                             dayjs-week $ get-done-time task
-                          Map Number $ List app.schema/Task
+                          Map Number $ List schema/Task
                         weeks $ sort
                           &set:to-list $ keys tasks-by-week
                           , by-larger
@@ -347,16 +349,16 @@
                         list->
                           {} $ :class-name css/column
                           map weeks $ fn (week)
-                            hint-fn $ Fn Number $ -> (List app.comp.viewer/ScheduleRowItem)
+                            hint-fn $ Fn Number $ -> (List ScheduleRowItem)
                             let
                                 tasks-in-week $ assert-type
                                   .unwrap-or (get tasks-by-week week) ([])
-                                  List app.schema/Task
+                                  List schema/Task
                                 tasks-by-day $ assert-type
                                   group-by tasks-in-week $ fn (task)
-                                    hint-fn $ Fn app.schema/Task $ -> Number
+                                    hint-fn $ Fn schema/Task $ -> Number
                                     dayjs-day $ get-done-time task
-                                  Map Number $ List app.schema/Task
+                                  Map Number $ List schema/Task
                                 days $ -> (range 1 6)
                                   concat $ &set:to-list $ keys tasks-by-day
                                   distinct
@@ -370,7 +372,7 @@
                                     hint-fn $ Fn Number $ -> Number
                                     .len $ assert-type
                                       .unwrap-or (get tasks-by-day day) ([])
-                                      List app.schema/Task
+                                      List schema/Task
                                   reduce 0 &+
                               [] week $ div
                                 {} (:class-name css/column)
@@ -380,11 +382,11 @@
                                   {} $ :class-name css-day-list
                                   -> days (reverse)
                                     map $ fn (day)
-                                      hint-fn $ Fn Number $ -> (List app.comp.viewer/ScheduleRowItem)
+                                      hint-fn $ Fn Number $ -> (List ScheduleRowItem)
                                       [] day $ comp-day-card day
                                         assert-type
                                           .unwrap-or (get tasks-by-day day) ([])
-                                          List app.schema/Task
+                                          List schema/Task
                                         , week-start
           :examples $ []
           :schema $ quote $ Fn schema/Schedule (-> respo.schema/Component)
@@ -588,7 +590,7 @@
               storage-get $ .unwrap-or (get schema/config :storage) |pudica-schedule-viewer
               (:some raw)
                 do
-                  dispatch! $ schema/Op :content $ parse-cirru-edn raw
+                  dispatch! $ schema/Op :content $ schema/read-schedule-document (parse-cirru-edn raw)
                   dispatch! $ schema/Op :router $ schema/Router :name :viewer
               (:none) &unit
             println "|App started."
@@ -615,7 +617,7 @@
             if-let (target mount-target)
               render! (narrow-element target) (comp-container @*reel)
                 fn (raw-op)
-                  hint-fn $ Fn app.schema/Op $ -> Unit
+                  hint-fn $ Fn schema/Op $ -> Unit
                   dispatch! $ schema/decode-op raw-op
               do (eprintln |Mount-target-not-found.) &unit
           :examples $ []
@@ -642,10 +644,14 @@
             respo.ffi.browser :refer $ narrow-element
     'app.schema $ %{} 'FileEntry
       :defs $ {}
+        'DraftStateValue $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion DraftStateValue String Bool (List respo.schema/CoordKey) (Map respo.schema/CoordKey app.schema/DraftStateValue)
+          :examples $ []
+          :schema $ quote UnionDef
         'Op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum Op
-            :states (List respo.schema/CoordKey) Dynamic
-            :content Dynamic
+            :states (List respo.schema/CoordKey) (Map Tag String)
+            :content ScheduleDocument
             :router app.schema/Router
             :hydrate-storage app.schema/Store
           :examples $ []
@@ -660,11 +666,15 @@
             :archives $ Map String app.schema/Task
           :examples $ []
           :schema $ quote StructDef
+        'ScheduleDocument $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct ScheduleDocument (:schedule Schedule) (:original Dynamic)
+          :examples $ []
+          :schema $ quote StructDef
         'Store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct Store
-            :states $ Map Tag Dynamic
+            :states $ Map respo.schema/CoordKey app.schema/DraftStateValue
             :router app.schema/Router
-            :content Dynamic
+            :content ScheduleDocument
             :messages $ Map Tag Dynamic
           :examples $ []
           :schema $ quote StructDef
@@ -690,20 +700,25 @@
                     if (list? cursor)
                       Op :states
                         decode-map-as cursor $ List respo.schema/CoordKey
-                        , state
+                        decode-map-as state $ Map Tag String
                       raise |Invalid-state-cursor
-                  (:content content) (Op :content content)
+                  (:content content)
+                    Op :content $ read-schedule-document content
                   (:router router)
                     Op :router $ decode-map-as (storage-map router) 'app.schema/Router
                   (:hydrate-storage data)
                     let
                         fields $ storage-map data
                       Op :hydrate-storage $ decode-map-as
-                        assoc fields :router $ storage-map $ .unwrap (get fields :router)
+                        assoc
+                          assoc
+                            assoc fields :router $ storage-map $ .unwrap (get fields :router)
+                            , :content $ restore-schedule-document $ .unwrap (get fields :content)
+                          , :states $ read-draft-states $ .unwrap (get fields :states)
                         , 'app.schema/Store
                   _ $ raise |Unknown-viewer-operation
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Op)
+          :schema $ quote $ Fn Input (-> Op) (:generics Input)
         'decode-schedule $ %{} 'CodeEntry
           :doc "|Validate legacy parsed storage and construct a typed Schedule."
           :code $ quote $ defn decode-schedule (raw)
@@ -738,12 +753,55 @@
         'decode-task-map $ %{} 'CodeEntry (:doc "|Decode every task in a legacy task map.")
           :code $ quote $ defn decode-task-map (raw)
             filter-map-kv raw $ fn (task-id task)
-              hint-fn $ Fn String V $ -> (calcit.core/MapEntryDecision String app.schema/Task)
+              hint-fn $ Fn String V $ -> (MapEntryDecision String Task)
               calcit.core/MapEntryDecision :keep task-id $ decode-task $ storage-map task
           :examples $ []
           :schema $ quote $ Fn (Map String V)
             -> $ Map String Task
             :generics V
+        'read-draft-states $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn read-draft-states (raw)
+            let
+                source $ if (nil? raw) ({})
+                  decode-map-as raw $ Map respo.schema/CoordKey Dynamic
+                states $ match (get source :cursor)
+                  (:some cursor)
+                    if (nil? cursor) (.dissoc source :cursor) source
+                  (:none) source
+                normalized $ match (get states :editor)
+                  (:some editor)
+                    cond
+                        nil? editor
+                        .dissoc states :editor
+                      (map? editor)
+                        let
+                            branch $ decode-map-as editor $ Map respo.schema/CoordKey Dynamic
+                          match (get branch :data)
+                            (:some data)
+                              if (nil? data)
+                                .assoc states :editor $ .dissoc branch :data
+                                , states
+                            (:none) states
+                      true states
+                  (:none) states
+              decode-map-as normalized $ Map respo.schema/CoordKey DraftStateValue
+          :examples $ []
+          :schema $ quote $ Fn Input
+            -> $ Map respo.schema/CoordKey DraftStateValue
+            :generics Input
+        'read-schedule-document $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn read-schedule-document (raw)
+            ScheduleDocument :schedule (decode-schedule raw) :original raw
+          :examples $ []
+          :schema $ quote $ Fn Input (-> ScheduleDocument) (:generics Input)
+        'restore-schedule-document $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn restore-schedule-document (raw)
+            match (try-decode-map-as raw ScheduleDocument)
+              (:ok document)
+                read-schedule-document $ :original document
+              (:err _) (read-schedule-document raw)
+          :examples $ []
+          :schema $ quote $ Fn Input (-> ScheduleDocument) (:generics Input)
         'storage-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn storage-map (raw)
             if (struct? raw) (&struct:to-map raw)
@@ -755,7 +813,7 @@
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             Store :states ({}) :router (Router :name :home) :content
-              {}
+              read-schedule-document $ {}
                 :tasks $ {}
                 :archives $ {}
               , :messages $ {}
@@ -795,7 +853,7 @@
               (:states cursor state)
                 assoc store :states $ decode-map-as
                   assoc-in (:states store) (conj cursor :data) state
-                  Map Tag Dynamic
+                  Map respo.schema/CoordKey app.schema/DraftStateValue
               (:content content) (assoc store :content content)
               (:router router) (assoc store :router router)
               (:hydrate-storage data) data
