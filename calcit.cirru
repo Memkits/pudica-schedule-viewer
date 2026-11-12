@@ -576,7 +576,7 @@
             reset! *reel $ updater @*reel op (generate-id!) (now-ms)
             , &unit
           :examples $ []
-          :schema $ quote $ Fn schema/Op (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn schema/Op (-> Unit) (:features :io :js-ffi :state)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             if config/dev? $ load-console-formatter!
@@ -596,7 +596,7 @@
             println "|App started."
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'mount-target $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def mount-target (query-selector |.app)
           :examples $ []
@@ -611,7 +611,7 @@
               hud! |error build-errors
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             if-let (target mount-target)
@@ -621,7 +621,7 @@
                   dispatch! $ schema/decode-op raw-op
               do (eprintln |Mount-target-not-found.) &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :io :state)
         'ssr? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def ssr?
             .some? $ query-selector |meta.respo-ssr
