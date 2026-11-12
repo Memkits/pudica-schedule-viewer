@@ -724,13 +724,9 @@
           :code $ quote $ defn decode-schedule (raw)
             let
                 content $ storage-map raw
-                tasks $ decode-map-as
-                  .unwrap $ get content :tasks
-                  Map String Dynamic
-                archives $ decode-map-as
-                  .unwrap $ get content :archives
-                  Map String Dynamic
-              Schedule :tasks (decode-task-map tasks) :archives $ decode-task-map archives
+                tasks $ decode-task-map $ .unwrap (get content :tasks)
+                archives $ decode-task-map $ .unwrap (get content :archives)
+              Schedule :tasks tasks :archives archives
           :examples $ []
           :schema $ quote $ Fn Input (-> Schedule) (:generics Input)
         'decode-task $ %{} 'CodeEntry
@@ -752,13 +748,16 @@
           :schema $ quote $ Fn (Map Tag V) (-> Task) (:generics V)
         'decode-task-map $ %{} 'CodeEntry (:doc "|Decode every task in a legacy task map.")
           :code $ quote $ defn decode-task-map (raw)
-            filter-map-kv raw $ fn (task-id task)
-              hint-fn $ Fn String V $ -> (MapEntryDecision String Task)
-              calcit.core/MapEntryDecision :keep task-id $ decode-task $ storage-map task
+            if (map? raw)
+              filter-map-kv raw $ fn (task-id task)
+                if (string? task-id)
+                  calcit.core/MapEntryDecision :keep task-id $ decode-task $ storage-map task
+                  raise "|Expected a string task key"
+              raise "|Expected a task map"
           :examples $ []
-          :schema $ quote $ Fn (Map String V)
+          :schema $ quote $ Fn Input
             -> $ Map String Task
-            :generics V
+            :generics Input
         'read-draft-states $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-draft-states (raw)
             let
