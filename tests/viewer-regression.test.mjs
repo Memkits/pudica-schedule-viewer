@@ -43,6 +43,10 @@ test("decode validates all task fields and rejects malformed storage", () => {
   assert.throws(() => decode_schedule(map(t.tasks, map(42, task("bad", "text")), t.archives, map())), /string task key/);
   assert.throws(() => decode_schedule(map(t.tasks, map(), t.archives, c._$L_())), /task map/);
   assert.throws(() => decode_task(c.assoc(task("bad", "text"), t["done-time"], "not a timestamp")));
+  for (const storedTime of ["%:: 'Option 'some 42", ":: :some 42"]) {
+    const decoded = decode_task(task("saved", "text", c.parse_cirru_edn(storedTime)));
+    assert.equal(c.option_$o_unwrap(field(decoded, t["done-time"])), 42);
+  }
   const currentStorage = `%{} 'Store (:dragging-id |) (:dropping-id |) (:pointer 0)
   :archives $ {}
   :states $ {}
