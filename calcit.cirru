@@ -678,6 +678,10 @@
             :messages $ Map Tag Dynamic
           :examples $ []
           :schema $ quote StructDef
+        'StoredTimestamp $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion StoredTimestamp Number (Option Number)
+          :examples $ []
+          :schema $ quote UnionDef
         'Task $ %{} 'CodeEntry (:doc "|Task fields used by the schedule viewer.")
           :code $ quote $ defstruct Task (:id String) (:text String) (:created-time Number)
             :done-time $ Option Number
@@ -826,12 +830,18 @@
         'to-number-option $ %{} 'CodeEntry
           :doc "|Validate a legacy nil-or-number field and return Option<Number>."
           :code $ quote $ defn to-number-option (value)
-            if (nil? value) None $ if (enum? value)
-              match value
-                (:none) None
-                (:some timestamp)
-                  if (number? timestamp) (Some timestamp) (raise "|Invalid stored timestamp")
-              if (number? value) (Some value) (raise "|Invalid stored timestamp")
+            if (nil? value) None $ let
+                normalized $ if (enum? value)
+                  match value
+                    (:none) None
+                    (:some timestamp) (Some timestamp)
+                  , value
+              match (try-decode-map-as normalized StoredTimestamp)
+                (:ok stored)
+                  match stored
+                    (Number timestamp) (Some timestamp)
+                    (Option timestamp) timestamp
+                (:err _) (raise "|Invalid stored timestamp")
           :examples $ []
           :schema $ quote $ Fn Input
             -> $ Option Number
