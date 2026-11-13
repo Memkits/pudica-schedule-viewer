@@ -732,18 +732,23 @@
         'decode-task $ %{} 'CodeEntry
           :doc "|Validate one legacy task map and construct a typed Task."
           :code $ quote $ defn decode-task (raw)
-            decode-map-as
-              {}
-                :id $ .unwrap $ get raw :id
-                :text $ .unwrap $ get raw :text
-                :created-time $ .unwrap $ get raw :created-time
-                :done-time $ match (get raw :done-time)
+            let
+                id $ decode-map-as
+                  .unwrap $ get raw :id
+                  , String
+                text $ decode-map-as
+                  .unwrap $ get raw :text
+                  , String
+                created-time $ decode-map-as
+                  .unwrap $ get raw :created-time
+                  , Number
+                done-time $ match (get raw :done-time)
                   (:some time) (to-number-option time)
                   (:none) None
-                :archived-time $ match (get raw :archived-time)
+                archived-time $ match (get raw :archived-time)
                   (:some time) (to-number-option time)
                   (:none) None
-              , Task
+              Task :id id :text text :created-time created-time :done-time done-time :archived-time archived-time
           :examples $ []
           :schema $ quote $ Fn (Map Tag V) (-> Task) (:generics V)
         'decode-task-map $ %{} 'CodeEntry (:doc "|Decode every task in a legacy task map.")
