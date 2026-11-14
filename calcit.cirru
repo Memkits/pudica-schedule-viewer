@@ -756,7 +756,10 @@
             if (map? raw)
               filter-map-kv raw $ fn (task-id task)
                 if (string? task-id)
-                  calcit.core/MapEntryDecision :keep task-id $ decode-task $ storage-map task
+                  calcit.core/MapEntryDecision :keep task-id $ if
+                    and (struct? task) (&struct:matches? task Task)
+                    assert-type task Task
+                    decode-task $ storage-map task
                   raise "|Expected a string task key"
               raise "|Expected a task map"
           :examples $ []
