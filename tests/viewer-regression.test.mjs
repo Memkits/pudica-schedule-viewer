@@ -59,6 +59,23 @@ test("active and archived tasks render with year grouping", () => {
   for (const text of ["active fixture", "archived fixture", "2024", "week"]) assert.ok(html.includes(text), text);
   assert.match(make_string(comp_viewer(decode_schedule(map(t.tasks, map(), t.archives, map())))), /Tasks/);
 });
+test("week heading matches displayed weekdays and included weekend cards", () => {
+  const renderDay = (date) => {
+    const done = dayjs(`${date}T12:00:00`).valueOf();
+    return make_string(comp_viewer(decode_schedule(map(t.tasks, map(), t.archives, map("fixture", task("fixture", "week fixture", done))))));
+  };
+  const weekday = renderDay("2024-01-03");
+  assert.match(weekday, /week 1 \(1\)/);
+  assert.match(weekday, /2024-01-01 ~ 2024-01-05/);
+  assert.doesNotMatch(weekday, /1th week/);
+  const saturday = renderDay("2024-01-06");
+  assert.match(saturday, /2024-01-01 ~ 2024-01-06/);
+  const sunday = renderDay("2023-12-31");
+  assert.match(sunday, /2023-12-31 ~ 2024-01-05/);
+  const both = map("sun", task("sun", "Sunday", dayjs("2024-01-07T12:00:00").valueOf()),
+    "sat", task("sat", "Saturday", dayjs("2024-01-13T12:00:00").valueOf()));
+  assert.match(make_string(comp_viewer(decode_schedule(map(t.tasks, map(), t.archives, both)))), /2024-01-07 ~ 2024-01-13/);
+});
 test("optional times preserve placeholder and inclusive duration semantics", () => {
   assert.match(make_string(comp_time(field(decode_task(task("none", "fallback")), t["done-time"]))), /\?\?:\?\?/);
   const decoded = decode_task(task("done", "duration", Date.UTC(2024, 0, 3, 12)));

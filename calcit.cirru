@@ -378,6 +378,8 @@
                                 {} (:class-name css/column)
                                   :style $ {} $ :padding-top 16
                                 comp-week week amount week-start
+                                  .unwrap $ first days
+                                  .unwrap $ last days
                                 list->
                                   {} $ :class-name css-day-list
                                   -> days (reverse)
@@ -391,20 +393,20 @@
           :examples $ []
           :schema $ quote $ Fn schema/Schedule (-> respo.schema/Component)
         'comp-week $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defcomp comp-week (week amount week-start)
+          :code $ quote $ defcomp comp-week (week amount week-start first-day last-day)
             div
               {} $ :class-name css-week
-              <> $ str week "|th week (" amount "|)"
+              <> $ str "|week " week "| (" amount "|)"
               space-x 8
               span
                 {} $ :style $ {} (:font-size 12)
                   :color $ hsl 0 0 60
                   :font-family ui/font-normal
-                <> $ let
-                    end $ add-days week-start 4
-                  str (format-dayjs week-start |YYYY-MM-DD) "| ~ " $ format-dayjs end |YYYY-MM-DD
+                <> $ str
+                  format-dayjs (add-days week-start first-day) |YYYY-MM-DD
+                  , "| ~ " $ format-dayjs (add-days week-start last-day) |YYYY-MM-DD
           :examples $ []
-          :schema $ quote $ Fn Number Number DayjsHost (-> respo.schema/Component)
+          :schema $ quote $ Fn Number Number DayjsHost Number Number (-> respo.schema/Component)
         'comp-year $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-year (year)
             <> (str year) (str-spaced style/css-title css-year)
