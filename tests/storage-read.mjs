@@ -33,7 +33,18 @@ const { decode_schedule } = await import("../js-out/app.schema.mjs")
 const raw = calcit.option_$o_unwrap_or(storage_get(storageKey), "")
 const parsed = calcit.parse_cirru_edn(raw)
 const normalized = calcit.format_cirru_edn(parsed)
-const decoded = calcit.format_cirru_edn(decode_schedule(parsed))
+const schedule = decode_schedule(parsed)
+const decoded = calcit.format_cirru_edn(schedule)
+const tags = calcit.init_tags(["tasks", "archives"])
+const get = (value, key) => calcit.option_$o_unwrap(calcit.get(value, key))
+const task = get(get(schedule, tags.tasks), "task-1")
+const reread = decode_schedule(schedule)
+assert.strictEqual(get(get(reread, tags.tasks), "task-1"), task)
+const malformed = calcit._$n__$M_(
+  tags.tasks, calcit._$n__$M_(1, task),
+  tags.archives, calcit._$n__$M_(),
+)
+assert.throws(() => decode_schedule(malformed), /Expected a string task key/)
 
 assert.match(normalized, /:tasks/)
 assert.match(normalized, /:archives/)
