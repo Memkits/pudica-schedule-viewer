@@ -6,15 +6,17 @@ Pudica Schedule Viewer
 
 Site http://r.tiye.me/Memkits/pudica-schedule-viewer/
 
-### Calcit 0.31.0：使用者影响
+### Calcit 0.44.0
+
+开发与构建使用正式 Calcit 和 `@calcit/procs` 0.44.0，以及 Respo 0.19.13、UI 0.15.7 和 JS FFI 0.2.19；重新安装依赖后构建。旧存档解码和上传原始内容的行为保持不变。未验证真实用户存档或生产上传。
+
+### Calcit 0.42.1
 
 日程存档格式、时间缺失时的默认值、任务排序与原始上传内容保持不变。
-升级配对的 Calcit/procs 到正式 0.31.0；Respo/UI 使用与该工具链匹配的精确 alpha 标签，
-JS-FFI 使用正式 0.2.7，不使用 Git hash 依赖。
+重新安装正式 Calcit/procs 0.42.1 和依赖后构建。正式模块为 Respo 0.19.5、UI 0.15.2、JS FFI 0.2.13 和 Router 0.12.2。
 
-未激活的导航项现在明确提供空样式 Map，激活项使用 CSS 字符串 `black`。
-`dispatch!` 从 Dynamic 收紧为既有的名义 `Op`；保留封闭 dispatch 类型槽、
-操作解码、Store/Router/Schedule/Task 合同和 HUD。未放宽类型门禁，未增加验证脚本。
+渲染使用已校验的 `Schedule`，列表行使用具名 union。Dayjs 接收时间戳或日期字符串，可选任务时间兼容旧 nil 和新 Option。编辑器接收已校验的 `CoordKey` 路径和字符串字段，事件仍使用 RespoEvent。渲染入口将旧操作解码为具名 Op，内部派发只接收 Op。上传继续使用原始存档。
+
 原存储/Canvas 适配及六项业务测试继续保留；上传回归只拦截 Axios adapter，
 不向真实服务发送请求。DayJS 两处原有 unsafe 边界仍保留。
 
@@ -22,8 +24,7 @@ JS-FFI 使用正式 0.2.7，不使用 Git hash 依赖。
 
 Workflow https://github.com/calcit-lang/respo-calcit-workflow
 
-The project pairs stable Calcit/procs `0.31.0`, with pinned
-Respo 0.17.0-alpha.4, UI 0.9.0-alpha.4 and JS-FFI 0.2.7 modules. Legacy Pudica
+Legacy Pudica
 storage maps and current Schedule Struct/Option exports are validated and converted to typed schedule/task structs;
 the remaining `Dynamic` positions are limited to storage, Respo state, and
 host boundaries:
@@ -61,7 +62,7 @@ snapshots are ignored and rejected by CI. Public upload verification uses
 cos-upload-action's built-in verify settings, with no extra CDN checker. Original server
 deployment paths and shared external resource URLs remain unchanged.
 
-CI 使用精确正式 tag 的 Actions，COS action v1.2.0 内置生成 HTML 同域资源引用及公开字节/SHA-256 校验，不再重复 CDN 构建测试。规范格式、全定义/公开定义/完整 strict、弃用调用零门禁及工具链一致性检查保留；原五项业务测试、存储/Canvas 适配测试保留，并在同一测试文件增加一项 Promise 上传桥接回归，验证原始数据及错误传播。该测试在 Axios 选择网络传输前拦截 adapter，不发送真实请求。构建一次后直接运行，避免重复编译。job 15 分钟、上传 10 分钟限时，不改变串行队列及部署条件。
+CI 使用精确正式 tag 的 Actions，COS action v1.3.0 内置生成 HTML 同域资源引用及公开字节/SHA-256 校验，不再重复 CDN 构建测试。规范格式、全定义/公开定义/完整 strict、弃用调用零门禁及工具链一致性检查保留；原五项业务测试、存储/Canvas 适配测试保留，并在同一测试文件增加一项 Promise 上传桥接回归，验证原始数据及错误传播。该测试在 Axios 选择网络传输前拦截 adapter，不发送真实请求。构建一次后直接运行，避免重复编译。job 15 分钟、上传 10 分钟限时，不改变串行队列及部署条件。
 
 Map 查询显式处理 Option，旧 nil 时间和新 Option 在存档边界规范化。事件实际是 Map，检查具体输入字段；混合 key 的 Respo states 保留真实开放合同，不用伪强转或 Dynamic 数量证明类型安全。`llms/` 只保留当前 CLI 与项目边界入口，退役重复的旧语言/框架教程。
 
