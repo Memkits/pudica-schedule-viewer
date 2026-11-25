@@ -28,7 +28,15 @@
                       state $ decode-map-as
                         match (get editor-states :data)
                           (:some value)
-                            if value value $ {} $ :text |
+                            match value
+                              (Bool flag)
+                                if flag value $ {} $ :text |
+                              (String text)
+                                if (= text |)
+                                  {} $ :text |
+                                  , value
+                              (List _) value
+                              (Map _) value
                           (:none)
                             {} $ :text |
                         Map Tag String
