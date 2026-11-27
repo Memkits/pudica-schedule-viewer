@@ -6,9 +6,9 @@ Pudica Schedule Viewer
 
 Site http://r.tiye.me/Memkits/pudica-schedule-viewer/
 
-### Calcit 0.45.1
+### Calcit 0.46.0
 
-开发与构建使用正式 Calcit 和 `@calcit/procs` 0.45.1，以及 Respo 0.19.18、UI 0.16.5 和 JS FFI 0.2.24；重新安装依赖后构建。旧存档解码和上传原始内容的行为保持不变。未验证真实用户存档或生产上传。
+开发与构建使用正式 Calcit 和 `@calcit/procs` 0.46.0，以及 Respo 0.20.0、UI 0.16.6 和 JS FFI 0.2.26；重新安装依赖后构建。旧存档解码和上传原始内容的行为保持不变。未验证真实用户存档或生产上传。
 
 ### Calcit 0.42.1
 
